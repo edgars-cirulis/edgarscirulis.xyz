@@ -5,8 +5,33 @@
 
 	const site = {
 		url: 'https://edgarscirulis.xyz',
-		title: 'Edgars Cīrulis',
-		desc: 'Frontend Engineer in Latvia.'
+		title: 'Edgars Cirulis (Cīrulis) – Frontend Engineer & IT Services in Latvia',
+		desc: 'Official website of Edgars Cirulis (Cīrulis), a frontend engineer from Latvia offering computer repair, IT support and web development services.'
+	};
+
+	const personSchema = {
+		'@context': 'https://schema.org',
+		'@type': 'Person',
+		name: 'Edgars Cirulis',
+		alternateName: 'Edgars Cīrulis',
+		jobTitle: 'Frontend Engineer / Developer & IT Specialist',
+		url: site.url,
+		address: {
+			'@type': 'PostalAddress',
+			addressCountry: 'LV'
+		},
+		knowsAbout: [
+			'Computer repair',
+			'IT support',
+			'Frontend development',
+			'Web development',
+			'SvelteKit'
+		],
+		sameAs: [
+			'https://github.com/edgars-cirulis',
+			'https://facebook.com/edgarsscirulis',
+			'https://instagram.com/e.cirulis'
+		]
 	};
 </script>
 
@@ -19,14 +44,23 @@
 	<meta name="description" content={site.desc} />
 	<meta name="robots" content="index,follow" />
 
+	<!-- Open Graph -->
 	<meta property="og:type" content="website" />
 	<meta property="og:title" content={site.title} />
 	<meta property="og:description" content={site.desc} />
 	<meta property="og:url" content={site.url} />
 
+	<!-- Twitter -->
 	<meta name="twitter:card" content="summary" />
 	<meta name="twitter:title" content={site.title} />
 	<meta name="twitter:description" content={site.desc} />
+
+	<!-- Person schema for SEO -->
+	{@html `
+    <script type="application/ld+json">
+      ${JSON.stringify(personSchema)}
+    </script>
+  `}
 </svelte:head>
 
 <div class="app">

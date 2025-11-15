@@ -5,12 +5,11 @@ export type LifeItem = { icon: string; title: string; text: string };
 
 export const me = {
 	name: 'Edgars Cīrulis',
-	title: 'Frontend Engineer / Developer',
+	title: 'Frontend Engineer / Developer & IT Support',
 	location: 'Latvia',
 	email: 'e.cirulis@proton.me',
-	bio: 'Friendly, but not customer service.',
-	skills: ['SvelteKit', 'C++', 'UI/UX', 'Testing'],
-
+	bio: 'Frontend engineer from Latvia offering computer repair, IT support and friendly tech help. Friendly, but not customer service.',
+	skills: ['SvelteKit', 'C++', 'UI/UX', 'Testing', 'Computer repair', 'IT support'],
 	links: [
 		{
 			label: 'GitHub',
