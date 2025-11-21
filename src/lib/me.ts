@@ -49,5 +49,5 @@ export const me = {
 		}
 	] as LifeItem[],
 
-	now: [''] as string[]
+	now: [] as string[]
 };

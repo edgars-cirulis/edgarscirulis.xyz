@@ -72,8 +72,10 @@
 
 <section class="card section" id="about" aria-labelledby="about-heading">
 	<header class="section-head">
-		<h2 id="about-heading">About</h2>
-		<p class="section-subtitle muted">Who I am and how I work.</p>
+		<div>
+			<h2 id="about-heading">About</h2>
+			<p class="section-subtitle muted">Who I am and how I work.</p>
+		</div>
 	</header>
 
 	<p class="lead">{me.bio}</p>
@@ -89,8 +91,10 @@
 
 <section class="card section" id="life" aria-labelledby="life-heading">
 	<header class="section-head">
-		<h2 id="life-heading">Life</h2>
-		<p class="section-subtitle muted">What I’m doing outside of code.</p>
+		<div>
+			<h2 id="life-heading">Life</h2>
+			<p class="section-subtitle muted">What I’m doing outside of code.</p>
+		</div>
 	</header>
 
 	<div class="life">
@@ -111,8 +115,10 @@
 
 <section class="card section" id="now" aria-labelledby="now-heading">
 	<header class="section-head">
-		<h2 id="now-heading">Now</h2>
-		<p class="section-subtitle muted">What I’m focusing on at this moment.</p>
+		<div>
+			<h2 id="now-heading">Now</h2>
+			<p class="section-subtitle muted">What I’m focusing on at this moment.</p>
+		</div>
 	</header>
 
 	{#if nowItems.length}
@@ -128,8 +134,10 @@
 
 <section class="card section" id="projects" aria-labelledby="projects-heading">
 	<header class="section-head">
-		<h2 id="projects-heading">Projects</h2>
-		<p class="section-subtitle muted">Things I’ve built and shipped.</p>
+		<div>
+			<h2 id="projects-heading">Projects</h2>
+			<p class="section-subtitle muted">Things I’ve built and shipped.</p>
+		</div>
 	</header>
 
 	{#if me.projects.length}
@@ -152,8 +160,10 @@
 
 <section class="card section" id="experience" aria-labelledby="experience-heading">
 	<header class="section-head">
-		<h2 id="experience-heading">Experience</h2>
-		<p class="section-subtitle muted">Where I’ve worked and what I’ve done.</p>
+		<div>
+			<h2 id="experience-heading">Experience</h2>
+			<p class="section-subtitle muted">Where I’ve worked and what I’ve done.</p>
+		</div>
 	</header>
 
 	{#if me.experience.length}
@@ -189,17 +199,39 @@
 
 	.card {
 		position: relative;
+		overflow: hidden;
 		background:
-			linear-gradient(180deg, color-mix(in srgb, var(--surface) 96%, transparent), var(--surface)),
-			radial-gradient(140% 160% at 20% -40%, rgba(255, 255, 255, 0.06), transparent 60%);
-		border: 1px solid color-mix(in srgb, var(--border) 90%, transparent);
+			radial-gradient(120% 160% at 0% -40%, rgba(255, 255, 255, 0.05), transparent 60%),
+			color-mix(in srgb, var(--surface) 70%, transparent);
 		border-radius: var(--radius);
 		padding: var(--pad);
+
+		border: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
+
 		box-shadow:
-			0 1px 0 rgba(255, 255, 255, 0.02) inset,
-			0 0 0 1px color-mix(in srgb, var(--text) 2%, transparent) inset,
-			0 18px 40px rgba(0, 0, 0, 0.32);
-		backdrop-filter: blur(14px);
+			0 0 0 1px color-mix(in srgb, var(--text) 4%, transparent) inset,
+			0 18px 40px rgba(0, 0, 0, 0.35);
+		backdrop-filter: blur(22px) saturate(120%);
+	}
+
+	.card::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		border-radius: inherit;
+		background: radial-gradient(
+			140% 140% at 0% 0%,
+			color-mix(in srgb, var(--tint) 8%, transparent),
+			transparent 55%
+		);
+		opacity: 0.7;
+		mix-blend-mode: soft-light;
+	}
+
+	.card > * {
+		position: relative;
+		z-index: 1;
 	}
 
 	.card + .card {
@@ -216,7 +248,7 @@
 		font-size: 0.9rem;
 		letter-spacing: 0.11em;
 		text-transform: uppercase;
-		color: color-mix(in srgb, var(--text) 70%, var(--bg));
+		color: color-mix(in srgb, var(--text) 72%, var(--bg));
 		font-weight: 700;
 	}
 
@@ -361,16 +393,19 @@
 
 	.section .section-head {
 		display: flex;
-		align-items: baseline;
+		align-items: center;
 		justify-content: space-between;
 		gap: 12px;
 		margin-bottom: 14px;
+		padding-bottom: 8px;
+		border-bottom: 1px solid color-mix(in srgb, var(--border) 92%, transparent);
 	}
 
 	.section-subtitle {
 		font-size: 0.82rem;
 		max-width: 260px;
-		text-align: right;
+		text-align: left;
+		margin-top: 4px;
 	}
 
 	.chips {
@@ -407,12 +442,8 @@
 		align-items: flex-start;
 		padding: 12px;
 		border-radius: 12px;
-		background: linear-gradient(
-			180deg,
-			var(--elev),
-			color-mix(in srgb, var(--elev) 92%, transparent)
-		);
-		border: 1px solid color-mix(in srgb, var(--border) 88%, transparent);
+		background: color-mix(in srgb, var(--elev) 65%, transparent);
+		border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
 	}
 
 	.life-icon {
@@ -455,8 +486,8 @@
 		display: grid;
 		gap: 6px;
 		padding: 14px;
-		background: var(--elev);
-		border: 1px solid color-mix(in srgb, var(--border) 86%, transparent);
+		background: color-mix(in srgb, var(--elev) 65%, transparent);
+		border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
 		border-radius: 14px;
 		text-decoration: none;
 		color: inherit;
@@ -547,12 +578,8 @@
 		position: relative;
 		padding: 12px 12px 10px;
 		border-radius: 14px;
-		background: linear-gradient(
-			180deg,
-			var(--elev),
-			color-mix(in srgb, var(--elev) 92%, transparent)
-		);
-		border: 1px solid color-mix(in srgb, var(--border) 86%, transparent);
+		background: color-mix(in srgb, var(--elev) 65%, transparent);
+		border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
 	}
 
 	.role::before {
@@ -642,6 +669,12 @@
 	@media (max-width: 420px) {
 		.hide-sm {
 			display: none;
+		}
+	}
+
+	@media (prefers-reduced-transparency: reduce) {
+		.card {
+			backdrop-filter: none;
 		}
 	}
 </style>
