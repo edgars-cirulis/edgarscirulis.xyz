@@ -167,7 +167,7 @@
 		padding: max(32px, env(safe-area-inset-top)) clamp(16px, 4vw, 32px)
 			max(48px, env(safe-area-inset-bottom));
 		display: grid;
-		gap: 18px;
+		gap: 22px;
 	}
 
 	.ambient {
