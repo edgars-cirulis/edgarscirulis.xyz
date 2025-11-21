@@ -53,37 +53,35 @@
 			</div>
 		</div>
 
-		<div class="hero-actions">
-			<a class="btn primary" href={mailto(me.email)} rel="noopener">
-				<Icon icon="lucide:mail" width="18" />
-				<span>{lang === 'lv' ? 'Sazināties' : 'Contact'}</span>
-			</a>
-
-			<div class="hero-actions-right">
-				{#if me.links.length}
-					<nav class="links" aria-label="Social links">
-						{#each me.links as l (l.href)}
-							<a
-								class="chip-btn subtle"
-								href={l.href}
-								rel="me external noopener noreferrer"
-								target="_blank"
-							>
-								<Icon icon={l.icon} width="18" />
-								<span class="hide-sm">{l.label}</span>
-							</a>
-						{/each}
-					</nav>
-				{/if}
-
-				<nav class="lang-switch" aria-label="Language switcher">
-					<a href="/en" class:active={lang === 'en'}>EN</a>
-					<span>·</span>
-					<a href="/" class:active={lang === 'lv'}>LV</a>
-				</nav>
-			</div>
-		</div>
+		<nav class="lang-switch" aria-label="Language switcher">
+			<a href="/" class:active={lang === 'lv'}>LV</a>
+			<span>·</span>
+			<a href="/en" class:active={lang === 'en'}>EN</a>
+		</nav>
 	</header>
+
+	<div class="hero-actions">
+		<a class="btn primary" href={mailto(me.email)} rel="noopener">
+			<Icon icon="lucide:mail" width="18" />
+			<span>{lang === 'lv' ? 'Sazināties' : 'Contact'}</span>
+		</a>
+
+		{#if me.links.length}
+			<nav class="links" aria-label="Social links">
+				{#each me.links as l (l.href)}
+					<a
+						class="chip-btn subtle"
+						href={l.href}
+						rel="me external noopener noreferrer"
+						target="_blank"
+					>
+						<Icon icon={l.icon} width="18" />
+						<span class="hide-sm">{l.label}</span>
+					</a>
+				{/each}
+			</nav>
+		{/if}
+	</div>
 
 	<NowPlaying spotify={data.spotify} />
 </section>
@@ -421,8 +419,10 @@
 
 	.hero-header {
 		display: flex;
-		flex-direction: column;
+		align-items: flex-start;
+		justify-content: space-between;
 		gap: 12px;
+		flex-wrap: wrap;
 	}
 
 	.hero-main {
@@ -461,13 +461,6 @@
 		align-items: center;
 		column-gap: 10px;
 		row-gap: 8px;
-	}
-
-	.hero-actions-right {
-		display: flex;
-		align-items: center;
-		flex-wrap: wrap;
-		gap: 8px;
 	}
 
 	.lang-switch {
