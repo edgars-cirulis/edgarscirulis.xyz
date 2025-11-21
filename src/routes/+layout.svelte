@@ -1,12 +1,26 @@
 <script lang="ts">
 	import favicon from '$lib/assets/58264013.jpg';
 
-	let { children } = $props();
+	let {
+		children,
+		data
+	}: {
+		children: any;
+		data: { lang?: 'lv' | 'en' };
+	} = $props();
+
+	const lang: 'lv' | 'en' = data.lang ?? 'lv';
 
 	const site = {
 		url: 'https://edgarscirulis.xyz',
-		title: 'Edgars Cirulis (Cīrulis) – Frontend Engineer & IT Services in Latvia',
-		desc: 'Official website of Edgars Cirulis (Cīrulis), a frontend engineer from Latvia offering computer repair, IT support and web development services.'
+		title:
+			lang === 'lv'
+				? 'Edgars Cīrulis – Frontend inženieris un IT pakalpojumi Latvijā'
+				: 'Edgars Cirulis (Cīrulis) – Frontend Engineer & IT Services in Latvia',
+		desc:
+			lang === 'lv'
+				? 'Oficiālā Edgara Cīrulis – frontend inženieris no Latvijas, kas piedāvā datoru remontu, IT atbalstu un web izstrādi.'
+				: 'Official website of Edgars Cirulis (Cīrulis), a frontend engineer from Latvia offering computer repair, IT support and web development services.'
 	};
 
 	const personSchema = {

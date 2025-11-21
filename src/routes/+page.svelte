@@ -1,21 +1,25 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
 	import Avatar from '$lib/assets/58264013.jpg';
-	import { me } from '$lib/me';
 	import { mailto } from '$lib/utils';
 	import NowPlaying from '$lib/components/NowPlaying.svelte';
 
-	export let data: {
-		spotify: {
-			playing: boolean;
-			title: string;
-			artist: string;
-			album: string;
-			url: string;
-			image: string;
-		} | null;
+	type Spotify = {
+		playing: boolean;
+		title: string;
+		artist: string;
+		album: string;
+		url: string;
+		image: string;
 	};
 
+	export let data: {
+		spotify: Spotify | null;
+		me: typeof import('$lib/me').me;
+		lang: 'lv' | 'en';
+	};
+
+	const { me, lang } = data;
 	const nowItems = me.now.filter(Boolean);
 </script>
 
@@ -25,7 +29,9 @@
 			<img
 				class="avatar"
 				src={Avatar}
-				alt="Portrait of Edgars Cīrulis, frontend engineer from Latvia"
+				alt={lang === 'lv'
+					? 'Portrets: Edgars Cīrulis, frontend inženieris no Latvijas'
+					: 'Portrait of Edgars Cīrulis, frontend engineer from Latvia'}
 				width="72"
 				height="72"
 				fetchpriority="high"
@@ -34,7 +40,11 @@
 			/>
 
 			<div class="who">
-				<div class="eyebrow">Frontend engineer & IT specialist</div>
+				<div class="eyebrow">
+					{lang === 'lv'
+						? 'Frontend inženieris un IT speciālists'
+						: 'Frontend engineer & IT specialist'}
+				</div>
 				<h1 id="hero-heading" class="name">{me.name}</h1>
 
 				<p class="title">
@@ -46,42 +56,90 @@
 		<div class="hero-actions">
 			<a class="btn primary" href={mailto(me.email)} rel="noopener">
 				<Icon icon="lucide:mail" width="18" />
-				<span>Contact</span>
+				<span>{lang === 'lv' ? 'Sazināties' : 'Contact'}</span>
 			</a>
 
-			{#if me.links.length}
-				<nav class="links" aria-label="Social links">
-					{#each me.links as l (l.href)}
-						<a
-							class="chip-btn subtle"
-							href={l.href}
-							rel="me external noopener noreferrer"
-							target="_blank"
-						>
-							<Icon icon={l.icon} width="18" />
-							<span class="hide-sm">{l.label}</span>
-						</a>
-					{/each}
+			<div class="hero-actions-right">
+				{#if me.links.length}
+					<nav class="links" aria-label="Social links">
+						{#each me.links as l (l.href)}
+							<a
+								class="chip-btn subtle"
+								href={l.href}
+								rel="me external noopener noreferrer"
+								target="_blank"
+							>
+								<Icon icon={l.icon} width="18" />
+								<span class="hide-sm">{l.label}</span>
+							</a>
+						{/each}
+					</nav>
+				{/if}
+
+				<nav class="lang-switch" aria-label="Language switcher">
+					<a href="/en" class:active={lang === 'en'}>EN</a>
+					<span>·</span>
+					<a href="/" class:active={lang === 'lv'}>LV</a>
 				</nav>
-			{/if}
+			</div>
 		</div>
 	</header>
 
 	<NowPlaying spotify={data.spotify} />
 </section>
 
+<section class="card section" id="services" aria-labelledby="services-heading">
+	<header class="section-head">
+		<div>
+			<h2 id="services-heading">{lang === 'lv' ? 'Pakalpojumi' : 'Services'}</h2>
+			<p class="section-subtitle muted">
+				{lang === 'lv'
+					? 'Praktisks IT atbalsts un frontendi, kurus tiešām var lietot.'
+					: 'Hands-on IT help and frontends you can actually use.'}
+			</p>
+		</div>
+	</header>
+
+	{#if me.services?.length}
+		<div class="services">
+			{#each me.services as s (s.name)}
+				<article class="service">
+					<div class="service-icon" aria-hidden="true">
+						<Icon icon={s.icon} width="18" />
+					</div>
+					<div class="service-body">
+						<h3>{s.name}</h3>
+						<p class="muted">{s.blurb}</p>
+						{#if s.highlight}
+							<p class="service-highlight">{s.highlight}</p>
+						{/if}
+					</div>
+				</article>
+			{/each}
+		</div>
+	{:else}
+		<p class="muted">
+			{lang === 'lv'
+				? 'Datoru remonts, optimizācija, IT atbalsts un frontend izstrāde.'
+				: 'PC repair, optimisation, IT support and frontend development.'}
+		</p>
+	{/if}
+</section>
+
 <section class="card section" id="about" aria-labelledby="about-heading">
 	<header class="section-head">
 		<div>
-			<h2 id="about-heading">About</h2>
-			<p class="section-subtitle muted">Who I am and how I work.</p>
+			<h2 id="about-heading">{lang === 'lv' ? 'Par mani' : 'About'}</h2>
+			<p class="section-subtitle muted">
+				{lang === 'lv' ? 'Kas es esmu un kā strādāju.' : 'Who I am and how I work.'}
+			</p>
 		</div>
 	</header>
 
 	<p class="lead">{me.bio}</p>
 
 	{#if me.skills.length}
-		<ul class="chips" aria-label="Skills">
+		<ul class="chips" aria-label={lang === 'lv' ? 'Prasmes' : 'Skills'}>
 			{#each me.skills as s (s)}
 				<li class="chip">{s}</li>
 			{/each}
@@ -92,8 +150,10 @@
 <section class="card section" id="life" aria-labelledby="life-heading">
 	<header class="section-head">
 		<div>
-			<h2 id="life-heading">Life</h2>
-			<p class="section-subtitle muted">What I’m doing outside of code.</p>
+			<h2 id="life-heading">{lang === 'lv' ? 'Ikdiena' : 'Life'}</h2>
+			<p class="section-subtitle muted">
+				{lang === 'lv' ? 'Ko daru ārpus koda.' : 'What I’m doing outside of code.'}
+			</p>
 		</div>
 	</header>
 
@@ -116,8 +176,10 @@
 <section class="card section" id="now" aria-labelledby="now-heading">
 	<header class="section-head">
 		<div>
-			<h2 id="now-heading">Now</h2>
-			<p class="section-subtitle muted">What I’m focusing on at this moment.</p>
+			<h2 id="now-heading">{lang === 'lv' ? 'Tagad' : 'Now'}</h2>
+			<p class="section-subtitle muted">
+				{lang === 'lv' ? 'Kam šobrīd pievēršu uzmanību.' : 'What I’m focusing on at this moment.'}
+			</p>
 		</div>
 	</header>
 
@@ -128,15 +190,21 @@
 			{/each}
 		</ul>
 	{:else}
-		<p class="muted">Resting, recharging, and planning what’s next.</p>
+		<p class="muted">
+			{lang === 'lv'
+				? 'Atpūšos, uzpildu baterijas un plānoju nākamos soļus.'
+				: 'Resting, recharging, and planning what’s next.'}
+		</p>
 	{/if}
 </section>
 
 <section class="card section" id="projects" aria-labelledby="projects-heading">
 	<header class="section-head">
 		<div>
-			<h2 id="projects-heading">Projects</h2>
-			<p class="section-subtitle muted">Things I’ve built and shipped.</p>
+			<h2 id="projects-heading">{lang === 'lv' ? 'Projekti' : 'Projects'}</h2>
+			<p class="section-subtitle muted">
+				{lang === 'lv' ? 'Lietas, ko esmu uzbūvējis.' : 'Things I’ve built and shipped.'}
+			</p>
 		</div>
 	</header>
 
@@ -154,15 +222,21 @@
 			{/each}
 		</div>
 	{:else}
-		<p class="muted">No public projects right now.</p>
+		<p class="muted">
+			{lang === 'lv' ? 'Šobrīd nav publisku projektu.' : 'No public projects right now.'}
+		</p>
 	{/if}
 </section>
 
 <section class="card section" id="experience" aria-labelledby="experience-heading">
 	<header class="section-head">
 		<div>
-			<h2 id="experience-heading">Experience</h2>
-			<p class="section-subtitle muted">Where I’ve worked and what I’ve done.</p>
+			<h2 id="experience-heading">{lang === 'lv' ? 'Pieredze' : 'Experience'}</h2>
+			<p class="section-subtitle muted">
+				{lang === 'lv'
+					? 'Kur esmu strādājis un ko darījis.'
+					: 'Where I’ve worked and what I’ve done.'}
+			</p>
 		</div>
 	</header>
 
@@ -188,7 +262,11 @@
 			{/each}
 		</ul>
 	{:else}
-		<p class="muted">Open to opportunities. CV available on request.</p>
+		<p class="muted">
+			{lang === 'lv'
+				? 'Atvērts jaunām iespējām. CV pieejams pēc pieprasījuma.'
+				: 'Open to opportunities. CV available on request.'}
+		</p>
 	{/if}
 </section>
 
@@ -385,6 +463,45 @@
 		row-gap: 8px;
 	}
 
+	.hero-actions-right {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	.lang-switch {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		padding: 4px 10px;
+		border-radius: 999px;
+		background: color-mix(in srgb, var(--chip) 90%, transparent);
+		border: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+		font-size: 0.78rem;
+	}
+
+	.lang-switch a {
+		text-decoration: none;
+		color: color-mix(in srgb, var(--text) 70%, var(--bg));
+		opacity: 0.7;
+		transition:
+			opacity 0.12s ease,
+			color 0.12s ease,
+			transform 0.12s ease;
+	}
+
+	.lang-switch a.active {
+		font-weight: 600;
+		opacity: 1;
+		color: color-mix(in srgb, var(--text) 90%, var(--bg));
+		transform: translateY(-0.5px);
+	}
+
+	.lang-switch a:hover {
+		opacity: 1;
+	}
+
 	.links {
 		display: inline-flex;
 		flex-wrap: wrap;
@@ -428,6 +545,45 @@
 		border: 1px solid color-mix(in srgb, var(--border) 88%, transparent);
 		color: color-mix(in srgb, var(--text) 90%, var(--bg));
 		font-size: 0.9rem;
+	}
+
+	/* Services */
+
+	.services {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 10px;
+	}
+
+	.service {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 10px;
+		padding: 12px;
+		border-radius: 14px;
+		background: color-mix(in srgb, var(--elev) 65%, transparent);
+		border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+	}
+
+	.service-icon {
+		display: grid;
+		place-items: center;
+		width: 30px;
+		height: 30px;
+		border-radius: 999px;
+		background: var(--icon-surface);
+		border: 1px solid var(--border);
+	}
+
+	.service-body h3 {
+		font-size: 0.98rem;
+		margin-bottom: 3px;
+	}
+
+	.service-highlight {
+		margin-top: 4px;
+		font-size: 0.86rem;
+		color: color-mix(in srgb, var(--text) 72%, var(--bg));
 	}
 
 	.life {
@@ -633,6 +789,10 @@
 		}
 
 		.life {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.services {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 
