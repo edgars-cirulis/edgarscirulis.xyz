@@ -285,6 +285,15 @@
 		overflow: hidden;
 	}
 
+	.ambient,
+	.bg,
+	.aurora,
+	.grain,
+	.vignette {
+		transform: translateZ(0);
+		will-change: transform, opacity;
+	}
+
 	.bg {
 		position: absolute;
 		inset: -12% -12% 0 -12%;
@@ -390,6 +399,13 @@
 	@media (prefers-reduced-transparency: reduce) {
 		:root {
 			--glass-blur: 0px;
+		}
+	}
+
+	@supports (-moz-appearance: none) {
+		:root {
+			--glass-blur: 18px; /* was 26px */
+			--glass-sat: 140%; /* was 160% */
 		}
 	}
 </style>
