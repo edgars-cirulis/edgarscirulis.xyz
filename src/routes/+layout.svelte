@@ -235,6 +235,10 @@
 		}
 	}
 
+	:global(html) {
+		scroll-behavior: smooth;
+	}
+
 	:global(html),
 	:global(body) {
 		margin: 0;
@@ -245,6 +249,10 @@
 		-webkit-font-smoothing: antialiased;
 		text-rendering: optimizeLegibility;
 		-webkit-tap-highlight-color: transparent;
+	}
+
+	:global(body) {
+		-webkit-overflow-scrolling: touch;
 	}
 
 	:global(*) {
