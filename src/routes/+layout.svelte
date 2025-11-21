@@ -54,11 +54,19 @@
 	<meta name="theme-color" content="#050607" />
 	<link rel="canonical" href={site.url} />
 
-	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
 	<link
-		href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap"
-		rel="stylesheet"
+		rel="preload"
+		href="/fonts/inter-v20-latin-500.woff2"
+		as="font"
+		type="font/woff2"
+		crossorigin="anonymous"
+	/>
+	<link
+		rel="preload"
+		href="/fonts/sora-v17-latin-700.woff2"
+		as="font"
+		type="font/woff2"
+		crossorigin="anonymous"
 	/>
 
 	<title>{site.title}</title>
@@ -97,6 +105,71 @@
 </div>
 
 <style>
+	@font-face {
+		font-family: 'Inter';
+		font-style: normal;
+		font-weight: 400;
+		font-display: swap;
+		src: url('/fonts/inter-v20-latin-regular.woff2') format('woff2');
+	}
+	@font-face {
+		font-family: 'Inter';
+		font-style: normal;
+		font-weight: 500;
+		font-display: swap;
+		src: url('/fonts/inter-v20-latin-500.woff2') format('woff2');
+	}
+	@font-face {
+		font-family: 'Inter';
+		font-style: normal;
+		font-weight: 600;
+		font-display: swap;
+		src: url('/fonts/inter-v20-latin-600.woff2') format('woff2');
+	}
+	@font-face {
+		font-family: 'Inter';
+		font-style: normal;
+		font-weight: 700;
+		font-display: swap;
+		src: url('/fonts/inter-v20-latin-700.woff2') format('woff2');
+	}
+	@font-face {
+		font-family: 'Inter';
+		font-style: normal;
+		font-weight: 800;
+		font-display: swap;
+		src: url('/fonts/inter-v20-latin-800.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Sora';
+		font-style: normal;
+		font-weight: 400;
+		font-display: swap;
+		src: url('/fonts/sora-v17-latin-regular.woff2') format('woff2');
+	}
+	@font-face {
+		font-family: 'Sora';
+		font-style: normal;
+		font-weight: 600;
+		font-display: swap;
+		src: url('/fonts/sora-v17-latin-600.woff2') format('woff2');
+	}
+	@font-face {
+		font-family: 'Sora';
+		font-style: normal;
+		font-weight: 700;
+		font-display: swap;
+		src: url('/fonts/sora-v17-latin-700.woff2') format('woff2');
+	}
+	@font-face {
+		font-family: 'Sora';
+		font-style: normal;
+		font-weight: 800;
+		font-display: swap;
+		src: url('/fonts/sora-v17-latin-800.woff2') format('woff2');
+	}
+
 	:root {
 		color-scheme: light dark;
 
