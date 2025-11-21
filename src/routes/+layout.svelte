@@ -16,11 +16,11 @@
 		title:
 			lang === 'lv'
 				? 'Edgars Cīrulis – Frontend inženieris un IT pakalpojumi Latvijā'
-				: 'Edgars Cirulis (Cīrulis) – Frontend Engineer & IT Services in Latvia',
+				: 'Edgars Cīrulis – Frontend Engineer & IT Services in Latvia',
 		desc:
 			lang === 'lv'
-				? 'Oficiālā Edgara Cīrulis – frontend inženieris no Latvijas, kas piedāvā datoru remontu, IT atbalstu un web izstrādi.'
-				: 'Official website of Edgars Cirulis (Cīrulis), a frontend engineer from Latvia offering computer repair, IT support and web development services.'
+				? 'Edgara Cīrulis – frontend inženieris no Latvijas, kas piedāvā datoru remontu, IT atbalstu un web izstrādi.'
+				: 'Edgars Cīrulis - frontend engineer from Latvia offering computer repair, IT support and web development services.'
 	};
 
 	const personSchema = {
@@ -51,8 +51,15 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
-	<meta name="theme-color" content="#000000" />
+	<meta name="theme-color" content="#050607" />
 	<link rel="canonical" href={site.url} />
+
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap"
+		rel="stylesheet"
+	/>
 
 	<title>{site.title}</title>
 	<meta name="description" content={site.desc} />
@@ -77,9 +84,10 @@
 <div class="app">
 	<div class="ambient" aria-hidden="true">
 		<span class="bg"></span>
-		<span class="weave"></span>
+		<span class="aurora a1"></span>
+		<span class="aurora a2"></span>
+		<span class="aurora a3"></span>
 		<span class="grain"></span>
-		<span class="ringlight"></span>
 		<span class="vignette"></span>
 	</div>
 
@@ -92,51 +100,65 @@
 	:root {
 		color-scheme: light dark;
 
-		--bg: #070708;
-		--surface: #0b0b0c;
-		--surface-2: #111113;
-		--elev: #0e0e10;
-		--chip: #101113;
-		--icon-surface: #121214;
-		--ghost: #0f1012;
-		--border: #1a1b1e;
-		--text: #e9e9ee;
-		--muted: #9da1a8;
+		--bg: #050607;
+		--bg-2: #0a0c10;
 
-		--radius: 20px;
-		--pad: 20px;
+		--surface: rgba(18, 19, 22, 0.7);
+		--surface-strong: rgba(22, 23, 26, 0.92);
+		--surface-soft: rgba(255, 255, 255, 0.05);
 
-		--tint: #22c55e;
+		--border: rgba(255, 255, 255, 0.08);
+		--border-strong: rgba(255, 255, 255, 0.14);
 
-		--carbon-a: #0a0b0d;
-		--carbon-b: #0f1013;
-		--carbon-gloss: rgba(255, 255, 255, 0.03);
+		--text: #e9edf3;
+		--muted: rgba(233, 237, 243, 0.68);
 
-		--vig-top: 0.5;
-		--vig-bottom: 0.52;
+		--tint: #7dd3fc;
+		--tint-2: #a78bfa;
+		--tint-green: #34d399;
+
+		--radius-xl: 22px;
+		--radius-lg: 18px;
+		--radius-md: 14px;
+
+		--pad: 24px;
+		--pad-sm: 14px;
+
+		--font-body: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+		--font-head: 'Sora', var(--font-body);
+
+		--shadow-1: 0 10px 30px rgba(0, 0, 0, 0.35);
+		--shadow-2: 0 18px 60px rgba(0, 0, 0, 0.55);
+
+		--glass-blur: 26px;
+		--glass-sat: 160%;
+		--glass-bright: 1.05;
+
+		--ring: 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
 	}
 
 	@media (prefers-color-scheme: light) {
 		:root {
-			--bg: #f5f5f9;
-			--surface: #ffffff;
-			--surface-2: #ffffff;
-			--elev: #ffffff;
-			--chip: #f9fafb;
-			--icon-surface: #f3f4f6;
-			--ghost: #f6f7f9;
-			--border: #e1e4ee;
-			--text: #0c0d10;
-			--muted: #606571;
+			--bg: #f4f6fb;
+			--bg-2: #eef2f8;
 
-			--tint: #16a34a;
+			--surface: rgba(255, 255, 255, 0.8);
+			--surface-strong: rgba(255, 255, 255, 0.98);
+			--surface-soft: rgba(0, 0, 0, 0.03);
 
-			--carbon-a: #f3f4f7;
-			--carbon-b: #ffffff;
-			--carbon-gloss: rgba(0, 0, 0, 0.04);
+			--border: rgba(8, 10, 15, 0.08);
+			--border-strong: rgba(8, 10, 15, 0.12);
 
-			--vig-top: 0.08;
-			--vig-bottom: 0.1;
+			--text: #0b0f16;
+			--muted: rgba(11, 15, 22, 0.62);
+
+			--tint: #0ea5e9;
+			--tint-2: #6366f1;
+			--tint-green: #10b981;
+
+			--shadow-1: 0 8px 24px rgba(12, 18, 28, 0.08);
+			--shadow-2: 0 16px 50px rgba(12, 18, 28, 0.12);
+			--ring: 0 0 0 1px rgba(0, 0, 0, 0.03) inset;
 		}
 	}
 
@@ -144,42 +166,32 @@
 	:global(body) {
 		margin: 0;
 		height: 100%;
-		background: radial-gradient(circle at top, #0e1118 0%, var(--bg) 42%, #050608 100%);
+		background: radial-gradient(1200px 900px at 50% -10%, var(--bg-2), var(--bg));
 		color: var(--text);
-		font:
-			500 15px/1.55 system-ui,
-			-apple-system,
-			BlinkMacSystemFont,
-			'SF Pro Text',
-			'SF Pro Display',
-			Segoe UI,
-			Roboto,
-			Inter,
-			Arial,
-			sans-serif;
+		font: 500 15px/1.6 var(--font-body);
 		-webkit-font-smoothing: antialiased;
 		text-rendering: optimizeLegibility;
 		-webkit-tap-highlight-color: transparent;
 	}
 
-	:global(*),
-	:global(*::before),
-	:global(*::after) {
+	:global(*) {
 		box-sizing: border-box;
 	}
 
 	.app {
 		min-height: 100dvh;
+		position: relative;
+		isolation: isolate;
 	}
 
 	.wrap {
 		position: relative;
 		z-index: 1;
 		width: 100%;
-		max-width: 880px;
+		max-width: 900px;
 		margin-inline: auto;
-		padding: max(32px, env(safe-area-inset-top)) clamp(16px, 4vw, 32px)
-			max(48px, env(safe-area-inset-bottom));
+		padding: max(36px, env(safe-area-inset-top)) clamp(16px, 4vw, 32px)
+			max(56px, env(safe-area-inset-bottom));
 		display: grid;
 		gap: 22px;
 	}
@@ -190,29 +202,77 @@
 		z-index: 0;
 		pointer-events: none;
 		overflow: hidden;
-		transform: translateZ(0);
-		contain: paint;
 	}
 
 	.bg {
 		position: absolute;
-		inset: 0;
-		background: radial-gradient(120% 150% at 50% -10%, #111827 0%, var(--bg) 48%, #020409 100%);
-	}
-
-	.weave {
-		position: absolute;
-		inset: 0;
-		opacity: 0.5;
+		inset: -12% -12% 0 -12%;
 		background:
-			repeating-linear-gradient(45deg, var(--carbon-a) 0 6px, var(--carbon-b) 6px 12px),
-			repeating-linear-gradient(-45deg, transparent 0 6px, var(--carbon-gloss) 6px 12px);
-		background-blend-mode: normal;
+			radial-gradient(
+				1200px 800px at 8% -12%,
+				color-mix(in srgb, var(--tint) 18%, transparent),
+				transparent 58%
+			),
+			radial-gradient(
+				1100px 900px at 92% 8%,
+				color-mix(in srgb, var(--tint-2) 16%, transparent),
+				transparent 62%
+			),
+			radial-gradient(900px 900px at 50% 90%, rgba(255, 255, 255, 0.05), transparent 60%),
+			linear-gradient(180deg, var(--bg-2), var(--bg));
+		filter: saturate(115%);
 	}
 
-	@media (min-width: 900px) {
-		.weave {
-			opacity: 0.45;
+	.aurora {
+		position: absolute;
+		width: 60vmax;
+		height: 60vmax;
+		border-radius: 999px;
+		filter: blur(95px) saturate(135%);
+		opacity: 0.22;
+		mix-blend-mode: screen;
+		animation: float 18s ease-in-out infinite;
+	}
+
+	.aurora.a1 {
+		left: -10vmax;
+		top: -15vmax;
+		background: radial-gradient(
+			circle,
+			color-mix(in srgb, var(--tint) 90%, transparent),
+			transparent 60%
+		);
+	}
+
+	.aurora.a2 {
+		right: -12vmax;
+		top: -8vmax;
+		background: radial-gradient(
+			circle,
+			color-mix(in srgb, var(--tint-2) 90%, transparent),
+			transparent 60%
+		);
+		animation-duration: 22s;
+	}
+
+	.aurora.a3 {
+		left: 10vmax;
+		bottom: -18vmax;
+		background: radial-gradient(
+			circle,
+			color-mix(in srgb, var(--tint-green) 70%, transparent),
+			transparent 60%
+		);
+		animation-duration: 26s;
+	}
+
+	@keyframes float {
+		0%,
+		100% {
+			transform: translate3d(0, 0, 0) scale(1);
+		}
+		50% {
+			transform: translate3d(0, 4vmax, 0) scale(1.06);
 		}
 	}
 
@@ -220,10 +280,11 @@
 		position: absolute;
 		inset: 0;
 		opacity: 0.06;
-		mix-blend-mode: overlay;
 		background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAQAAACENnfnAAAAF0lEQVQYV2NkYGD4z0AaGJiBBTgAQ9oAA2cJ3g8g7e7iAAAAAElFTkSuQmCC');
 		background-size: 200px 200px;
+		mix-blend-mode: overlay;
 	}
+
 	@media (prefers-color-scheme: light) {
 		.grain {
 			opacity: 0.08;
@@ -231,41 +292,23 @@
 		}
 	}
 
-	.ringlight {
-		position: absolute;
-		inset: 0;
-		background: radial-gradient(
-			120vmax 90vmax at 50% 62%,
-			color-mix(in srgb, var(--tint) 18%, transparent),
-			transparent 60%
-		);
-	}
-
-	@media (prefers-color-scheme: light) {
-		.ringlight {
-			background: radial-gradient(
-				120vmax 90vmax at 50% 60%,
-				color-mix(in srgb, var(--tint) 12%, transparent),
-				transparent 60%
-			);
-		}
-	}
-
 	.vignette {
 		position: absolute;
 		inset: 0;
 		background:
-			radial-gradient(120vmax 120vmax at 50% -10%, rgba(0, 0, 0, var(--vig-top)), transparent 55%),
-			radial-gradient(
-				130vmax 130vmax at 50% 115%,
-				rgba(0, 0, 0, var(--vig-bottom)),
-				transparent 60%
-			);
+			radial-gradient(120vmax 120vmax at 50% -20%, rgba(0, 0, 0, 0.45), transparent 55%),
+			radial-gradient(140vmax 140vmax at 50% 120%, rgba(0, 0, 0, 0.55), transparent 65%);
 	}
 
 	:global(:focus-visible) {
-		outline: 2px solid color-mix(in srgb, var(--tint) 55%, white);
-		outline-offset: 2px;
+		outline: 2px solid color-mix(in srgb, var(--tint) 60%, white);
+		outline-offset: 3px;
 		border-radius: 12px;
+	}
+
+	@media (prefers-reduced-transparency: reduce) {
+		:root {
+			--glass-blur: 0px;
+		}
 	}
 </style>

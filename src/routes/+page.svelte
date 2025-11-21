@@ -32,11 +32,11 @@
 				alt={lang === 'lv'
 					? 'Portrets: Edgars Cīrulis, frontend inženieris no Latvijas'
 					: 'Portrait of Edgars Cīrulis, frontend engineer from Latvia'}
-				width="72"
-				height="72"
+				width="76"
+				height="76"
 				fetchpriority="high"
 				decoding="async"
-				sizes="72px"
+				sizes="76px"
 			/>
 
 			<div class="who">
@@ -270,62 +270,95 @@
 
 <style>
 	:global(section[id]) {
-		scroll-margin-top: 80px;
+		scroll-margin-top: 90px;
 	}
 
+	/* ===== Vision-OS / macOS Glass Card ===== */
 	.card {
 		position: relative;
 		overflow: hidden;
-		background:
-			radial-gradient(120% 160% at 0% -40%, rgba(255, 255, 255, 0.05), transparent 60%),
-			color-mix(in srgb, var(--surface) 70%, transparent);
-		border-radius: var(--radius);
+		border-radius: var(--radius-xl);
 		padding: var(--pad);
 
-		border: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
+		background: linear-gradient(180deg, var(--surface-soft), transparent 40%), var(--surface);
 
-		box-shadow:
-			0 0 0 1px color-mix(in srgb, var(--text) 4%, transparent) inset,
-			0 18px 40px rgba(0, 0, 0, 0.35);
-		backdrop-filter: blur(22px) saturate(120%);
+		border: 1px solid var(--border);
+		box-shadow: var(--ring), var(--shadow-1);
+		backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat))
+			brightness(var(--glass-bright));
+
+		transform: translateZ(0);
+		transition:
+			transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1),
+			border-color 0.22s ease,
+			box-shadow 0.22s ease,
+			background 0.22s ease;
 	}
 
 	.card::before {
 		content: '';
 		position: absolute;
-		inset: 0;
-		pointer-events: none;
-		border-radius: inherit;
+		inset: -30% -10% auto -10%;
+		height: 60%;
 		background: radial-gradient(
-			140% 140% at 0% 0%,
-			color-mix(in srgb, var(--tint) 8%, transparent),
-			transparent 55%
+			800px 260px at 30% 0%,
+			color-mix(in srgb, white 12%, transparent),
+			transparent 70%
 		);
-		opacity: 0.7;
+		opacity: 0.55;
+		pointer-events: none;
 		mix-blend-mode: soft-light;
 	}
 
-	.card > * {
-		position: relative;
-		z-index: 1;
+	.card::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		border: 1px solid transparent;
+		background: linear-gradient(
+				140deg,
+				color-mix(in srgb, var(--tint) 30%, transparent),
+				transparent 40%,
+				color-mix(in srgb, var(--tint-2) 22%, transparent)
+			)
+			border-box;
+		mask:
+			linear-gradient(#000 0 0) padding-box,
+			linear-gradient(#000 0 0);
+		-webkit-mask:
+			linear-gradient(#000 0 0) padding-box,
+			linear-gradient(#000 0 0);
+		-webkit-mask-composite: xor;
+		mask-composite: exclude;
+		opacity: 0;
+		transition: opacity 0.22s ease;
+		pointer-events: none;
 	}
 
-	.card + .card {
-		margin-top: 10px;
+	.card:hover {
+		transform: translateY(-3px);
+		border-color: var(--border-strong);
+		box-shadow: var(--ring), var(--shadow-2);
+	}
+
+	.card:hover::after {
+		opacity: 0.9;
 	}
 
 	h1,
 	h2,
 	h3 {
 		margin: 0;
+		font-family: var(--font-head);
 	}
 
 	h2 {
 		font-size: 0.9rem;
-		letter-spacing: 0.11em;
+		letter-spacing: 0.14em;
 		text-transform: uppercase;
-		color: color-mix(in srgb, var(--text) 72%, var(--bg));
-		font-weight: 700;
+		color: color-mix(in srgb, var(--text) 80%, transparent);
+		font-weight: 800;
 	}
 
 	h3 {
@@ -335,91 +368,100 @@
 	p {
 		margin: 0;
 	}
-
 	.lead {
-		color: color-mix(in srgb, var(--text) 88%, var(--bg));
 		font-size: 0.98rem;
+		color: color-mix(in srgb, var(--text) 92%, transparent);
 	}
-
 	.muted {
-		color: color-mix(in srgb, var(--text) 54%, var(--bg));
+		color: var(--muted);
 	}
 
 	.eyebrow {
-		font-size: 0.75rem;
+		font-size: 0.74rem;
 		text-transform: uppercase;
 		letter-spacing: 0.18em;
-		color: color-mix(in srgb, var(--text) 54%, var(--bg));
-		margin-bottom: 4px;
+		color: var(--muted);
+		margin-bottom: 6px;
 	}
 
+	/* ===== macOS Pills (neutral, no green cast) ===== */
 	.btn,
 	.chip-btn {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
 		gap: 8px;
-		padding: 10px 13px;
+		padding: 10px 14px;
 		border-radius: 999px;
-		background: var(--ghost);
+
+		background:
+			linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
+			rgba(255, 255, 255, 0.03);
+
 		color: var(--text);
 		text-decoration: none;
-		border: 1px solid color-mix(in srgb, var(--border) 88%, transparent);
-		box-shadow: none;
-		font-size: 0.9rem;
+		border: 1px solid var(--border);
+		font-size: 0.92rem;
+		box-shadow: var(--ring);
+		backdrop-filter: blur(10px) saturate(150%);
+
 		transition:
-			transform 0.12s ease,
-			border-color 0.12s ease,
-			background 0.12s ease,
-			box-shadow 0.12s ease;
+			transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1),
+			border-color 0.15s ease,
+			background 0.15s ease,
+			box-shadow 0.15s ease;
 		white-space: nowrap;
 	}
 
 	.btn:hover,
 	.chip-btn:hover {
 		transform: translateY(-1px);
-		border-color: color-mix(in srgb, var(--text) 10%, var(--border));
-		box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+		border-color: var(--border-strong);
+		background:
+			linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03)),
+			rgba(255, 255, 255, 0.04);
 	}
 
 	.btn:active,
 	.chip-btn:active {
-		transform: translateY(0);
-		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+		transform: translateY(0) scale(0.98);
 	}
 
 	.btn.primary {
-		background: radial-gradient(
-			circle at 0% 0%,
-			color-mix(in srgb, var(--tint) 40%, var(--ghost)),
-			var(--ghost)
-		);
-		border-color: color-mix(in srgb, var(--tint) 45%, var(--border));
+		background:
+			radial-gradient(
+				140% 180% at 0% 0%,
+				color-mix(in srgb, var(--tint) 22%, transparent),
+				transparent 55%
+			),
+			linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
+			rgba(255, 255, 255, 0.045);
+
+		border-color: color-mix(in srgb, var(--tint) 35%, var(--border));
 	}
 
 	.btn.primary:hover {
-		border-color: color-mix(in srgb, var(--tint) 60%, var(--border));
+		box-shadow:
+			var(--ring),
+			0 0 26px color-mix(in srgb, var(--tint) 55%, transparent),
+			0 14px 30px rgba(0, 0, 0, 0.35);
+		border-color: color-mix(in srgb, var(--tint) 55%, var(--border));
 	}
 
 	.chip-btn.subtle {
-		background: color-mix(in srgb, var(--chip) 92%, transparent);
-	}
-
-	.btn:focus-visible,
-	.chip-btn:focus-visible {
-		outline: 2px solid color-mix(in srgb, var(--tint) 65%, white);
-		outline-offset: 2px;
-		border-radius: 999px;
+		background:
+			linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
+			rgba(255, 255, 255, 0.025);
 	}
 
 	.hero {
 		display: grid;
-		gap: 14px;
+		gap: 16px;
 	}
 
 	.hero-header {
 		display: flex;
-		align-items: flex-start;
+		align-items: center;
 		justify-content: space-between;
 		gap: 12px;
 		flex-wrap: wrap;
@@ -432,27 +474,27 @@
 	}
 
 	.avatar {
-		width: 72px;
-		height: 72px;
-		border-radius: 24px;
+		width: 76px;
+		height: 76px;
+		border-radius: 26px;
 		border: 1px solid var(--border);
-		background: var(--icon-surface);
+		background: rgba(255, 255, 255, 0.04);
 		object-fit: cover;
 		box-shadow:
-			0 0 0 1px color-mix(in srgb, var(--text) 5%, transparent) inset,
-			0 5px 14px rgba(0, 0, 0, 0.3);
+			var(--ring),
+			0 8px 18px rgba(0, 0, 0, 0.35);
 	}
 
 	.name {
-		font-size: 1.52rem;
-		font-weight: 780;
-		letter-spacing: 0.16px;
+		font-size: 1.95rem;
+		font-weight: 800;
+		letter-spacing: -0.01em;
 	}
 
 	.title {
-		color: color-mix(in srgb, var(--text) 72%, var(--bg));
-		margin-top: 3px;
-		font-size: 0.95rem;
+		color: color-mix(in srgb, var(--text) 80%, transparent);
+		margin-top: 4px;
+		font-size: 0.98rem;
 	}
 
 	.hero-actions {
@@ -466,33 +508,28 @@
 	.lang-switch {
 		display: inline-flex;
 		align-items: center;
-		gap: 6px;
-		padding: 4px 10px;
+		gap: 8px;
+		padding: 5px 12px;
 		border-radius: 999px;
-		background: color-mix(in srgb, var(--chip) 90%, transparent);
-		border: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
-		font-size: 0.78rem;
+		background: rgba(255, 255, 255, 0.04);
+		border: 1px solid var(--border);
+		font-size: 0.8rem;
+		backdrop-filter: blur(8px);
 	}
 
 	.lang-switch a {
 		text-decoration: none;
-		color: color-mix(in srgb, var(--text) 70%, var(--bg));
-		opacity: 0.7;
+		color: var(--muted);
+		opacity: 0.8;
 		transition:
 			opacity 0.12s ease,
-			color 0.12s ease,
-			transform 0.12s ease;
+			color 0.12s ease;
 	}
 
 	.lang-switch a.active {
-		font-weight: 600;
+		font-weight: 700;
 		opacity: 1;
-		color: color-mix(in srgb, var(--text) 90%, var(--bg));
-		transform: translateY(-0.5px);
-	}
-
-	.lang-switch a:hover {
-		opacity: 1;
+		color: var(--text);
 	}
 
 	.links {
@@ -507,14 +544,13 @@
 		justify-content: space-between;
 		gap: 12px;
 		margin-bottom: 14px;
-		padding-bottom: 8px;
-		border-bottom: 1px solid color-mix(in srgb, var(--border) 92%, transparent);
+		padding-bottom: 10px;
+		border-bottom: 1px solid var(--border);
 	}
 
 	.section-subtitle {
-		font-size: 0.82rem;
-		max-width: 260px;
-		text-align: left;
+		font-size: 0.84rem;
+		max-width: 280px;
 		margin-top: 4px;
 	}
 
@@ -528,105 +564,97 @@
 	}
 
 	.chip {
-		padding: 6px 11px;
+		padding: 6px 12px;
 		border-radius: 999px;
-		background: linear-gradient(
-			180deg,
-			var(--chip),
-			color-mix(in srgb, var(--chip) 92%, transparent)
-		);
-		border: 1px solid color-mix(in srgb, var(--border) 88%, transparent);
-		color: color-mix(in srgb, var(--text) 90%, var(--bg));
+		background: rgba(255, 255, 255, 0.04);
+		border: 1px solid var(--border);
 		font-size: 0.9rem;
 	}
-
-	/* Services */
 
 	.services {
 		display: grid;
 		grid-template-columns: 1fr;
-		gap: 10px;
+		gap: 12px;
 	}
 
 	.service {
 		display: grid;
-		grid-template-columns: auto 1fr;
-		gap: 10px;
-		padding: 12px;
-		border-radius: 14px;
-		background: color-mix(in srgb, var(--elev) 65%, transparent);
-		border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
-	}
-
-	.service-icon {
-		display: grid;
-		place-items: center;
-		width: 30px;
-		height: 30px;
-		border-radius: 999px;
-		background: var(--icon-surface);
+		grid-template-columns: 36px 1fr;
+		gap: 12px;
+		align-items: center;
+		padding: var(--pad-sm);
+		border-radius: var(--radius-lg);
+		background: rgba(255, 255, 255, 0.03);
 		border: 1px solid var(--border);
 	}
 
-	.service-body h3 {
-		font-size: 0.98rem;
-		margin-bottom: 3px;
+	.service-icon {
+		width: 36px;
+		height: 36px;
+		border-radius: 999px;
+		display: grid;
+		place-items: center;
+		background: rgba(255, 255, 255, 0.06);
+		border: 1px solid var(--border);
+		box-shadow: var(--ring);
+		line-height: 0;
 	}
 
-	.service-highlight {
-		margin-top: 4px;
-		font-size: 0.86rem;
-		color: color-mix(in srgb, var(--text) 72%, var(--bg));
+	.service-icon :global(svg) {
+		width: 18px !important;
+		height: 18px !important;
+		display: block;
 	}
 
 	.life {
 		display: grid;
 		grid-template-columns: 1fr;
-		gap: 10px;
+		gap: 12px;
 	}
 
 	.life-item {
-		display: flex;
-		gap: 10px;
-		align-items: flex-start;
-		padding: 12px;
-		border-radius: 12px;
-		background: color-mix(in srgb, var(--elev) 65%, transparent);
-		border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
-	}
-
-	.life-icon {
 		display: grid;
-		place-items: center;
-		width: 30px;
-		height: 30px;
-		border-radius: 999px;
-		background: var(--icon-surface);
+		grid-template-columns: 36px 1fr;
+		gap: 12px;
+		align-items: center;
+		padding: var(--pad-sm);
+		border-radius: var(--radius-lg);
+		background: rgba(255, 255, 255, 0.03);
 		border: 1px solid var(--border);
 	}
 
-	.life-title {
-		font-weight: 650;
+	.life-icon {
+		width: 36px;
+		height: 36px;
+		border-radius: 999px;
+		display: grid;
+		place-items: center;
+		background: rgba(255, 255, 255, 0.06);
+		border: 1px solid var(--border);
+		box-shadow: var(--ring);
+		line-height: 0;
 	}
 
-	.life-text {
-		margin-top: 3px;
-		font-size: 0.92rem;
+	.life-icon :global(svg) {
+		width: 18px !important;
+		height: 18px !important;
+		display: block;
+		opacity: 0.95;
 	}
 
 	.now {
 		margin: 0;
 		padding-left: 18px;
-		color: color-mix(in srgb, var(--text) 78%, var(--bg));
+		color: color-mix(in srgb, var(--text) 85%, transparent);
 		display: grid;
 		gap: 6px;
-		font-size: 0.95rem;
+		font-size: 0.96rem;
 	}
 
 	.grid {
 		display: grid;
 		grid-template-columns: 1fr;
-		gap: 10px;
+		gap: 12px;
 	}
 
 	.project {
@@ -635,67 +663,29 @@
 		display: grid;
 		gap: 6px;
 		padding: 14px;
-		background: color-mix(in srgb, var(--elev) 65%, transparent);
-		border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
-		border-radius: 14px;
+		background: rgba(255, 255, 255, 0.03);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-lg);
 		text-decoration: none;
 		color: inherit;
 		transition:
-			transform 0.16s ease,
-			border-color 0.16s ease,
-			box-shadow 0.16s ease,
-			background 0.16s ease;
-	}
-
-	.project::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		border-radius: 14px;
-		border: 1px solid transparent;
-		background: linear-gradient(
-				120deg,
-				color-mix(in srgb, var(--tint) 14%, transparent),
-				transparent 30%
-			)
-			border-box;
-		mask:
-			linear-gradient(#000 0 0) padding-box,
-			linear-gradient(#000 0 0);
-		-webkit-mask:
-			linear-gradient(#000 0 0) padding-box,
-			linear-gradient(#000 0 0);
-		-webkit-mask-composite: xor;
-		mask-composite: exclude;
-		opacity: 0;
-		transition: opacity 0.16s ease;
+			transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+			border-color 0.18s ease,
+			box-shadow 0.18s ease,
+			background 0.18s ease;
 	}
 
 	.project:hover {
 		transform: translateY(-2px);
-		border-color: color-mix(in srgb, var(--tint) 18%, var(--border));
-		box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35);
+		border-color: var(--border-strong);
+		box-shadow: var(--shadow-1);
 		background:
 			radial-gradient(
-				circle at top left,
-				color-mix(in srgb, var(--tint) 10%, transparent),
-				transparent 55%
+				600px 180px at 0% 0%,
+				color-mix(in srgb, var(--tint) 12%, transparent),
+				transparent 65%
 			),
-			var(--elev);
-	}
-
-	.project:hover::after {
-		opacity: 0.95;
-	}
-
-	.row {
-		display: flex;
-		gap: 6px;
-		align-items: center;
-	}
-
-	.row h3 {
-		font-weight: 700;
+			rgba(255, 255, 255, 0.035);
 	}
 
 	.roles {
@@ -718,17 +708,17 @@
 		border-radius: 2px;
 		background: linear-gradient(
 			180deg,
-			color-mix(in srgb, var(--tint) 18%, transparent),
+			color-mix(in srgb, var(--tint) 40%, transparent),
 			transparent 70%
 		);
 	}
 
 	.role {
 		position: relative;
-		padding: 12px 12px 10px;
-		border-radius: 14px;
-		background: color-mix(in srgb, var(--elev) 65%, transparent);
-		border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+		padding: 12px;
+		border-radius: var(--radius-lg);
+		background: rgba(255, 255, 255, 0.03);
+		border: 1px solid var(--border);
 	}
 
 	.role::before {
@@ -739,81 +729,34 @@
 		width: 10px;
 		height: 10px;
 		border-radius: 50%;
-		background: color-mix(in srgb, var(--tint) 70%, var(--bg));
-		box-shadow: 0 0 0 3px color-mix(in srgb, var(--bg) 80%, transparent);
-	}
-
-	.meta {
-		display: flex;
-		gap: 8px;
-		align-items: baseline;
-		flex-wrap: wrap;
-	}
-
-	.company {
-		color: color-mix(in srgb, var(--text) 70%, var(--bg));
-	}
-
-	.years {
-		margin-left: auto;
-		color: var(--muted);
-		font-size: 0.9rem;
-	}
-
-	.bullets {
-		margin: 7px 0 0 18px;
-		color: color-mix(in srgb, var(--text) 78%, var(--bg));
-		font-size: 0.94rem;
+		background: color-mix(in srgb, var(--tint) 80%, transparent);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--bg) 85%, transparent);
 	}
 
 	@media (min-width: 760px) {
-		.hero-header {
-			flex-direction: row;
-			align-items: center;
-			justify-content: space-between;
-		}
-
 		.name {
-			font-size: 1.65rem;
+			font-size: 2.1rem;
 		}
-
 		.grid {
 			grid-template-columns: repeat(3, minmax(0, 1fr));
 		}
-
 		.life {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
-
 		.services {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
-		}
-
-		.card {
-			border-radius: 22px;
 		}
 	}
 
 	@media (max-width: 540px) {
-		.hero-header {
-			gap: 10px;
-		}
-
 		.hero-actions {
 			flex-direction: column;
 			align-items: stretch;
+			gap: 10px;
 		}
-
 		.links {
 			width: 100%;
-			justify-content: flex-start;
 		}
-
-		.chip-btn {
-			flex: 1 0 auto;
-			justify-content: center;
-		}
-
 		.section-subtitle {
 			display: none;
 		}
