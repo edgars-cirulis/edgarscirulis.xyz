@@ -178,14 +178,6 @@
 
 							<span class="tname">{now.title}</span>
 						</div>
-
-						<span class="pill" class:playing={now.playing}>
-							{#if now.playing}
-								<Icon icon="lucide:waveform" width="14" /> Now playing
-							{:else}
-								<Icon icon="lucide:history" width="14" /> Last played
-							{/if}
-						</span>
 					</div>
 
 					<div class="muted ellip">
@@ -469,7 +461,7 @@
 		align-items: center;
 		gap: 8px;
 		min-width: 0;
-		justify-content: space-between;
+		justify-content: flex-start;
 	}
 
 	.title-block {
@@ -537,27 +529,6 @@
 		white-space: nowrap;
 		line-height: 1.2;
 		font-size: 0.96rem;
-	}
-
-	.pill {
-		display: inline-flex;
-		gap: 6px;
-		align-items: center;
-		justify-content: center;
-		padding: 4px 10px;
-		border-radius: 999px;
-		font-size: 0.78rem;
-		line-height: 1;
-		background: var(--chip);
-		border: 1px solid var(--border);
-		color: var(--muted);
-		white-space: nowrap;
-		min-width: 104px;
-	}
-
-	.pill.playing {
-		color: color-mix(in srgb, #22c55e 70%, var(--text));
-		border-color: color-mix(in srgb, #22c55e 35%, var(--border));
 	}
 
 	.ellip {
