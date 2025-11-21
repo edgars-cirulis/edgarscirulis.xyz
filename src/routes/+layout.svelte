@@ -403,9 +403,14 @@
 	}
 
 	@supports (-moz-appearance: none) {
-		:root {
-			--glass-blur: 18px; /* was 26px */
-			--glass-sat: 140%; /* was 160% */
+		.aurora {
+			filter: blur(60px) saturate(115%) !important;
+			mix-blend-mode: normal !important;
+			opacity: 0.16 !important;
+			animation: none !important;
+		}
+		.bg {
+			filter: saturate(105%) !important;
 		}
 	}
 </style>

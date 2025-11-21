@@ -773,4 +773,19 @@
 			backdrop-filter: none;
 		}
 	}
+
+	@supports (-moz-appearance: none) {
+		.card,
+		.btn,
+		.chip-btn,
+		.project,
+		.service,
+		.life-item,
+		.role {
+			backdrop-filter: none !important;
+
+			background:
+				linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 50%), var(--surface-strong) !important;
+		}
+	}
 </style>
