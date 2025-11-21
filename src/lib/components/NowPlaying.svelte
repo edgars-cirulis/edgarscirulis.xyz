@@ -25,6 +25,73 @@
 	let showHistory = false;
 	let hasLoaded = false;
 
+	let albumColor = 'rgba(34, 197, 94, 0.85)';
+	let albumColorSoft = 'rgba(34, 197, 94, 0.3)';
+
+	type RGB = { r: number; g: number; b: number };
+
+	const extractAverageColor = (src: string): Promise<RGB | null> =>
+		new Promise((resolve) => {
+			const img = new Image();
+			img.crossOrigin = 'anonymous';
+			img.onload = () => {
+				const canvas = document.createElement('canvas');
+				const ctx = canvas.getContext('2d');
+				if (!ctx) {
+					resolve(null);
+					return;
+				}
+				const size = 32;
+				canvas.width = size;
+				canvas.height = size;
+
+				ctx.drawImage(img, 0, 0, size, size);
+				const data = ctx.getImageData(0, 0, size, size).data;
+
+				let r = 0;
+				let g = 0;
+				let b = 0;
+				let count = 0;
+
+				for (let i = 0; i < data.length; i += 4) {
+					const alpha = data[i + 3];
+					if (alpha < 128) continue;
+					r += data[i];
+					g += data[i + 1];
+					b += data[i + 2];
+					count++;
+				}
+
+				if (!count) {
+					resolve(null);
+					return;
+				}
+
+				resolve({
+					r: Math.round(r / count),
+					g: Math.round(g / count),
+					b: Math.round(b / count)
+				});
+			};
+			img.onerror = () => resolve(null);
+			img.src = src;
+		});
+
+	const updateAlbumGlow = async (imageUrl: string | null | undefined) => {
+		if (typeof window === 'undefined' || !imageUrl) return;
+
+		const rgb = await extractAverageColor(imageUrl);
+		if (!rgb) {
+			albumColor = 'rgba(34, 197, 94, 0.85)';
+			albumColorSoft = 'rgba(34, 197, 94, 0.3)';
+			return;
+		}
+
+		const { r, g, b } = rgb;
+		albumColor = `rgba(${r}, ${g}, ${b}, 0.88)`;
+		albumColorSoft = `rgba(${r}, ${g}, ${b}, 0.32)`;
+	};
+
 	onMount(() => {
 		if (spotify) {
 			now = {
@@ -40,6 +107,7 @@
 				device: null,
 				previewUrl: null
 			};
+			updateAlbumGlow(spotify.image);
 			hasLoaded = true;
 		}
 
@@ -52,6 +120,10 @@
 
 				now = json.now;
 
+				if (now?.image) {
+					updateAlbumGlow(now.image);
+				}
+
 				if (includeMeta) {
 					history = json.history ?? [];
 					topTracks = json.topTracks ?? [];
@@ -59,7 +131,9 @@
 				}
 
 				hasLoaded = true;
-			} catch {}
+			} catch {
+				// ignore
+			}
 		};
 
 		const handleVisibility = () => {
@@ -140,6 +214,8 @@
 			rel="external noopener noreferrer"
 			target="_blank"
 			aria-label={`Open on Spotify: ${now.title} by ${now.artist}`}
+			style:--album-glow={albumColor}
+			style:--album-glow-soft={albumColorSoft}
 		>
 			<div class="badge-row">
 				<span class="badge">
@@ -361,6 +437,9 @@
 	}
 
 	.track {
+		--album-glow: rgba(34, 197, 94, 0.85);
+		--album-glow-soft: rgba(34, 197, 94, 0.3);
+
 		display: grid;
 		gap: 6px;
 		text-decoration: none;
@@ -368,11 +447,9 @@
 		padding: 10px 10px 11px;
 		border: 1px solid color-mix(in srgb, var(--border) 94%, transparent);
 		border-radius: 14px;
-		background: linear-gradient(
-			135deg,
-			color-mix(in srgb, var(--chip) 90%, transparent),
-			var(--elev)
-		);
+		background:
+			radial-gradient(circle at 0% 0%, var(--album-glow-soft) 0, transparent 60%),
+			linear-gradient(135deg, color-mix(in srgb, var(--chip) 90%, transparent), var(--elev));
 		transition:
 			border-color 0.15s ease,
 			transform 0.15s ease,
@@ -382,18 +459,22 @@
 	}
 
 	.track:hover {
-		border-color: color-mix(in srgb, var(--tint) 22%, var(--border));
+		border-color: color-mix(in srgb, var(--album-glow) 40%, var(--border));
 		transform: translateY(-1px);
-		box-shadow: 0 10px 24px rgba(0, 0, 0, 0.42);
-		background: linear-gradient(
-			135deg,
-			color-mix(in srgb, var(--tint) 14%, var(--chip)),
-			var(--elev)
-		);
+		box-shadow:
+			0 0 40px color-mix(in srgb, var(--album-glow-soft) 80%, transparent),
+			0 10px 24px rgba(0, 0, 0, 0.42);
+		background:
+			radial-gradient(circle at 0% 0%, var(--album-glow-soft) 0, transparent 65%),
+			linear-gradient(
+				135deg,
+				color-mix(in srgb, var(--album-glow-soft) 40%, var(--chip)),
+				var(--elev)
+			);
 	}
 
 	.track:focus-visible {
-		outline: 2px solid color-mix(in srgb, var(--tint) 65%, white);
+		outline: 2px solid color-mix(in srgb, var(--album-glow) 70%, white);
 		outline-offset: 2px;
 		border-radius: 14px;
 	}
@@ -412,9 +493,9 @@
 		font-size: 0.74rem;
 		padding: 3px 8px;
 		border-radius: 999px;
-		background: color-mix(in srgb, var(--tint) 22%, var(--chip));
+		background: color-mix(in srgb, var(--album-glow) 40%, var(--chip));
 		color: color-mix(in srgb, #022c22 10%, var(--text));
-		border: 1px solid color-mix(in srgb, var(--tint) 40%, var(--border));
+		border: 1px solid color-mix(in srgb, var(--album-glow) 55%, var(--border));
 	}
 
 	.mini-link {
@@ -448,6 +529,7 @@
 		border-radius: 10px;
 		object-fit: cover;
 		border: 1px solid var(--border);
+		box-shadow: 0 0 24px var(--album-glow-soft);
 	}
 
 	.tmeta {
@@ -482,7 +564,7 @@
 	.bar {
 		width: 3px;
 		border-radius: 999px;
-		background: color-mix(in srgb, var(--tint) 60%, var(--text));
+		background: color-mix(in srgb, var(--album-glow) 60%, var(--text));
 		opacity: 0.6;
 	}
 
@@ -580,7 +662,7 @@
 	}
 
 	.preview-btn:hover {
-		border-color: color-mix(in srgb, var(--tint) 26%, var(--border));
+		border-color: color-mix(in srgb, var(--album-glow) 35%, var(--border));
 	}
 
 	.panel {
@@ -717,7 +799,7 @@
 	}
 
 	.history-open:hover {
-		border-color: color-mix(in srgb, var(--tint) 22%, var(--border));
+		border-color: color-mix(in srgb, var(--album-glow) 35%, var(--border));
 	}
 
 	.top-rank {
