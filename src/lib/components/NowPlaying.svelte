@@ -440,16 +440,29 @@
 		--album-glow: rgba(34, 197, 94, 0.85);
 		--album-glow-soft: rgba(34, 197, 94, 0.3);
 
+		position: relative;
+		z-index: 0;
+		overflow: hidden;
+
 		display: grid;
 		gap: 6px;
 		text-decoration: none;
 		color: inherit;
 		padding: 10px 10px 11px;
-		border: 1px solid color-mix(in srgb, var(--border) 94%, transparent);
 		border-radius: 14px;
+
+		border: 1px solid color-mix(in srgb, var(--album-glow) 40%, var(--border));
+		box-shadow:
+			0 0 26px color-mix(in srgb, var(--album-glow-soft) 70%, transparent),
+			0 8px 20px rgba(0, 0, 0, 0.4);
 		background:
-			radial-gradient(circle at 0% 0%, var(--album-glow-soft) 0, transparent 60%),
-			linear-gradient(135deg, color-mix(in srgb, var(--chip) 90%, transparent), var(--elev));
+			radial-gradient(circle at 0% 0%, var(--album-glow-soft) 0, transparent 65%),
+			linear-gradient(
+				135deg,
+				color-mix(in srgb, var(--album-glow-soft) 40%, var(--chip)),
+				var(--elev)
+			);
+
 		transition:
 			border-color 0.15s ease,
 			transform 0.15s ease,
@@ -459,18 +472,57 @@
 	}
 
 	.track:hover {
-		border-color: color-mix(in srgb, var(--album-glow) 40%, var(--border));
 		transform: translateY(-1px);
-		box-shadow:
-			0 0 40px color-mix(in srgb, var(--album-glow-soft) 80%, transparent),
-			0 10px 24px rgba(0, 0, 0, 0.42);
+	}
+
+	.track::before {
+		content: '';
+		position: absolute;
+		inset: -20%;
+		border-radius: inherit;
+		pointer-events: none;
+		z-index: 0;
+
 		background:
-			radial-gradient(circle at 0% 0%, var(--album-glow-soft) 0, transparent 65%),
-			linear-gradient(
-				135deg,
-				color-mix(in srgb, var(--album-glow-soft) 40%, var(--chip)),
-				var(--elev)
+			radial-gradient(circle at 0% 0%, var(--album-glow-soft) 0, transparent 55%),
+			conic-gradient(
+				from 0deg,
+				color-mix(in srgb, var(--album-glow) 90%, white) 0%,
+				color-mix(in srgb, var(--album-glow) 70%, black) 25%,
+				color-mix(in srgb, var(--album-glow) 80%, #22c55e) 50%,
+				color-mix(in srgb, var(--album-glow) 80%, #0ea5e9) 75%,
+				color-mix(in srgb, var(--album-glow) 90%, white) 100%
 			);
+
+		opacity: 0.38;
+		filter: blur(22px);
+		mix-blend-mode: screen;
+		background-size: 220% 220%;
+
+		animation: album-glow-flow 16s ease-in-out infinite alternate;
+	}
+
+	.track > * {
+		position: relative;
+		z-index: 1;
+	}
+
+	@keyframes album-glow-flow {
+		0% {
+			transform: translate3d(-6%, -2%, 0) scale(1.02);
+			background-position: 0% 50%;
+			filter: blur(18px);
+		}
+		50% {
+			transform: translate3d(4%, 4%, 0) scale(1.05);
+			background-position: 100% 50%;
+			filter: blur(24px);
+		}
+		100% {
+			transform: translate3d(-3%, 2%, 0) scale(1.03);
+			background-position: 0% 60%;
+			filter: blur(20px);
+		}
 	}
 
 	.track:focus-visible {
@@ -528,7 +580,7 @@
 		height: 48px;
 		border-radius: 10px;
 		object-fit: cover;
-		border: 1px solid var(--border);
+		border: 1px solid color-mix(in srgb, var(--border) 80%, var(--album-glow-soft));
 		box-shadow: 0 0 24px var(--album-glow-soft);
 	}
 
