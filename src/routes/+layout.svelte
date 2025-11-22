@@ -27,19 +27,26 @@
 		'@context': 'https://schema.org',
 		'@type': 'Person',
 		name: 'Edgars Cirulis',
-		alternateName: 'Edgars Cīrulis',
-		jobTitle: 'Frontend Engineer / Developer & IT Specialist',
+		alternateName: [
+			'Edgars Cīrulis',
+			'Edgars Cirulis',
+			'Edgars C. Cīrulis',
+			'Edgars C. Cirulis',
+			'Edgars Cirulis (datoru remonts)',
+			'Edgars Cirulis IT specialist'
+		],
+		jobTitle: 'Frontend Engineer / IT Specialist',
 		url: site.url,
-		address: {
-			'@type': 'PostalAddress',
-			addressCountry: 'LV'
-		},
+		address: { '@type': 'PostalAddress', addressCountry: 'LV' },
 		knowsAbout: [
 			'Computer repair',
+			'Datoru remonts',
 			'IT support',
+			'IT speciālists',
 			'Frontend development',
+			'SvelteKit',
 			'Web development',
-			'SvelteKit'
+			'Veiktspējas optimizācija'
 		],
 		sameAs: [
 			'https://github.com/edgars-cirulis',
@@ -53,6 +60,10 @@
 	<link rel="icon" href={favicon} />
 	<meta name="theme-color" content="#050607" />
 	<link rel="canonical" href={site.url} />
+	<meta
+		name="keywords"
+		content="Edgars Cīrulis, Edgars Cirulis, Edgars Cirulis datoru remonts, Edgars Cīrulis IT, datoru remonts, IT speciālists, frontend engineer, SvelteKit, web development, Latvija"
+	/>
 
 	<link
 		rel="preload"

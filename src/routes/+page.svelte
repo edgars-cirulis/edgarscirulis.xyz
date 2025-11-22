@@ -2,7 +2,10 @@
 	import Icon from '@iconify/svelte';
 	import Avatar from '$lib/assets/58264013.jpg';
 	import { mailto } from '$lib/utils';
-	import NowPlaying from '$lib/components/NowPlaying.svelte';
+
+	import { onMount } from 'svelte';
+	let NowPlayingComponent: any = null;
+	let nowPlayingLoaded = false;
 
 	type Spotify = {
 		playing: boolean;
@@ -21,6 +24,17 @@
 
 	const { me, lang } = data;
 	const nowItems = me.now.filter(Boolean);
+
+	onMount(async () => {
+		try {
+			const mod = await import('$lib/components/NowPlaying.svelte');
+			NowPlayingComponent = mod.default;
+		} catch (err) {
+			console.warn('NowPlaying failed to load', err);
+		} finally {
+			nowPlayingLoaded = true;
+		}
+	});
 </script>
 
 <section class="card hero" aria-labelledby="hero-heading">
@@ -46,6 +60,11 @@
 						: 'Frontend engineer & IT specialist'}
 				</div>
 				<h1 id="hero-heading" class="name">{me.name}</h1>
+
+				<div class="visually-hidden" aria-hidden="true">
+					Edgars Cīrulis, Edgars Cirulis — datoru remonts, IT speciālists, frontend inženieris,
+					SvelteKit, veiktspējas optimizācija.
+				</div>
 
 				<p class="title">
 					{me.title} · <span class="muted">{me.location} 🇱🇻</span>
@@ -83,7 +102,9 @@
 		{/if}
 	</div>
 
-	<NowPlaying spotify={data.spotify} />
+	{#if nowPlayingLoaded && NowPlayingComponent}
+		<svelte:component this={NowPlayingComponent} spotify={data.spotify} />
+	{/if}
 </section>
 
 <section class="card section" id="services" aria-labelledby="services-heading">
@@ -273,7 +294,18 @@
 		scroll-margin-top: 90px;
 	}
 
-	/* ===== Vision-OS / macOS Glass Card ===== */
+	.visually-hidden {
+		position: absolute !important;
+		height: 1px;
+		width: 1px;
+		overflow: hidden;
+		clip: rect(1px, 1px, 1px, 1px);
+		white-space: nowrap;
+		border: 0;
+		padding: 0;
+		margin: -1px;
+	}
+
 	.card {
 		position: relative;
 		overflow: hidden;
