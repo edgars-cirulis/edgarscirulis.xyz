@@ -1,26 +1,23 @@
 <script lang="ts">
 	import favicon from '$lib/assets/58264013.jpg';
 
-	let {
-		children,
-		data
-	}: {
-		children: any;
-		data: { lang?: 'lv' | 'en' };
-	} = $props();
+	export let children: any;
+	export let data: { lang?: 'lv' | 'en' };
 
-	const lang: 'lv' | 'en' = data.lang ?? 'lv';
+	$: lang = data.lang ?? 'lv';
 
 	const site = {
 		url: 'https://edgarscirulis.xyz',
-		title:
-			lang === 'lv'
+		get title() {
+			return lang === 'lv'
 				? 'Edgars Cīrulis – Frontend inženieris un IT pakalpojumi Latvijā'
-				: 'Edgars Cīrulis – Frontend Engineer & IT Services in Latvia',
-		desc:
-			lang === 'lv'
+				: 'Edgars Cīrulis – Frontend Engineer & IT Services in Latvia';
+		},
+		get desc() {
+			return lang === 'lv'
 				? 'Edgara Cīrulis – frontend inženieris no Latvijas, kas piedāvā datoru remontu, IT atbalstu un web izstrādi.'
-				: 'Edgars Cīrulis - frontend engineer from Latvia offering computer repair, IT support and web development services.'
+				: 'Edgars Cīrulis - frontend engineer from Latvia offering computer repair, IT support and web development services.';
+		}
 	};
 
 	const personSchema = {
@@ -72,13 +69,6 @@
 		type="font/woff2"
 		crossorigin="anonymous"
 	/>
-	<link
-		rel="preload"
-		href="/fonts/sora-v17-latin-700.woff2"
-		as="font"
-		type="font/woff2"
-		crossorigin="anonymous"
-	/>
 
 	<title>{site.title}</title>
 	<meta name="description" content={site.desc} />
@@ -106,7 +96,6 @@
 		<span class="aurora a1"></span>
 		<span class="aurora a2"></span>
 		<span class="aurora a3"></span>
-		<span class="grain"></span>
 		<span class="vignette"></span>
 	</div>
 
@@ -116,6 +105,7 @@
 </div>
 
 <style>
+	/* Fonts: reduced to essential weights for perf */
 	@font-face {
 		font-family: 'Inter';
 		font-style: normal;
@@ -133,52 +123,17 @@
 	@font-face {
 		font-family: 'Inter';
 		font-style: normal;
-		font-weight: 600;
-		font-display: swap;
-		src: url('/fonts/inter-v20-latin-600.woff2') format('woff2');
-	}
-	@font-face {
-		font-family: 'Inter';
-		font-style: normal;
 		font-weight: 700;
 		font-display: swap;
 		src: url('/fonts/inter-v20-latin-700.woff2') format('woff2');
 	}
-	@font-face {
-		font-family: 'Inter';
-		font-style: normal;
-		font-weight: 800;
-		font-display: swap;
-		src: url('/fonts/inter-v20-latin-800.woff2') format('woff2');
-	}
 
-	@font-face {
-		font-family: 'Sora';
-		font-style: normal;
-		font-weight: 400;
-		font-display: swap;
-		src: url('/fonts/sora-v17-latin-regular.woff2') format('woff2');
-	}
-	@font-face {
-		font-family: 'Sora';
-		font-style: normal;
-		font-weight: 600;
-		font-display: swap;
-		src: url('/fonts/sora-v17-latin-600.woff2') format('woff2');
-	}
 	@font-face {
 		font-family: 'Sora';
 		font-style: normal;
 		font-weight: 700;
 		font-display: swap;
 		src: url('/fonts/sora-v17-latin-700.woff2') format('woff2');
-	}
-	@font-face {
-		font-family: 'Sora';
-		font-style: normal;
-		font-weight: 800;
-		font-display: swap;
-		src: url('/fonts/sora-v17-latin-800.woff2') format('woff2');
 	}
 
 	:root {
@@ -212,7 +167,7 @@
 		--font-head: 'Sora', var(--font-body);
 
 		--shadow-1: 0 10px 30px rgba(0, 0, 0, 0.35);
-		--shadow-2: 0 18px 60px rgba(0, 0, 0, 0.55);
+		--shadow-2: 0 18px 60px rgba(0, 0, 0, 0.5);
 
 		--glass-blur: 26px;
 		--glass-sat: 160%;
@@ -296,27 +251,18 @@
 		overflow: hidden;
 	}
 
-	.ambient,
-	.bg,
-	.aurora,
-	.grain,
-	.vignette {
-		transform: translateZ(0);
-		will-change: transform, opacity;
-	}
-
 	.bg {
 		position: absolute;
 		inset: -12% -12% 0 -12%;
 		background:
 			radial-gradient(
 				1200px 800px at 8% -12%,
-				color-mix(in srgb, var(--tint) 18%, transparent),
+				color-mix(in srgb, var(--tint) 15%, transparent),
 				transparent 58%
 			),
 			radial-gradient(
 				1100px 900px at 92% 8%,
-				color-mix(in srgb, var(--tint-2) 16%, transparent),
+				color-mix(in srgb, var(--tint-2) 14%, transparent),
 				transparent 62%
 			),
 			radial-gradient(900px 900px at 50% 90%, rgba(255, 255, 255, 0.05), transparent 60%),
@@ -329,9 +275,8 @@
 		width: 60vmax;
 		height: 60vmax;
 		border-radius: 999px;
-		filter: blur(95px) saturate(135%);
-		opacity: 0.22;
-		mix-blend-mode: screen;
+		filter: blur(48px) saturate(125%);
+		opacity: 0.2;
 		animation: float 18s ease-in-out infinite;
 	}
 
@@ -340,7 +285,7 @@
 		top: -15vmax;
 		background: radial-gradient(
 			circle,
-			color-mix(in srgb, var(--tint) 90%, transparent),
+			color-mix(in srgb, var(--tint) 80%, transparent),
 			transparent 60%
 		);
 	}
@@ -350,7 +295,7 @@
 		top: -8vmax;
 		background: radial-gradient(
 			circle,
-			color-mix(in srgb, var(--tint-2) 90%, transparent),
+			color-mix(in srgb, var(--tint-2) 80%, transparent),
 			transparent 60%
 		);
 		animation-duration: 22s;
@@ -361,7 +306,7 @@
 		bottom: -18vmax;
 		background: radial-gradient(
 			circle,
-			color-mix(in srgb, var(--tint-green) 70%, transparent),
+			color-mix(in srgb, var(--tint-green) 65%, transparent),
 			transparent 60%
 		);
 		animation-duration: 26s;
@@ -377,28 +322,12 @@
 		}
 	}
 
-	.grain {
-		position: absolute;
-		inset: 0;
-		opacity: 0.06;
-		background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAQAAACENnfnAAAAF0lEQVQYV2NkYGD4z0AaGJiBBTgAQ9oAA2cJ3g8g7e7iAAAAAElFTkSuQmCC');
-		background-size: 200px 200px;
-		mix-blend-mode: overlay;
-	}
-
-	@media (prefers-color-scheme: light) {
-		.grain {
-			opacity: 0.08;
-			mix-blend-mode: multiply;
-		}
-	}
-
 	.vignette {
 		position: absolute;
 		inset: 0;
 		background:
-			radial-gradient(120vmax 120vmax at 50% -20%, rgba(0, 0, 0, 0.45), transparent 55%),
-			radial-gradient(140vmax 140vmax at 50% 120%, rgba(0, 0, 0, 0.55), transparent 65%);
+			radial-gradient(120vmax 120vmax at 50% -20%, rgba(0, 0, 0, 0.35), transparent 55%),
+			radial-gradient(140vmax 140vmax at 50% 120%, rgba(0, 0, 0, 0.45), transparent 65%);
 	}
 
 	:global(:focus-visible) {
@@ -411,17 +340,10 @@
 		:root {
 			--glass-blur: 0px;
 		}
-	}
-
-	@supports (-moz-appearance: none) {
 		.aurora {
-			filter: blur(60px) saturate(115%) !important;
-			mix-blend-mode: normal !important;
-			opacity: 0.16 !important;
-			animation: none !important;
-		}
-		.bg {
-			filter: saturate(105%) !important;
+			animation: none;
+			filter: blur(30px);
+			opacity: 0.12;
 		}
 	}
 </style>

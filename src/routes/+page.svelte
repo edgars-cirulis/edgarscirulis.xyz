@@ -3,10 +3,6 @@
 	import Avatar from '$lib/assets/58264013.jpg';
 	import { mailto } from '$lib/utils';
 
-	import { onMount } from 'svelte';
-	let NowPlayingComponent: any = null;
-	let nowPlayingLoaded = false;
-
 	type Spotify = {
 		playing: boolean;
 		title: string;
@@ -24,17 +20,7 @@
 
 	const { me, lang } = data;
 	const nowItems = me.now.filter(Boolean);
-
-	onMount(async () => {
-		try {
-			const mod = await import('$lib/components/NowPlaying.svelte');
-			NowPlayingComponent = mod.default;
-		} catch (err) {
-			console.warn('NowPlaying failed to load', err);
-		} finally {
-			nowPlayingLoaded = true;
-		}
-	});
+	const nowPlayingModule = import('$lib/components/NowPlaying.svelte');
 </script>
 
 <section class="card hero" aria-labelledby="hero-heading">
@@ -48,9 +34,7 @@
 					: 'Portrait of Edgars Cīrulis, frontend engineer from Latvia'}
 				width="76"
 				height="76"
-				fetchpriority="high"
-				decoding="async"
-				sizes="76px"
+				loading="eager"
 			/>
 
 			<div class="who">
@@ -102,9 +86,9 @@
 		{/if}
 	</div>
 
-	{#if nowPlayingLoaded && NowPlayingComponent}
-		<svelte:component this={NowPlayingComponent} spotify={data.spotify} />
-	{/if}
+	{#await nowPlayingModule then mod}
+		<svelte:component this={mod.default} spotify={data.spotify} />
+	{/await}
 </section>
 
 <section class="card section" id="services" aria-labelledby="services-heading">
@@ -311,60 +295,29 @@
 		overflow: hidden;
 		border-radius: var(--radius-xl);
 		padding: var(--pad);
-
-		background: linear-gradient(180deg, var(--surface-soft), transparent 40%), var(--surface);
-
+		background: var(--surface);
 		border: 1px solid var(--border);
 		box-shadow: var(--ring), var(--shadow-1);
 		backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat))
 			brightness(var(--glass-bright));
-
-		transform: translateZ(0);
 		transition:
-			transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1),
-			border-color 0.22s ease,
-			box-shadow 0.22s ease,
-			background 0.22s ease;
+			transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
+			border-color 0.2s ease,
+			box-shadow 0.2s ease,
+			background 0.2s ease;
 	}
 
 	.card::before {
 		content: '';
 		position: absolute;
 		inset: -30% -10% auto -10%;
-		height: 60%;
+		height: 50%;
 		background: radial-gradient(
-			800px 260px at 30% 0%,
-			color-mix(in srgb, white 12%, transparent),
+			700px 240px at 30% 0%,
+			color-mix(in srgb, white 10%, transparent),
 			transparent 70%
 		);
-		opacity: 0.55;
-		pointer-events: none;
-		mix-blend-mode: soft-light;
-	}
-
-	.card::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		border-radius: inherit;
-		border: 1px solid transparent;
-		background: linear-gradient(
-				140deg,
-				color-mix(in srgb, var(--tint) 30%, transparent),
-				transparent 40%,
-				color-mix(in srgb, var(--tint-2) 22%, transparent)
-			)
-			border-box;
-		mask:
-			linear-gradient(#000 0 0) padding-box,
-			linear-gradient(#000 0 0);
-		-webkit-mask:
-			linear-gradient(#000 0 0) padding-box,
-			linear-gradient(#000 0 0);
-		-webkit-mask-composite: xor;
-		mask-composite: exclude;
-		opacity: 0;
-		transition: opacity 0.22s ease;
+		opacity: 0.4;
 		pointer-events: none;
 	}
 
@@ -372,10 +325,6 @@
 		transform: translateY(-3px);
 		border-color: var(--border-strong);
 		box-shadow: var(--ring), var(--shadow-2);
-	}
-
-	.card:hover::after {
-		opacity: 0.9;
 	}
 
 	h1,
@@ -400,10 +349,12 @@
 	p {
 		margin: 0;
 	}
+
 	.lead {
 		font-size: 0.98rem;
 		color: color-mix(in srgb, var(--text) 92%, transparent);
 	}
+
 	.muted {
 		color: var(--muted);
 	}
@@ -416,7 +367,6 @@
 		margin-bottom: 6px;
 	}
 
-	/* ===== macOS Pills (neutral, no green cast) ===== */
 	.btn,
 	.chip-btn {
 		display: inline-flex;
@@ -425,18 +375,15 @@
 		gap: 8px;
 		padding: 10px 14px;
 		border-radius: 999px;
-
 		background:
 			linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
 			rgba(255, 255, 255, 0.03);
-
 		color: var(--text);
 		text-decoration: none;
 		border: 1px solid var(--border);
 		font-size: 0.92rem;
 		box-shadow: var(--ring);
-		backdrop-filter: blur(10px) saturate(150%);
-
+		backdrop-filter: blur(8px) saturate(140%);
 		transition:
 			transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1),
 			border-color 0.15s ease,
@@ -468,22 +415,21 @@
 			),
 			linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
 			rgba(255, 255, 255, 0.045);
-
 		border-color: color-mix(in srgb, var(--tint) 35%, var(--border));
 	}
 
 	.btn.primary:hover {
 		box-shadow:
 			var(--ring),
-			0 0 26px color-mix(in srgb, var(--tint) 55%, transparent),
-			0 14px 30px rgba(0, 0, 0, 0.35);
+			0 0 26px color-mix(in srgb, var(--tint) 45%, transparent),
+			0 12px 26px rgba(0, 0, 0, 0.35);
 		border-color: color-mix(in srgb, var(--tint) 55%, var(--border));
 	}
 
 	.chip-btn.subtle {
 		background:
 			linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
-			rgba(255, 255, 255, 0.025);
+			rgba(255, 255, 255, 0.02);
 	}
 
 	.hero {
@@ -514,7 +460,7 @@
 		object-fit: cover;
 		box-shadow:
 			var(--ring),
-			0 8px 18px rgba(0, 0, 0, 0.35);
+			0 8px 18px rgba(0, 0, 0, 0.32);
 	}
 
 	.name {
@@ -546,7 +492,7 @@
 		background: rgba(255, 255, 255, 0.04);
 		border: 1px solid var(--border);
 		font-size: 0.8rem;
-		backdrop-filter: blur(8px);
+		backdrop-filter: blur(6px);
 	}
 
 	.lang-switch a {
@@ -804,20 +750,10 @@
 		.card {
 			backdrop-filter: none;
 		}
-	}
-
-	@supports (-moz-appearance: none) {
-		.card,
 		.btn,
 		.chip-btn,
-		.project,
-		.service,
-		.life-item,
-		.role {
-			backdrop-filter: none !important;
-
-			background:
-				linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 50%), var(--surface-strong) !important;
+		.lang-switch {
+			backdrop-filter: none;
 		}
 	}
 </style>
