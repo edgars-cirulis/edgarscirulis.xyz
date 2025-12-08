@@ -28,7 +28,7 @@
   integrity sha512-N3zl+lxHCifgIlcMUP5016ESkeQjLj/959RxxNYIthIg+CQHInujFuXeWbWMgnTo4cp5XVHqFPmpyu9J65C1Yg==
 
 "@esbuild/darwin-x64@0.25.12":
-  version "0.25.12"
+  version "0.25.12"1
   resolved "https://registry.yarnpkg.com/@esbuild/darwin-x64/-/darwin-x64-0.25.12.tgz#146400a8562133f45c4d2eadcf37ddd09718079e"
   integrity sha512-HQ9ka4Kx21qHXwtlTUVbKJOAnmG1ipXhdWTmNXiPzPfWKpXqASVcWdnf2bnL73wgjNrFXAa3yYvBSd9pzfEIpA==
 
@@ -353,9 +353,9 @@
     esbuild "^0.25.4"
 
 "@sveltejs/kit@^2.47.1":
-  version "2.49.0"
-  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-2.49.0.tgz#8e7d5d1c9dc482a7c2ae11d4f1e27125aaf9c36b"
-  integrity sha512-oH8tXw7EZnie8FdOWYrF7Yn4IKrqTFHhXvl8YxXxbKwTMcD/5NNCryUSEXRk2ZR4ojnub0P8rNrsVGHXWqIDtA==
+  version "2.49.1"
+  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-2.49.1.tgz#ae0b3f8ab0a1012c3f47803f583bb9cb4902904b"
+  integrity sha512-vByReCTTdlNM80vva8alAQC80HcOiHLkd8XAxIiKghKSHcqeNfyhp3VsYAV8VSiPKu4Jc8wWCfsZNAIvd1uCqA==
   dependencies:
     "@standard-schema/spec" "^1.0.0"
     "@sveltejs/acorn-typescript" "^1.0.5"
@@ -545,7 +545,7 @@ esm-env@^1.2.1, esm-env@^1.2.2:
   resolved "https://registry.yarnpkg.com/esm-env/-/esm-env-1.2.2.tgz#263c9455c55861f41618df31b20cb571fc20b75e"
   integrity sha512-Epxrv+Nr/CaL4ZcFGPJIYLWFom+YeV1DqMLHJoEd9SYRxNbaFruBwfEX/kkHUJf55j2+TUbmDcmuilbP1TmXHA==
 
-esrap@^2.2.0:
+esrap@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/esrap/-/esrap-2.2.1.tgz#cbe28fe94cd7c75b158609d602f5e345bae21259"
   integrity sha512-GiYWG34AN/4CUyaWAgunGt0Rxvr1PTMlGC0vvEov/uOQYWne2bpN03Um+k8jT+q3op33mKouP2zeJ6OlM+qeUg==
@@ -714,9 +714,9 @@ prettier-plugin-svelte@^3.4.0:
   integrity sha512-pn1ra/0mPObzqoIQn/vUTR3ZZI6UuZ0sHqMK5x2jMLGrs53h0sXhkVuDcrlssHwIMk7FYrMjHBPoUSyyEEDlBQ==
 
 prettier@^3.6.2:
-  version "3.7.3"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.7.3.tgz#99a8891f6c990cfa54bcff2a0d276e6f845e59ab"
-  integrity sha512-QgODejq9K3OzoBbuyobZlUhznP5SKwPqp+6Q6xw6o8gnhr4O85L2U915iM2IDcfF2NPXVaM9zlo9tdwipnYwzg==
+  version "3.7.4"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.7.4.tgz#d2f8335d4b1cec47e1c8098645411b0c9dff9c0f"
+  integrity sha512-v6UNi1+3hSlVvv8fSaoUbggEM5VErKmmpGA7Pl3HF8V6uKY7rvClBOJlH6yNwQtfTueNkGVpOv/mtWL9L4bgRA==
 
 readdirp@^4.0.1:
   version "4.1.2"
@@ -802,9 +802,9 @@ svelte-check@^4.3.3:
     sade "^1.7.4"
 
 svelte@^5.41.0:
-  version "5.45.3"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-5.45.3.tgz#a7f36b3b8dcb68a3fc0b138c13a5ac0dcc9fb7a2"
-  integrity sha512-ngKXNhNvwPzF43QqEhDOue7TQTrG09em1sd4HBxVF0Wr2gopAmdEWan+rgbdgK4fhBtSOTJO8bYU4chUG7VXZQ==
+  version "5.45.6"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-5.45.6.tgz#655376246bbf767af67ec85a76e7c571eff15843"
+  integrity sha512-V3aVXthzPyPt1UB1wLEoXnEXpwPsvs7NHrR0xkCor8c11v71VqBj477MClqPZYyrcXrAH21sNGhOj9FJvSwXfQ==
   dependencies:
     "@jridgewell/remapping" "^2.3.4"
     "@jridgewell/sourcemap-codec" "^1.5.0"
@@ -816,7 +816,7 @@ svelte@^5.41.0:
     clsx "^2.1.1"
     devalue "^5.5.0"
     esm-env "^1.2.1"
-    esrap "^2.2.0"
+    esrap "^2.2.1"
     is-reference "^3.0.3"
     locate-character "^3.0.0"
     magic-string "^0.30.11"
@@ -857,9 +857,9 @@ typescript@^5.9.3:
   integrity sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==
 
 vite@^7.1.10:
-  version "7.2.6"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-7.2.6.tgz#91e05ba05bc7c667a7645595e21f2a0eb1057631"
-  integrity sha512-tI2l/nFHC5rLh7+5+o7QjKjSR04ivXDF4jcgV0f/bTQ+OJiITy5S6gaynVsEM+7RqzufMnVbIon6Sr5x1SDYaQ==
+  version "7.2.7"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-7.2.7.tgz#0789a4c3206081699f34a9ecca2dda594a07478e"
+  integrity sha512-ITcnkFeR3+fI8P1wMgItjGrR10170d8auB4EpMLPqmx6uxElH3a/hHGQabSHKdqd4FXWO1nFIp9rRn7JQ34ACQ==
   dependencies:
     esbuild "^0.25.0"
     fdir "^6.5.0"
