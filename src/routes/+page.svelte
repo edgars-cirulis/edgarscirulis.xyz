@@ -321,10 +321,15 @@
 		pointer-events: none;
 	}
 
-	.card:hover {
+	.hero:hover,
+	.project:hover {
 		transform: translateY(-3px);
 		border-color: var(--border-strong);
 		box-shadow: var(--ring), var(--shadow-2);
+	}
+
+	.card:hover {
+		border-color: var(--border-strong);
 	}
 
 	h1,
@@ -460,10 +465,19 @@
 		object-fit: cover;
 		box-shadow:
 			var(--ring),
-			0 8px 18px rgba(0, 0, 0, 0.32);
+			0 12px 32px rgba(0, 0, 0, 0.45),
+			0 0 0 1px color-mix(in srgb, var(--tint) 25%, transparent);
 	}
 
 	.name {
+		background: linear-gradient(
+			180deg,
+			var(--text),
+			color-mix(in srgb, var(--tint) 35%, var(--text))
+		);
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
 		font-size: 1.95rem;
 		font-weight: 800;
 		letter-spacing: -0.01em;
