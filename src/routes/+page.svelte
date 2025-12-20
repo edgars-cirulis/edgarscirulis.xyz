@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	import Avatar from '$lib/assets/58264013.jpg';
+	import Avatar from '$lib/assets/file_0000000020d071f4a43315d3a39b00b8.png';
 	import { mailto } from '$lib/utils';
 
 	type Spotify = {
