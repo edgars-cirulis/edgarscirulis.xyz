@@ -21,261 +21,621 @@
 	const { me, lang } = data;
 	const nowItems = me.now.filter(Boolean);
 	const nowPlayingModule = import('$lib/components/NowPlaying.svelte');
+
+	const t = (lv: string, en: string) => (lang === 'lv' ? lv : en);
+
+	const sections = [
+		{ id: 'services', label: t('Pakalpojumi', 'Services'), icon: 'lucide:sparkles' },
+		{ id: 'about', label: t('Par mani', 'About'), icon: 'lucide:user' },
+		{ id: 'life', label: t('Ikdiena', 'Life'), icon: 'lucide:heart' },
+		{ id: 'now', label: t('Tagad', 'Now'), icon: 'lucide:focus' },
+		{ id: 'projects', label: t('Projekti', 'Projects'), icon: 'lucide:folder' },
+		{ id: 'experience', label: t('Pieredze', 'Experience'), icon: 'lucide:briefcase' }
+	];
+
+	const stats = [
+		{ k: t('Fokus', 'Focus'), v: t('Veiktspēja', 'Performance'), icon: 'lucide:gauge' },
+		{ k: t('Stils', 'Style'), v: t('Tīrs UI', 'Clean UI'), icon: 'lucide:layers' },
+		{ k: t('Atbalsts', 'Support'), v: t('Cilvēcīgi', 'Human-first'), icon: 'lucide:hand-heart' }
+	];
 </script>
 
-<section class="card hero" aria-labelledby="hero-heading">
-	<header class="hero-header">
-		<div class="hero-main">
-			<img
-				class="avatar"
-				src={Avatar}
-				alt={lang === 'lv'
-					? 'Portrets: Edgars Cīrulis, frontend inženieris no Latvijas'
-					: 'Portrait of Edgars Cīrulis, frontend engineer from Latvia'}
-				width="76"
-				height="76"
-				loading="eager"
-			/>
+<svelte:head>
+	<title>{me.name} · {me.title}</title>
+	<meta
+		name="description"
+		content={t(
+			'Frontend inženieris un IT atbalsts Latvijā. SvelteKit, veiktspēja, remonts un optimizācija.',
+			'Frontend engineer & IT support in Latvia. SvelteKit, performance, repairs and optimisation.'
+		)}
+	/>
+</svelte:head>
 
-			<div class="who">
-				<div class="eyebrow">
-					{lang === 'lv'
-						? 'Frontend inženieris un IT speciālists'
-						: 'Frontend engineer & IT specialist'}
-				</div>
-				<h1 id="hero-heading" class="name">{me.name}</h1>
+<div class="page">
+	<!-- Sticky top bar -->
+	<header class="topbar">
+		<div class="topbar-inner">
+			<a class="brand" href={lang === 'lv' ? '/' : '/en'} aria-label={t('Sākums', 'Home')}>
+				<span class="brand-mark" aria-hidden="true"></span>
+				<span class="brand-text">{me.name}</span>
+			</a>
 
-				<div class="visually-hidden" aria-hidden="true">
-					Edgars Cīrulis, Edgars Cirulis — datoru remonts, IT speciālists, frontend inženieris,
-					SvelteKit, veiktspējas optimizācija.
-				</div>
-
-				<p class="title">
-					{me.title} · <span class="muted">{me.location} 🇱🇻</span>
-				</p>
-			</div>
-		</div>
-
-		<nav class="lang-switch" aria-label="Language switcher">
-			<a href="/" class:active={lang === 'lv'}>LV</a>
-			<span>·</span>
-			<a href="/en" class:active={lang === 'en'}>EN</a>
-		</nav>
-	</header>
-
-	<div class="hero-actions">
-		<a class="btn primary" href={mailto(me.email)} rel="noopener">
-			<Icon icon="lucide:mail" width="18" />
-			<span>{lang === 'lv' ? 'Sazināties' : 'Contact'}</span>
-		</a>
-
-		{#if me.links.length}
-			<nav class="links" aria-label="Social links">
-				{#each me.links as l (l.href)}
-					<a
-						class="chip-btn subtle"
-						href={l.href}
-						rel="me external noopener noreferrer"
-						target="_blank"
-					>
-						<Icon icon={l.icon} width="18" />
-						<span class="hide-sm">{l.label}</span>
+			<nav class="topnav" aria-label={t('Lapas navigācija', 'Page navigation')}>
+				{#each sections as s (s.id)}
+					<a class="topnav-link" href={'#' + s.id}>
+						<Icon icon={s.icon} width="16" />
+						<span class="hide-sm">{s.label}</span>
 					</a>
 				{/each}
 			</nav>
-		{/if}
-	</div>
 
-	{#await nowPlayingModule then mod}
-		<svelte:component this={mod.default} spotify={data.spotify} />
-	{/await}
-</section>
+			<div class="topbar-right">
+				<nav class="lang" aria-label="Language switcher">
+					<a href="/" class:active={lang === 'lv'}>LV</a>
+					<span aria-hidden="true">·</span>
+					<a href="/en" class:active={lang === 'en'}>EN</a>
+				</nav>
 
-<section class="card section" id="services" aria-labelledby="services-heading">
-	<header class="section-head">
-		<div>
-			<h2 id="services-heading">{lang === 'lv' ? 'Pakalpojumi' : 'Services'}</h2>
-			<p class="section-subtitle muted">
-				{lang === 'lv'
-					? 'Praktisks IT atbalsts un frontendi, kurus tiešām var lietot.'
-					: 'Hands-on IT help and frontends you can actually use.'}
-			</p>
+				<a class="cta" href={mailto(me.email)} rel="noopener">
+					<Icon icon="lucide:mail" width="16" />
+					<span class="hide-sm">{t('Sazināties', 'Contact')}</span>
+				</a>
+			</div>
 		</div>
 	</header>
 
-	{#if me.services?.length}
-		<div class="services">
-			{#each me.services as s (s.name)}
-				<article class="service">
-					<div class="service-icon" aria-hidden="true">
-						<Icon icon={s.icon} width="18" />
+	<main class="layout">
+		<!-- LEFT: Hero + quick modules -->
+		<section class="hero card" aria-labelledby="hero-heading">
+			<div class="hero-shell">
+				<div class="hero-top">
+					<div class="identity">
+						<img
+							class="avatar"
+							src={Avatar}
+							alt={lang === 'lv'
+								? 'Portrets: Edgars Cīrulis, frontend inženieris no Latvijas'
+								: 'Portrait of Edgars Cīrulis, frontend engineer from Latvia'}
+							width="88"
+							height="88"
+							loading="eager"
+						/>
+
+						<div class="id-text">
+							<div class="eyebrow">
+								{t('Frontend inženieris un IT speciālists', 'Frontend engineer & IT specialist')}
+							</div>
+
+							<h1 id="hero-heading" class="name">{me.name}</h1>
+
+							<div class="visually-hidden" aria-hidden="true">
+								Edgars Cīrulis, Edgars Cirulis — datoru remonts, IT speciālists, frontend
+								inženieris, SvelteKit, veiktspējas optimizācija.
+							</div>
+
+							<p class="title">
+								{me.title} <span class="dot" aria-hidden="true">·</span>
+								<span class="muted">{me.location} 🇱🇻</span>
+							</p>
+						</div>
 					</div>
-					<div class="service-body">
-						<h3>{s.name}</h3>
-						<p class="muted">{s.blurb}</p>
-						{#if s.highlight}
-							<p class="service-highlight">{s.highlight}</p>
+
+					<div class="hero-cta">
+						<a class="btn primary" href={mailto(me.email)} rel="noopener">
+							<Icon icon="lucide:mail" width="18" />
+							<span>{t('Uzraksti', 'Email me')}</span>
+						</a>
+
+						{#if me.links.length}
+							<nav class="links" aria-label={t('Sociālie profili', 'Social links')}>
+								{#each me.links as l (l.href)}
+									<a
+										class="chip"
+										href={l.href}
+										rel="me external noopener noreferrer"
+										target="_blank"
+									>
+										<Icon icon={l.icon} width="18" />
+										<span class="hide-xs">{l.label}</span>
+									</a>
+								{/each}
+							</nav>
 						{/if}
 					</div>
-				</article>
-			{/each}
-		</div>
-	{:else}
-		<p class="muted">
-			{lang === 'lv'
-				? 'Datoru remonts, optimizācija, IT atbalsts un frontend izstrāde.'
-				: 'PC repair, optimisation, IT support and frontend development.'}
-		</p>
-	{/if}
-</section>
-
-<section class="card section" id="about" aria-labelledby="about-heading">
-	<header class="section-head">
-		<div>
-			<h2 id="about-heading">{lang === 'lv' ? 'Par mani' : 'About'}</h2>
-			<p class="section-subtitle muted">
-				{lang === 'lv' ? 'Kas es esmu un kā strādāju.' : 'Who I am and how I work.'}
-			</p>
-		</div>
-	</header>
-
-	<p class="lead">{me.bio}</p>
-
-	{#if me.skills.length}
-		<ul class="chips" aria-label={lang === 'lv' ? 'Prasmes' : 'Skills'}>
-			{#each me.skills as s (s)}
-				<li class="chip">{s}</li>
-			{/each}
-		</ul>
-	{/if}
-</section>
-
-<section class="card section" id="life" aria-labelledby="life-heading">
-	<header class="section-head">
-		<div>
-			<h2 id="life-heading">{lang === 'lv' ? 'Ikdiena' : 'Life'}</h2>
-			<p class="section-subtitle muted">
-				{lang === 'lv' ? 'Ko daru ārpus koda.' : 'What I’m doing outside of code.'}
-			</p>
-		</div>
-	</header>
-
-	<div class="life">
-		{#each me.life as item (item.title)}
-			<div class="life-item">
-				<div class="life-icon" aria-hidden="true">
-					<Icon icon={item.icon} width="18" />
 				</div>
 
-				<div class="life-body">
-					<div class="life-title">{item.title}</div>
-					<div class="life-text muted">{item.text}</div>
+				<!-- stats row -->
+				<div class="stats" aria-label={t('Ātrie akcenti', 'Quick highlights')}>
+					{#each stats as s (s.k)}
+						<div class="stat">
+							<div class="stat-ic" aria-hidden="true">
+								<Icon icon={s.icon} width="16" />
+							</div>
+							<div class="stat-txt">
+								<div class="stat-k muted">{s.k}</div>
+								<div class="stat-v">{s.v}</div>
+							</div>
+						</div>
+					{/each}
+				</div>
+
+				<!-- now playing -->
+				<div class="module">
+					<div class="module-head">
+						<div class="module-title">
+							<Icon icon="lucide:audio-lines" width="16" aria-hidden="true" />
+							<span>{t('Šobrīd skan', 'Now playing')}</span>
+						</div>
+						<span class="module-hint muted"
+							>{t('Ja ir ieslēgts Spotify.', 'If Spotify is active.')}</span
+						>
+					</div>
+
+					{#await nowPlayingModule then mod}
+						<svelte:component this={mod.default} spotify={data.spotify} />
+					{/await}
 				</div>
 			</div>
-		{/each}
-	</div>
-</section>
+		</section>
 
-<section class="card section" id="now" aria-labelledby="now-heading">
-	<header class="section-head">
-		<div>
-			<h2 id="now-heading">{lang === 'lv' ? 'Tagad' : 'Now'}</h2>
-			<p class="section-subtitle muted">
-				{lang === 'lv' ? 'Kam šobrīd pievēršu uzmanību.' : 'What I’m focusing on at this moment.'}
-			</p>
-		</div>
-	</header>
-
-	{#if nowItems.length}
-		<ul class="now">
-			{#each nowItems as item (item)}
-				<li>{item}</li>
-			{/each}
-		</ul>
-	{:else}
-		<p class="muted">
-			{lang === 'lv'
-				? 'Atpūšos, uzpildu baterijas un plānoju nākamos soļus.'
-				: 'Resting, recharging, and planning what’s next.'}
-		</p>
-	{/if}
-</section>
-
-<section class="card section" id="projects" aria-labelledby="projects-heading">
-	<header class="section-head">
-		<div>
-			<h2 id="projects-heading">{lang === 'lv' ? 'Projekti' : 'Projects'}</h2>
-			<p class="section-subtitle muted">
-				{lang === 'lv' ? 'Lietas, ko esmu uzbūvējis.' : 'Things I’ve built and shipped.'}
-			</p>
-		</div>
-	</header>
-
-	{#if me.projects.length}
-		<div class="grid">
-			{#each me.projects as p (p.name)}
-				<a class="project" href={p.href} rel="external noopener noreferrer" target="_blank">
-					<div class="row">
-						<h3>{p.name}</h3>
-						<Icon icon="lucide:arrow-up-right" width="16" aria-hidden="true" />
-					</div>
-
-					<p class="muted">{p.desc}</p>
-				</a>
-			{/each}
-		</div>
-	{:else}
-		<p class="muted">
-			{lang === 'lv' ? 'Šobrīd nav publisku projektu.' : 'No public projects right now.'}
-		</p>
-	{/if}
-</section>
-
-<section class="card section" id="experience" aria-labelledby="experience-heading">
-	<header class="section-head">
-		<div>
-			<h2 id="experience-heading">{lang === 'lv' ? 'Pieredze' : 'Experience'}</h2>
-			<p class="section-subtitle muted">
-				{lang === 'lv'
-					? 'Kur esmu strādājis un ko darījis.'
-					: 'Where I’ve worked and what I’ve done.'}
-			</p>
-		</div>
-	</header>
-
-	{#if me.experience.length}
-		<ul class="roles">
-			{#each me.experience as e (e.role)}
-				<li class="role">
-					<div class="meta">
-						<div class="titleline">
-							<strong>{e.role}</strong>
-							<span class="company">· {e.company}</span>
+		<!-- RIGHT: Content stack -->
+		<div class="stack">
+			<section class="card section" id="services" aria-labelledby="services-heading">
+				<header class="section-head">
+					<div class="head-left">
+						<div class="badge">
+							<Icon icon="lucide:sparkles" width="14" />
+							<span>{t('Pakalpojumi', 'Services')}</span>
 						</div>
-
-						<div class="years">{e.years}</div>
+						<h2 id="services-heading">
+							{t('Ko varu izdarīt ātri un kvalitatīvi', 'What I can ship fast')}
+						</h2>
+						<p class="sub muted">
+							{t(
+								'Praktisks IT atbalsts un frontendi, kurus tiešām var lietot.',
+								'Hands-on IT help and frontends you can actually use.'
+							)}
+						</p>
 					</div>
+				</header>
 
-					<ul class="bullets">
-						{#each e.bullets as b (b)}
-							<li>{b}</li>
+				{#if me.services?.length}
+					<div class="tiles">
+						{#each me.services as s (s.name)}
+							<article class="tile">
+								<div class="tile-ic" aria-hidden="true">
+									<Icon icon={s.icon} width="18" />
+								</div>
+								<div class="tile-bd">
+									<h3>{s.name}</h3>
+									<p class="muted">{s.blurb}</p>
+									{#if s.highlight}
+										<p class="hl">{s.highlight}</p>
+									{/if}
+								</div>
+							</article>
+						{/each}
+					</div>
+				{:else}
+					<p class="muted">
+						{t(
+							'Datoru remonts, optimizācija, IT atbalsts un frontend izstrāde.',
+							'PC repair, optimisation, IT support and frontend development.'
+						)}
+					</p>
+				{/if}
+			</section>
+
+			<section class="card section" id="about" aria-labelledby="about-heading">
+				<header class="section-head">
+					<div class="head-left">
+						<div class="badge">
+							<Icon icon="lucide:user" width="14" />
+							<span>{t('Par mani', 'About')}</span>
+						</div>
+						<h2 id="about-heading">
+							{t('Skaidri, mierīgi, bez lieka trokšņa', 'Clear, calm, no fluff')}
+						</h2>
+						<p class="sub muted">{t('Kas es esmu un kā strādāju.', 'Who I am and how I work.')}</p>
+					</div>
+				</header>
+
+				<p class="lead">{me.bio}</p>
+
+				{#if me.skills.length}
+					<ul class="chips" aria-label={t('Prasmes', 'Skills')}>
+						{#each me.skills as s (s)}
+							<li class="chip2">{s}</li>
 						{/each}
 					</ul>
-				</li>
-			{/each}
-		</ul>
-	{:else}
-		<p class="muted">
-			{lang === 'lv'
-				? 'Atvērts jaunām iespējām. CV pieejams pēc pieprasījuma.'
-				: 'Open to opportunities. CV available on request.'}
-		</p>
-	{/if}
-</section>
+				{/if}
+			</section>
+
+			<section class="card section" id="life" aria-labelledby="life-heading">
+				<header class="section-head">
+					<div class="head-left">
+						<div class="badge">
+							<Icon icon="lucide:heart" width="14" />
+							<span>{t('Ikdiena', 'Life')}</span>
+						</div>
+						<h2 id="life-heading">{t('Ārpus koda', 'Outside of code')}</h2>
+						<p class="sub muted">{t('Ko daru ārpus koda.', 'What I’m doing outside of code.')}</p>
+					</div>
+				</header>
+
+				<div class="tiles life">
+					{#each me.life as item (item.title)}
+						<div class="tile mini">
+							<div class="tile-ic" aria-hidden="true">
+								<Icon icon={item.icon} width="18" />
+							</div>
+							<div class="tile-bd">
+								<div class="mini-title">{item.title}</div>
+								<div class="muted">{item.text}</div>
+							</div>
+						</div>
+					{/each}
+				</div>
+			</section>
+
+			<section class="card section" id="now" aria-labelledby="now-heading">
+				<header class="section-head">
+					<div class="head-left">
+						<div class="badge">
+							<Icon icon="lucide:focus" width="14" />
+							<span>{t('Tagad', 'Now')}</span>
+						</div>
+						<h2 id="now-heading">{t('Šobrīd fokusā', 'Currently focusing')}</h2>
+						<p class="sub muted">
+							{t('Kam šobrīd pievēršu uzmanību.', 'What I’m focusing on at this moment.')}
+						</p>
+					</div>
+				</header>
+
+				{#if nowItems.length}
+					<ul class="list">
+						{#each nowItems as item (item)}
+							<li>
+								<Icon icon="lucide:check" width="16" aria-hidden="true" />
+								<span>{item}</span>
+							</li>
+						{/each}
+					</ul>
+				{:else}
+					<p class="muted">
+						{t(
+							'Atpūšos, uzpildu baterijas un plānoju nākamos soļus.',
+							'Resting, recharging, and planning what’s next.'
+						)}
+					</p>
+				{/if}
+			</section>
+
+			<section class="card section" id="projects" aria-labelledby="projects-heading">
+				<header class="section-head">
+					<div class="head-left">
+						<div class="badge">
+							<Icon icon="lucide:folder" width="14" />
+							<span>{t('Projekti', 'Projects')}</span>
+						</div>
+						<h2 id="projects-heading">{t('Būvēts un palaists', 'Built & shipped')}</h2>
+						<p class="sub muted">
+							{t('Lietas, ko esmu uzbūvējis.', 'Things I’ve built and shipped.')}
+						</p>
+					</div>
+				</header>
+
+				{#if me.projects.length}
+					<div class="projects">
+						{#each me.projects as p (p.name)}
+							<a class="project" href={p.href} rel="external noopener noreferrer" target="_blank">
+								<div class="row">
+									<h3>{p.name}</h3>
+									<Icon icon="lucide:arrow-up-right" width="16" aria-hidden="true" />
+								</div>
+								<p class="muted">{p.desc}</p>
+							</a>
+						{/each}
+					</div>
+				{:else}
+					<p class="muted">{t('Šobrīd nav publisku projektu.', 'No public projects right now.')}</p>
+				{/if}
+			</section>
+
+			<section class="card section" id="experience" aria-labelledby="experience-heading">
+				<header class="section-head">
+					<div class="head-left">
+						<div class="badge">
+							<Icon icon="lucide:briefcase" width="14" />
+							<span>{t('Pieredze', 'Experience')}</span>
+						</div>
+						<h2 id="experience-heading">{t('Kur esmu bijis', 'Where I’ve been')}</h2>
+						<p class="sub muted">
+							{t('Kur esmu strādājis un ko darījis.', 'Where I’ve worked and what I’ve done.')}
+						</p>
+					</div>
+				</header>
+
+				{#if me.experience.length}
+					<ul class="timeline">
+						{#each me.experience as e (e.role)}
+							<li class="tl-item">
+								<div class="tl-dot" aria-hidden="true"></div>
+								<div class="tl-card">
+									<div class="tl-top">
+										<div class="tl-title">
+											<strong>{e.role}</strong>
+											<span class="muted">· {e.company}</span>
+										</div>
+										<div class="tl-years muted">{e.years}</div>
+									</div>
+
+									<ul class="bullets">
+										{#each e.bullets as b (b)}
+											<li>{b}</li>
+										{/each}
+									</ul>
+								</div>
+							</li>
+						{/each}
+					</ul>
+				{:else}
+					<p class="muted">
+						{t(
+							'Atvērts jaunām iespējām. CV pieejams pēc pieprasījuma.',
+							'Open to opportunities. CV available on request.'
+						)}
+					</p>
+				{/if}
+			</section>
+
+			<footer class="foot card" aria-label={t('Kājene', 'Footer')}>
+				<div class="foot-inner">
+					<div class="foot-left">
+						<div class="foot-title">{t('Ātrs kontakts', 'Quick contact')}</div>
+						<a class="foot-link" href={mailto(me.email)} rel="noopener">
+							<Icon icon="lucide:mail" width="16" />
+							<span>{me.email}</span>
+						</a>
+					</div>
+
+					<div class="foot-right muted">
+						<span>© {new Date().getFullYear()} {me.name}</span>
+						<span class="sep" aria-hidden="true">·</span>
+						<a class="foot-mini" href="#top">{t('Uz augšu', 'Back to top')}</a>
+					</div>
+				</div>
+			</footer>
+		</div>
+	</main>
+</div>
 
 <style>
 	:global(section[id]) {
-		scroll-margin-top: 90px;
+		scroll-margin-top: 96px;
+	}
+
+	.page {
+		position: relative;
+		min-height: 100vh;
+		padding: 0;
+	}
+
+	/* Topbar */
+	.topbar {
+		position: sticky;
+		top: 10px;
+		z-index: 50;
+		margin: 0 auto 14px;
+		max-width: 100%;
+	}
+
+	.topbar-inner {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		padding: 10px 12px;
+		border-radius: 999px;
+		background: color-mix(in srgb, var(--surface) 85%, rgba(0, 0, 0, 0.1));
+		border: 1px solid var(--border);
+		box-shadow:
+			var(--ring),
+			0 16px 50px rgba(0, 0, 0, 0.35);
+		backdrop-filter: blur(14px) saturate(140%);
+	}
+
+	.brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		text-decoration: none;
+		color: var(--text);
+		min-width: 170px;
+	}
+
+	.brand-mark {
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		background: radial-gradient(circle at 30% 30%, var(--tint), rgba(34, 211, 238, 0.9));
+		box-shadow:
+			0 0 0 4px rgba(255, 255, 255, 0.06),
+			0 0 26px rgba(139, 92, 246, 0.45);
+	}
+
+	.brand-text {
+		font-weight: 750;
+		letter-spacing: -0.01em;
+		font-size: 0.95rem;
+	}
+
+	.topnav {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		overflow: auto;
+		scrollbar-width: none;
+	}
+
+	.topnav::-webkit-scrollbar {
+		display: none;
+	}
+
+	.topnav-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 10px;
+		border-radius: 999px;
+		border: 1px solid transparent;
+		color: color-mix(in srgb, var(--text) 78%, transparent);
+		text-decoration: none;
+		background: rgba(255, 255, 255, 0.02);
+		transition:
+			transform 0.14s cubic-bezier(0.2, 0.8, 0.2, 1),
+			border-color 0.14s ease,
+			background 0.14s ease;
+		white-space: nowrap;
+	}
+
+	.topnav-link:hover {
+		transform: translateY(-1px);
+		border-color: var(--border);
+		background: rgba(255, 255, 255, 0.04);
+	}
+
+	.topbar-right {
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.lang {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 7px 10px;
+		border-radius: 999px;
+		border: 1px solid var(--border);
+		background: rgba(255, 255, 255, 0.03);
+	}
+
+	.lang a {
+		color: var(--muted);
+		text-decoration: none;
+		opacity: 0.85;
+		transition:
+			opacity 0.12s ease,
+			color 0.12s ease;
+		font-size: 0.85rem;
+	}
+
+	.lang a.active {
+		opacity: 1;
+		color: var(--text);
+		font-weight: 750;
+	}
+
+	.cta {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 12px;
+		border-radius: 999px;
+		text-decoration: none;
+		color: var(--text);
+		border: 1px solid color-mix(in srgb, var(--tint) 38%, var(--border));
+		background:
+			radial-gradient(120% 140% at 0% 0%, rgba(139, 92, 246, 0.18), transparent 55%),
+			rgba(255, 255, 255, 0.03);
+		box-shadow: var(--ring);
+		transition:
+			transform 0.14s cubic-bezier(0.2, 0.8, 0.2, 1),
+			border-color 0.14s ease,
+			box-shadow 0.14s ease;
+	}
+
+	.cta:hover {
+		transform: translateY(-1px);
+		border-color: color-mix(in srgb, var(--tint) 55%, var(--border));
+		box-shadow:
+			var(--ring),
+			0 0 30px rgba(139, 92, 246, 0.28);
+	}
+
+	/* Layout */
+	.layout {
+		max-width: 1120px;
+		margin: 0 auto;
+		display: grid;
+		gap: 14px;
+	}
+
+	.stack {
+		display: grid;
+		gap: 14px;
+	}
+
+	/* Cards */
+	.card {
+		position: relative;
+		overflow: hidden;
+		border-radius: var(--radius-xl);
+		padding: var(--pad);
+
+		/* key change: stronger background */
+		background: var(--surface-strong);
+		border: 1px solid var(--border-strong);
+
+		box-shadow: var(--shadow-1);
+		backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat))
+			brightness(var(--glass-bright));
+		transition:
+			transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+			border-color 0.18s ease,
+			box-shadow 0.18s ease;
+	}
+
+	.card::before {
+		content: '';
+		position: absolute;
+		inset: -40% -20% auto -20%;
+		height: 60%;
+		background: radial-gradient(800px 260px at 30% 0%, rgba(255, 255, 255, 0.12), transparent 70%);
+		opacity: 0.5;
+		pointer-events: none;
+	}
+
+	.card:hover {
+		transform: translateY(-2px);
+		border-color: var(--border-strong);
+		box-shadow: var(--ring), var(--shadow-2);
+	}
+
+	/* Typography */
+	h1,
+	h2,
+	h3 {
+		margin: 0;
+		font-family: var(--font-head);
+	}
+
+	h2 {
+		font-size: 1.05rem;
+		letter-spacing: -0.01em;
+	}
+
+	h3 {
+		font-size: 1rem;
+	}
+
+	p {
+		margin: 0;
+	}
+
+	.muted {
+		color: var(--muted);
 	}
 
 	.visually-hidden {
@@ -290,78 +650,39 @@
 		margin: -1px;
 	}
 
-	.card {
-		position: relative;
-		overflow: hidden;
-		border-radius: var(--radius-xl);
-		padding: var(--pad);
-		background: var(--surface);
+	/* Hero */
+	.hero {
+		padding: 0;
+	}
+
+	.hero-shell {
+		padding: 18px;
+		display: grid;
+		gap: 14px;
+	}
+
+	.hero-top {
+		display: grid;
+		gap: 14px;
+	}
+
+	.identity {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+	}
+
+	.avatar {
+		width: 88px;
+		height: 88px;
+		border-radius: 26px;
 		border: 1px solid var(--border);
-		box-shadow: var(--ring), var(--shadow-1);
-		backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat))
-			brightness(var(--glass-bright));
-		transition:
-			transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
-			border-color 0.2s ease,
-			box-shadow 0.2s ease,
-			background 0.2s ease;
-	}
-
-	.card::before {
-		content: '';
-		position: absolute;
-		inset: -30% -10% auto -10%;
-		height: 50%;
-		background: radial-gradient(
-			700px 240px at 30% 0%,
-			color-mix(in srgb, white 10%, transparent),
-			transparent 70%
-		);
-		opacity: 0.4;
-		pointer-events: none;
-	}
-
-	.hero:hover,
-	.project:hover {
-		transform: translateY(-3px);
-		border-color: var(--border-strong);
-		box-shadow: var(--ring), var(--shadow-2);
-	}
-
-	.card:hover {
-		border-color: var(--border-strong);
-	}
-
-	h1,
-	h2,
-	h3 {
-		margin: 0;
-		font-family: var(--font-head);
-	}
-
-	h2 {
-		font-size: 0.9rem;
-		letter-spacing: 0.14em;
-		text-transform: uppercase;
-		color: color-mix(in srgb, var(--text) 80%, transparent);
-		font-weight: 800;
-	}
-
-	h3 {
-		font-size: 1.02rem;
-	}
-
-	p {
-		margin: 0;
-	}
-
-	.lead {
-		font-size: 0.98rem;
-		color: color-mix(in srgb, var(--text) 92%, transparent);
-	}
-
-	.muted {
-		color: var(--muted);
+		background: rgba(255, 255, 255, 0.04);
+		object-fit: cover;
+		box-shadow:
+			var(--ring),
+			0 18px 45px rgba(0, 0, 0, 0.45),
+			0 0 0 1px color-mix(in srgb, var(--tint) 25%, transparent);
 	}
 
 	.eyebrow {
@@ -372,104 +693,10 @@
 		margin-bottom: 6px;
 	}
 
-	.btn,
-	.chip-btn {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		gap: 8px;
-		padding: 10px 14px;
-		border-radius: 999px;
-		background:
-			linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
-			rgba(255, 255, 255, 0.03);
-		color: var(--text);
-		text-decoration: none;
-		border: 1px solid var(--border);
-		font-size: 0.92rem;
-		box-shadow: var(--ring);
-		backdrop-filter: blur(8px) saturate(140%);
-		transition:
-			transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1),
-			border-color 0.15s ease,
-			background 0.15s ease,
-			box-shadow 0.15s ease;
-		white-space: nowrap;
-	}
-
-	.btn:hover,
-	.chip-btn:hover {
-		transform: translateY(-1px);
-		border-color: var(--border-strong);
-		background:
-			linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03)),
-			rgba(255, 255, 255, 0.04);
-	}
-
-	.btn:active,
-	.chip-btn:active {
-		transform: translateY(0) scale(0.98);
-	}
-
-	.btn.primary {
-		background:
-			radial-gradient(
-				140% 180% at 0% 0%,
-				color-mix(in srgb, var(--tint) 22%, transparent),
-				transparent 55%
-			),
-			linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
-			rgba(255, 255, 255, 0.045);
-		border-color: color-mix(in srgb, var(--tint) 35%, var(--border));
-	}
-
-	.btn.primary:hover {
-		box-shadow:
-			var(--ring),
-			0 0 26px color-mix(in srgb, var(--tint) 45%, transparent),
-			0 12px 26px rgba(0, 0, 0, 0.35);
-		border-color: color-mix(in srgb, var(--tint) 55%, var(--border));
-	}
-
-	.chip-btn.subtle {
-		background:
-			linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
-			rgba(255, 255, 255, 0.02);
-	}
-
-	.hero {
-		display: grid;
-		gap: 16px;
-	}
-
-	.hero-header {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 12px;
-		flex-wrap: wrap;
-	}
-
-	.hero-main {
-		display: flex;
-		gap: 14px;
-		align-items: center;
-	}
-
-	.avatar {
-		width: 76px;
-		height: 76px;
-		border-radius: 26px;
-		border: 1px solid var(--border);
-		background: rgba(255, 255, 255, 0.04);
-		object-fit: cover;
-		box-shadow:
-			var(--ring),
-			0 12px 32px rgba(0, 0, 0, 0.45),
-			0 0 0 1px color-mix(in srgb, var(--tint) 25%, transparent);
-	}
-
 	.name {
+		font-size: 2.05rem;
+		font-weight: 850;
+		letter-spacing: -0.02em;
 		background: linear-gradient(
 			180deg,
 			var(--text),
@@ -478,50 +705,64 @@
 		-webkit-background-clip: text;
 		background-clip: text;
 		color: transparent;
-		font-size: 1.95rem;
-		font-weight: 800;
-		letter-spacing: -0.01em;
 	}
 
 	.title {
-		color: color-mix(in srgb, var(--text) 80%, transparent);
-		margin-top: 4px;
-		font-size: 0.98rem;
+		margin-top: 6px;
+		color: color-mix(in srgb, var(--text) 82%, transparent);
 	}
 
-	.hero-actions {
+	.dot {
+		padding: 0 8px;
+		opacity: 0.65;
+	}
+
+	.hero-cta {
 		display: flex;
-		flex-wrap: wrap;
 		align-items: center;
-		column-gap: 10px;
-		row-gap: 8px;
+		justify-content: space-between;
+		gap: 10px;
+		flex-wrap: wrap;
 	}
 
-	.lang-switch {
+	.btn {
 		display: inline-flex;
 		align-items: center;
+		justify-content: center;
 		gap: 8px;
-		padding: 5px 12px;
+		padding: 10px 14px;
 		border-radius: 999px;
-		background: rgba(255, 255, 255, 0.04);
-		border: 1px solid var(--border);
-		font-size: 0.8rem;
-		backdrop-filter: blur(6px);
-	}
-
-	.lang-switch a {
 		text-decoration: none;
-		color: var(--muted);
-		opacity: 0.8;
+		color: var(--text);
+		border: 1px solid var(--border);
+		background: rgba(255, 255, 255, 0.03);
+		box-shadow: var(--ring);
 		transition:
-			opacity 0.12s ease,
-			color 0.12s ease;
+			transform 0.14s cubic-bezier(0.2, 0.8, 0.2, 1),
+			border-color 0.14s ease,
+			background 0.14s ease,
+			box-shadow 0.14s ease;
+		white-space: nowrap;
 	}
 
-	.lang-switch a.active {
-		font-weight: 700;
-		opacity: 1;
-		color: var(--text);
+	.btn:hover {
+		transform: translateY(-1px);
+		border-color: var(--border-strong);
+		background: rgba(255, 255, 255, 0.05);
+	}
+
+	.btn.primary {
+		border-color: color-mix(in srgb, var(--tint) 45%, var(--border));
+		background:
+			radial-gradient(140% 180% at 0% 0%, rgba(139, 92, 246, 0.22), transparent 55%),
+			rgba(255, 255, 255, 0.03);
+	}
+
+	.btn.primary:hover {
+		box-shadow:
+			var(--ring),
+			0 0 30px rgba(139, 92, 246, 0.35);
+		border-color: color-mix(in srgb, var(--tint) 60%, var(--border));
 	}
 
 	.links {
@@ -530,120 +771,231 @@
 		gap: 8px;
 	}
 
-	.section .section-head {
+	.chip {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 9px 12px;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.03);
+		border: 1px solid var(--border);
+		text-decoration: none;
+		color: var(--text);
+		transition:
+			transform 0.14s cubic-bezier(0.2, 0.8, 0.2, 1),
+			border-color 0.14s ease,
+			background 0.14s ease;
+	}
+
+	.chip:hover {
+		transform: translateY(-1px);
+		border-color: var(--border-strong);
+		background: rgba(255, 255, 255, 0.05);
+	}
+
+	/* Stats */
+	.stats {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 10px;
+		padding: 12px;
+		border-radius: var(--radius-lg);
+		border: 1px solid var(--border);
+		background: rgba(255, 255, 255, 0.02);
+	}
+
+	.stat {
 		display: flex;
 		align-items: center;
+		gap: 10px;
+	}
+
+	.stat-ic {
+		width: 34px;
+		height: 34px;
+		display: grid;
+		place-items: center;
+		border-radius: 12px;
+		border: 1px solid var(--border);
+		background: rgba(255, 255, 255, 0.04);
+		box-shadow: var(--ring);
+	}
+
+	.stat-k {
+		font-size: 0.78rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.stat-v {
+		font-weight: 700;
+		color: color-mix(in srgb, var(--text) 92%, transparent);
+	}
+
+	/* Module */
+	.module {
+		padding: 12px;
+		border-radius: var(--radius-lg);
+		border: 1px solid var(--border);
+		background: rgba(255, 255, 255, 0.02);
+	}
+
+	.module-head {
+		display: flex;
+		align-items: baseline;
 		justify-content: space-between;
 		gap: 12px;
-		margin-bottom: 14px;
+		margin-bottom: 10px;
+	}
+
+	.module-title {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		font-weight: 750;
+	}
+
+	.module-hint {
+		font-size: 0.82rem;
+	}
+
+	/* Sections */
+	.section-head {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 12px;
+		margin-bottom: 12px;
 		padding-bottom: 10px;
 		border-bottom: 1px solid var(--border);
 	}
 
-	.section-subtitle {
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		border: 1px solid var(--border);
+		background: rgba(255, 255, 255, 0.03);
+		color: color-mix(in srgb, var(--text) 88%, transparent);
 		font-size: 0.84rem;
-		max-width: 280px;
-		margin-top: 4px;
+		width: fit-content;
+		margin-bottom: 10px;
 	}
 
+	.sub {
+		margin-top: 8px;
+		max-width: 60ch;
+	}
+
+	.lead {
+		font-size: 1.02rem;
+		line-height: 1.6;
+		color: color-mix(in srgb, var(--text) 92%, transparent);
+	}
+
+	/* Tiles */
+	.tiles {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 12px;
+	}
+
+	.tile {
+		display: grid;
+		grid-template-columns: 40px 1fr;
+		gap: 12px;
+		align-items: start;
+		padding: 14px;
+		border-radius: var(--radius-lg);
+		background: rgba(255, 255, 255, 0.03);
+		border: 1px solid var(--border);
+		transition:
+			transform 0.16s cubic-bezier(0.2, 0.8, 0.2, 1),
+			border-color 0.16s ease,
+			background 0.16s ease;
+	}
+
+	.tile:hover {
+		transform: translateY(-1px);
+		border-color: var(--border-strong);
+		background: rgba(255, 255, 255, 0.04);
+	}
+
+	.tile-ic {
+		width: 40px;
+		height: 40px;
+		display: grid;
+		place-items: center;
+		border-radius: 14px;
+		border: 1px solid var(--border);
+		background: rgba(255, 255, 255, 0.05);
+		box-shadow: var(--ring);
+		line-height: 0;
+	}
+
+	.hl {
+		margin-top: 8px;
+		padding: 10px 12px;
+		border-radius: 14px;
+		border: 1px solid color-mix(in srgb, var(--tint) 28%, var(--border));
+		background:
+			radial-gradient(140% 160% at 0% 0%, rgba(139, 92, 246, 0.14), transparent 60%),
+			rgba(255, 255, 255, 0.02);
+		color: color-mix(in srgb, var(--text) 92%, transparent);
+	}
+
+	.tile.mini {
+		grid-template-columns: 40px 1fr;
+	}
+
+	.mini-title {
+		font-weight: 750;
+		margin-bottom: 4px;
+	}
+
+	/* Skills chips */
 	.chips {
 		list-style: none;
 		padding: 0;
 		margin: 14px 0 0;
 		display: flex;
-		gap: 8px;
 		flex-wrap: wrap;
+		gap: 8px;
 	}
 
-	.chip {
-		padding: 6px 12px;
+	.chip2 {
+		padding: 7px 12px;
 		border-radius: 999px;
-		background: rgba(255, 255, 255, 0.04);
 		border: 1px solid var(--border);
-		font-size: 0.9rem;
-	}
-
-	.services {
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: 12px;
-	}
-
-	.service {
-		display: grid;
-		grid-template-columns: 36px 1fr;
-		gap: 12px;
-		align-items: center;
-		padding: var(--pad-sm);
-		border-radius: var(--radius-lg);
 		background: rgba(255, 255, 255, 0.03);
-		border: 1px solid var(--border);
+		color: color-mix(in srgb, var(--text) 88%, transparent);
+		font-size: 0.92rem;
 	}
 
-	.service-icon {
-		width: 36px;
-		height: 36px;
-		border-radius: 999px;
-		display: grid;
-		place-items: center;
-		background: rgba(255, 255, 255, 0.06);
-		border: 1px solid var(--border);
-		box-shadow: var(--ring);
-		line-height: 0;
-	}
-
-	.service-icon :global(svg) {
-		width: 18px !important;
-		height: 18px !important;
-		display: block;
-	}
-
-	.life {
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: 12px;
-	}
-
-	.life-item {
-		display: grid;
-		grid-template-columns: 36px 1fr;
-		gap: 12px;
-		align-items: center;
-		padding: var(--pad-sm);
-		border-radius: var(--radius-lg);
-		background: rgba(255, 255, 255, 0.03);
-		border: 1px solid var(--border);
-	}
-
-	.life-icon {
-		width: 36px;
-		height: 36px;
-		border-radius: 999px;
-		display: grid;
-		place-items: center;
-		background: rgba(255, 255, 255, 0.06);
-		border: 1px solid var(--border);
-		box-shadow: var(--ring);
-		line-height: 0;
-	}
-
-	.life-icon :global(svg) {
-		width: 18px !important;
-		height: 18px !important;
-		display: block;
-		opacity: 0.95;
-	}
-
-	.now {
+	/* Now list */
+	.list {
+		list-style: none;
+		padding: 0;
 		margin: 0;
-		padding-left: 18px;
-		color: color-mix(in srgb, var(--text) 85%, transparent);
 		display: grid;
-		gap: 6px;
-		font-size: 0.96rem;
+		gap: 10px;
 	}
 
-	.grid {
+	.list li {
+		display: grid;
+		grid-template-columns: 18px 1fr;
+		gap: 10px;
+		align-items: start;
+		padding: 12px 12px;
+		border-radius: 16px;
+		border: 1px solid var(--border);
+		background: rgba(255, 255, 255, 0.02);
+	}
+
+	/* Projects */
+	.projects {
 		display: grid;
 		grid-template-columns: 1fr;
 		gap: 12px;
@@ -670,103 +1022,222 @@
 	.project:hover {
 		transform: translateY(-2px);
 		border-color: var(--border-strong);
-		box-shadow: var(--shadow-1);
+		box-shadow:
+			var(--ring),
+			0 18px 60px rgba(0, 0, 0, 0.35);
 		background:
-			radial-gradient(
-				600px 180px at 0% 0%,
-				color-mix(in srgb, var(--tint) 12%, transparent),
-				transparent 65%
-			),
-			rgba(255, 255, 255, 0.035);
+			radial-gradient(700px 220px at 0% 0%, rgba(139, 92, 246, 0.14), transparent 65%),
+			rgba(255, 255, 255, 0.03);
 	}
 
-	.roles {
+	.row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+	}
+
+	/* Timeline */
+	.timeline {
 		list-style: none;
 		padding: 0;
 		margin: 0;
 		display: grid;
-		gap: 16px;
+		gap: 14px;
 		position: relative;
-		padding-left: 12px;
 	}
 
-	.roles::before {
+	.timeline::before {
 		content: '';
 		position: absolute;
-		left: 8px;
-		top: 0;
-		bottom: 0;
+		left: 10px;
+		top: 8px;
+		bottom: 8px;
 		width: 2px;
 		border-radius: 2px;
 		background: linear-gradient(
 			180deg,
-			color-mix(in srgb, var(--tint) 40%, transparent),
+			color-mix(in srgb, var(--tint) 55%, transparent),
 			transparent 70%
 		);
+		opacity: 0.9;
 	}
 
-	.role {
+	.tl-item {
 		position: relative;
-		padding: 12px;
-		border-radius: var(--radius-lg);
-		background: rgba(255, 255, 255, 0.03);
-		border: 1px solid var(--border);
+		padding-left: 28px;
 	}
 
-	.role::before {
-		content: '';
+	.tl-dot {
 		position: absolute;
-		left: -3px;
+		left: 4px;
 		top: 18px;
-		width: 10px;
-		height: 10px;
+		width: 14px;
+		height: 14px;
 		border-radius: 50%;
-		background: color-mix(in srgb, var(--tint) 80%, transparent);
-		box-shadow: 0 0 0 3px color-mix(in srgb, var(--bg) 85%, transparent);
+		background: color-mix(in srgb, var(--tint) 85%, transparent);
+		box-shadow:
+			0 0 0 4px color-mix(in srgb, rgba(0, 0, 0, 0.25) 40%, transparent),
+			0 0 24px rgba(139, 92, 246, 0.25);
 	}
 
-	@media (min-width: 760px) {
-		.name {
-			font-size: 2.1rem;
+	.tl-card {
+		padding: 14px;
+		border-radius: var(--radius-lg);
+		border: 1px solid var(--border);
+		background: rgba(255, 255, 255, 0.03);
+	}
+
+	.tl-top {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 12px;
+	}
+
+	.tl-years {
+		font-size: 0.9rem;
+		white-space: nowrap;
+	}
+
+	.bullets {
+		margin: 10px 0 0;
+		padding-left: 18px;
+		color: color-mix(in srgb, var(--text) 86%, transparent);
+		display: grid;
+		gap: 6px;
+	}
+
+	/* Footer */
+	.foot {
+		padding: 14px;
+	}
+
+	.foot-inner {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		flex-wrap: wrap;
+	}
+
+	.foot-title {
+		font-weight: 800;
+		margin-bottom: 6px;
+	}
+
+	.foot-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		text-decoration: none;
+		color: var(--text);
+		padding: 8px 10px;
+		border-radius: 999px;
+		border: 1px solid var(--border);
+		background: rgba(255, 255, 255, 0.03);
+	}
+
+	.foot-right {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.foot-mini {
+		color: var(--muted);
+		text-decoration: none;
+	}
+
+	.sep {
+		opacity: 0.5;
+	}
+
+	/* Responsive */
+	@media (min-width: 900px) {
+		.layout {
+			grid-template-columns: 420px 1fr;
+			align-items: start;
 		}
-		.grid {
-			grid-template-columns: repeat(3, minmax(0, 1fr));
+
+		.hero {
+			position: sticky;
+			top: 86px;
+			align-self: start;
 		}
-		.life {
+
+		.hero-top {
+			gap: 16px;
+		}
+
+		.stats {
+			grid-template-columns: 1fr;
+		}
+
+		.tiles {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
-		.services {
+
+		.tiles.life {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.projects {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 	}
 
-	@media (max-width: 540px) {
-		.hero-actions {
-			flex-direction: column;
-			align-items: stretch;
-			gap: 10px;
-		}
-		.links {
-			width: 100%;
-		}
-		.section-subtitle {
+	@media (max-width: 720px) {
+		.topnav {
 			display: none;
 		}
+		.brand {
+			min-width: auto;
+		}
+		.name {
+			font-size: 1.85rem;
+		}
 	}
 
-	@media (max-width: 420px) {
+	@media (max-width: 460px) {
 		.hide-sm {
 			display: none;
+		}
+		.hide-xs {
+			display: none;
+		}
+		.avatar {
+			width: 78px;
+			height: 78px;
+		}
+		.hero-shell {
+			padding: 16px;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.card,
+		.topnav-link,
+		.btn,
+		.chip,
+		.project,
+		.cta,
+		.tile {
+			transition: none !important;
+		}
+		.card:hover,
+		.project:hover,
+		.tile:hover,
+		.btn:hover,
+		.chip:hover,
+		.cta:hover {
+			transform: none !important;
 		}
 	}
 
 	@media (prefers-reduced-transparency: reduce) {
-		.card {
-			backdrop-filter: none;
-		}
-		.btn,
-		.chip-btn,
-		.lang-switch {
+		.card,
+		.topbar-inner {
 			backdrop-filter: none;
 		}
 	}

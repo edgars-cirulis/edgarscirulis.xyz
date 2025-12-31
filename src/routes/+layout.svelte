@@ -235,9 +235,9 @@
 		position: relative;
 		z-index: 1;
 		width: 100%;
-		max-width: 900px;
+		max-width: 1120px; /* was 900px */
 		margin-inline: auto;
-		padding: max(36px, env(safe-area-inset-top)) clamp(16px, 4vw, 32px)
+		padding: max(28px, env(safe-area-inset-top)) clamp(16px, 4vw, 32px)
 			max(56px, env(safe-area-inset-bottom));
 		display: grid;
 		gap: 22px;
@@ -325,9 +325,10 @@
 	.vignette {
 		position: absolute;
 		inset: 0;
+		/* softer than before */
 		background:
-			radial-gradient(120vmax 120vmax at 50% -20%, rgba(0, 0, 0, 0.35), transparent 55%),
-			radial-gradient(140vmax 140vmax at 50% 120%, rgba(0, 0, 0, 0.45), transparent 65%);
+			radial-gradient(120vmax 120vmax at 50% -20%, rgba(0, 0, 0, 0.22), transparent 55%),
+			radial-gradient(140vmax 140vmax at 50% 120%, rgba(0, 0, 0, 0.28), transparent 65%);
 	}
 
 	:global(:focus-visible) {
