@@ -17,7 +17,7 @@ import {
 
 const headers = {
 	'Content-Type': 'application/json',
-	'cache-control': 'no-store'
+	'cache-control': 'public, max-age=0, s-maxage=30, stale-while-revalidate=300'
 };
 
 export const GET: RequestHandler = async () => {

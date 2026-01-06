@@ -2,7 +2,7 @@ import type { PageServerLoad } from './$types';
 import { getNowPlaying, getRecentTrack, toNowPayload } from '$lib/server/spotify';
 
 export const load: PageServerLoad = async ({ setHeaders }) => {
-	setHeaders({ 'cache-control': 'no-store' });
+	setHeaders({ 'cache-control': 'public, max-age=0, s-maxage=30, stale-while-revalidate=300' });
 
 	try {
 		const now = await getNowPlaying();

@@ -19,7 +19,7 @@
 	};
 
 	const { me, lang } = data;
-	const nowItems = me.now.filter(Boolean);
+	const nowItems = me.now ?? [];
 	const nowPlayingModule = import('$lib/components/NowPlaying.svelte');
 
 	const t = (lv: string, en: string) => (lang === 'lv' ? lv : en);

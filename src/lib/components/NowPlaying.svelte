@@ -21,12 +21,14 @@
 	let activeTopTab: 'artists' | 'tracks' = 'artists';
 
 	let isVisible = true;
-	let poll: number;
+	let poll: ReturnType<typeof setInterval> | null = null;
 	let showHistory = false;
 	let hasLoaded = false;
 
 	let albumColor = 'rgba(34, 197, 94, 0.85)';
 	let albumColorSoft = 'rgba(34, 197, 94, 0.3)';
+
+	const colorCache = new Map<string, RGB>();
 
 	type RGB = { r: number; g: number; b: number };
 
@@ -80,6 +82,14 @@
 	const updateAlbumGlow = async (imageUrl: string | null | undefined) => {
 		if (typeof window === 'undefined' || !imageUrl) return;
 
+		const cached = colorCache.get(imageUrl);
+		if (cached) {
+			const { r, g, b } = cached;
+			albumColor = `rgba(${r}, ${g}, ${b}, 0.88)`;
+			albumColorSoft = `rgba(${r}, ${g}, ${b}, 0.32)`;
+			return;
+		}
+
 		const rgb = await extractAverageColor(imageUrl);
 		if (!rgb) {
 			albumColor = 'rgba(34, 197, 94, 0.85)';
@@ -87,6 +97,7 @@
 			return;
 		}
 
+		colorCache.set(imageUrl, rgb);
 		const { r, g, b } = rgb;
 		albumColor = `rgba(${r}, ${g}, ${b}, 0.88)`;
 		albumColorSoft = `rgba(${r}, ${g}, ${b}, 0.32)`;
@@ -153,7 +164,7 @@
 		}, 60_000);
 
 		return () => {
-			clearInterval(poll);
+			if (poll) clearInterval(poll);
 			if (typeof document !== 'undefined') {
 				document.removeEventListener('visibilitychange', handleVisibility);
 			}
@@ -208,15 +219,18 @@
 
 <div class="nowplay" aria-live="polite">
 	{#if now}
-		<a
-			class="track"
-			href={now.url}
-			rel="external noopener noreferrer"
-			target="_blank"
-			aria-label={`Open on Spotify: ${now.title} by ${now.artist}`}
-			style:--album-glow={albumColor}
-			style:--album-glow-soft={albumColorSoft}
-		>
+		<div class="track" style:--album-glow={albumColor} style:--album-glow-soft={albumColorSoft}>
+			<!--
+				Accessibility/valid HTML: avoid placing interactive controls (buttons)
+				inside a single giant <a>. We use an overlay link instead.
+			-->
+			<a
+				class="track-link"
+				href={now.url}
+				rel="external noopener noreferrer"
+				target="_blank"
+				aria-label={`Open on Spotify: ${now.title} by ${now.artist}`}
+			></a>
 			<div class="badge-row">
 				<span class="badge">
 					<Icon icon="lucide:spotify" width="14" />
@@ -283,7 +297,7 @@
 					</div>
 				</div>
 			</div>
-		</a>
+		</div>
 
 		{#if now.previewUrl}
 			<audio bind:this={audioEl} src={now.previewUrl} on:ended={stopPreview}></audio>
@@ -446,10 +460,10 @@
 
 		display: grid;
 		gap: 6px;
-		text-decoration: none;
 		color: inherit;
 		padding: 10px 10px 11px;
 		border-radius: 14px;
+		cursor: pointer;
 
 		border: 1px solid color-mix(in srgb, var(--album-glow) 40%, var(--border));
 		box-shadow:
@@ -504,7 +518,16 @@
 
 	.track > * {
 		position: relative;
+		z-index: 2;
+	}
+
+	.track-link {
+		position: absolute;
+		inset: 0;
 		z-index: 1;
+		border-radius: inherit;
+		text-decoration: none;
+		color: inherit;
 	}
 
 	@keyframes album-glow-flow {
@@ -525,7 +548,7 @@
 		}
 	}
 
-	.track:focus-visible {
+	.track-link:focus-visible {
 		outline: 2px solid color-mix(in srgb, var(--album-glow) 70%, white);
 		outline-offset: 2px;
 		border-radius: 14px;
