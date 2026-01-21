@@ -49,10 +49,11 @@
 	</header>
 
 	<main class="wrap">
-		<section class="card" aria-labelledby="np-heading">
+		<!-- Spotify -->
+		<section class="card">
 			<div class="card-head">
-				<h1 id="np-heading" class="title">
-					<Icon icon="lucide:audio-lines" width="18" aria-hidden="true" />
+				<h1 class="title">
+					<Icon icon="lucide:audio-lines" width="18" />
 					<span>{t('Šobrīd skan', 'Now playing')}</span>
 				</h1>
 				<span class="hint">{t('Ja ir ieslēgts Spotify.', 'If Spotify is active.')}</span>
@@ -63,19 +64,38 @@
 			{/await}
 		</section>
 
+		<!-- Samantha -->
 		<section class="card love" aria-label={t('Sveiciens Samantai', 'A note for Samantha')}>
-			<div class="love-ic" aria-hidden="true">
-				<Icon icon="lucide:heart" width="18" />
+			<div class="love-left">
+				<div class="heartchip" aria-hidden="true">
+					<Icon icon="lucide:heart" width="18" />
+				</div>
+
+				<div class="beats" aria-hidden="true">
+					<span></span><span></span><span></span><span></span><span></span>
+				</div>
 			</div>
 
 			<div class="love-body">
-				<div class="love-title">{t('Samantha', 'Samantha')}</div>
+				<div class="love-top">
+					<div class="love-title">Samantha</div>
+					<span class="love-tag">
+						<Icon icon="lucide:sparkles" width="14" />
+						{t('mazs sveiciens', 'a little note')}
+					</span>
+				</div>
+
 				<p class="love-text">
 					{t(
 						'Paldies, ka esi. Lai šodiena ir maiga, un mūzika — tieši īstajā noskaņā. 💜',
 						'Thank you for being you. May today be gentle, and the music land exactly right. 💜'
 					)}
 				</p>
+
+				<div class="love-footer muted">
+					<span class="pulse-dot"></span>
+					<span>{t('Sirds ritmā ar mūziku.', 'In rhythm with the music.')}</span>
+				</div>
 			</div>
 		</section>
 	</main>
@@ -91,9 +111,8 @@
 
 	.top {
 		display: flex;
-		align-items: center;
 		justify-content: space-between;
-		gap: 12px;
+		align-items: center;
 		padding: 10px 12px;
 		border-radius: 999px;
 		background: color-mix(in srgb, var(--surface) 85%, rgba(0, 0, 0, 0.1));
@@ -104,7 +123,6 @@
 
 	.lang {
 		display: inline-flex;
-		align-items: center;
 		gap: 8px;
 		padding: 7px 10px;
 		border-radius: 999px;
@@ -113,15 +131,12 @@
 	}
 
 	.lang a {
-		color: var(--muted);
 		text-decoration: none;
-		opacity: 0.85;
-		transition: opacity 0.12s ease, color 0.12s ease;
+		color: var(--muted);
 		font-size: 0.85rem;
 	}
 
 	.lang a.active {
-		opacity: 1;
 		color: var(--text);
 		font-weight: 750;
 	}
@@ -132,67 +147,38 @@
 		gap: 8px;
 		padding: 8px 12px;
 		border-radius: 999px;
+		border: 1px solid color-mix(in srgb, var(--tint) 40%, var(--border));
 		text-decoration: none;
 		color: var(--text);
-		border: 1px solid color-mix(in srgb, var(--tint) 38%, var(--border));
-		background: radial-gradient(120% 140% at 0% 0%, rgba(139, 92, 246, 0.18), transparent 55%),
-			rgba(255, 255, 255, 0.03);
-		box-shadow: var(--ring);
-		transition: transform 0.14s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.14s ease,
-			box-shadow 0.14s ease;
-	}
-
-	.cta:hover {
-		transform: translateY(-1px);
-		border-color: color-mix(in srgb, var(--tint) 55%, var(--border));
-		box-shadow: var(--ring), 0 0 30px rgba(139, 92, 246, 0.28);
+		background: rgba(255, 255, 255, 0.03);
 	}
 
 	.wrap {
-		width: 100%;
 		display: grid;
 		gap: 14px;
-		align-content: start;
 	}
 
 	.card {
-		position: relative;
-		overflow: hidden;
-		border-radius: var(--radius-xl);
 		padding: 18px;
+		border-radius: var(--radius-xl);
 		background: var(--surface-strong);
 		border: 1px solid var(--border-strong);
 		box-shadow: var(--shadow-1);
-		backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat))
-			brightness(var(--glass-bright));
-	}
-
-	.card::before {
-		content: '';
-		position: absolute;
-		inset: -40% -20% auto -20%;
-		height: 60%;
-		background: radial-gradient(800px 260px at 30% 0%, rgba(255, 255, 255, 0.12), transparent 70%);
-		opacity: 0.45;
-		pointer-events: none;
+		backdrop-filter: blur(var(--glass-blur));
 	}
 
 	.card-head {
 		display: flex;
-		align-items: baseline;
 		justify-content: space-between;
-		gap: 12px;
 		margin-bottom: 10px;
 	}
 
 	.title {
-		margin: 0;
-		display: inline-flex;
+		display: flex;
 		align-items: center;
-		gap: 10px;
+		gap: 8px;
 		font-family: var(--font-head);
 		font-size: 1.05rem;
-		letter-spacing: -0.01em;
 	}
 
 	.hint {
@@ -200,43 +186,103 @@
 		font-size: 0.85rem;
 	}
 
-	/* Samantha note */
+	/* Samantha card */
 	.love {
 		display: grid;
-		grid-template-columns: 40px 1fr;
-		gap: 12px;
-		align-items: start;
-		background: radial-gradient(900px 260px at 0% 0%, rgba(139, 92, 246, 0.14), transparent 60%),
+		grid-template-columns: 84px 1fr;
+		gap: 14px;
+		background:
+			radial-gradient(900px 320px at 0% 0%, rgba(139, 92, 246, 0.18), transparent 60%),
 			var(--surface-strong);
 	}
 
-	.love-ic {
-		width: 40px;
-		height: 40px;
+	.love-left {
+		display: grid;
+		justify-items: center;
+		gap: 10px;
+	}
+
+	.heartchip {
+		width: 46px;
+		height: 46px;
+		border-radius: 16px;
 		display: grid;
 		place-items: center;
-		border-radius: 14px;
 		border: 1px solid var(--border);
 		background: rgba(255, 255, 255, 0.05);
-		box-shadow: var(--ring);
+		animation: pulse 1.8s ease-in-out infinite;
+	}
+
+	@keyframes pulse {
+		50% {
+			transform: scale(1.06);
+		}
+	}
+
+	.beats {
+		display: grid;
+		grid-auto-flow: column;
+		gap: 4px;
+		height: 22px;
+	}
+
+	.beats span {
+		width: 4px;
+		background: linear-gradient(var(--tint), var(--tint-2));
+		border-radius: 999px;
+		animation: beat 1.1s ease-in-out infinite;
+	}
+
+	.beats span:nth-child(odd) {
+		animation-delay: -0.3s;
+	}
+
+	@keyframes beat {
+		50% {
+			height: 100%;
+		}
 	}
 
 	.love-title {
-		font-weight: 850;
-		letter-spacing: -0.01em;
-		margin-bottom: 6px;
+		font-weight: 900;
+		font-size: 1.05rem;
+	}
+
+	.love-tag {
+		font-size: 0.85rem;
+		color: var(--muted);
 	}
 
 	.love-text {
-		margin: 0;
-		color: color-mix(in srgb, var(--text) 90%, transparent);
-		line-height: 1.6;
+		line-height: 1.65;
 	}
 
-	@media (prefers-reduced-transparency: reduce) {
-		.card,
-		.top {
-			backdrop-filter: none;
+	.love-footer {
+		margin-top: 10px;
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.pulse-dot {
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: var(--tint-green);
+		animation: dot 1.6s ease-in-out infinite;
+	}
+
+	@keyframes dot {
+		50% {
+			transform: scale(1.3);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.heartchip,
+		.beats span,
+		.pulse-dot {
+			animation: none;
 		}
 	}
 </style>
