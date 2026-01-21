@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
 	import { mailto } from '$lib/utils';
+	import { onMount } from 'svelte';
 
 	type Spotify = {
 		playing: boolean;
@@ -22,53 +23,33 @@
 
 	const t = (lv: string, en: string) => (lang === 'lv' ? lv : en);
 
-	// --- Love quotes (edit freely) ---
-	const loveQuotes = [
-		{
-			lv: 'Paldies, ka esi. Tu padari pasauli mierīgāku ar savu klātbūtni. 💜',
-			en: 'Thank you for being you. You make the world feel calmer just by being in it. 💜'
-		},
-		{
-			lv: 'Ja šodien kaut kas ir smags — es esmu tepat. Vienmēr. 🤍',
-			en: 'If today feels heavy — I’m right here. Always. 🤍'
-		},
-		{
-			lv: 'Tu esi mana mīļākā doma dienas vidū. ✨',
-			en: 'You’re my favorite thought in the middle of the day. ✨'
-		},
-		{
-			lv: 'Lai šodiena ir maiga, un mūzika — tieši īstajā noskaņā. 🎶',
-			en: 'May today be gentle, and the music land exactly right. 🎶'
-		},
-		{
-			lv: 'Es tevi izvēlētos vēlreiz. Un vēlreiz. Un vēlreiz. ♾️',
-			en: 'I’d choose you again. And again. And again. ♾️'
-		},
-		{
-			lv: 'Tu esi mans miers un mana iedvesma vienlaikus. 🌙',
-			en: 'You are my peace and my inspiration at the same time. 🌙'
-		},
-		{
-			lv: 'Katru reizi, kad smaidi, man gribas apstāties un paskatīties. ☀️',
-			en: 'Every time you smile, I want to pause and just look. ☀️'
-		},
-		{
-			lv: 'Tevī ir kaut kas ļoti skaists — un tas nav tikai ārpusē. 🌷',
-			en: 'There’s something truly beautiful about you — and it’s not only on the outside. 🌷'
+	// --- Quote state (English only) ---
+	let quoteText = 'You are my favorite kind of calm. 💜';
+	let quoteAuthor = '—';
+
+	// Fetch a love quote from Quotable (no API key)
+	onMount(async () => {
+		try {
+			const res = await fetch(
+				'https://api.quotable.io/quotes/random?tags=love&limit=1&maxLength=140',
+				{ headers: { Accept: 'application/json' } }
+			);
+
+			if (!res.ok) throw new Error(`Quote fetch failed: ${res.status}`);
+
+			const data = (await res.json()) as Array<{ content: string; author: string }>;
+
+			const first = data?.[0];
+			if (first?.content) {
+				quoteText = first.content;
+				quoteAuthor = first.author ? `— ${first.author}` : '—';
+			}
+		} catch {
+			// keep the fallback
+			quoteText = 'You are my favorite kind of calm. 💜';
+			quoteAuthor = '—';
 		}
-	] as const;
-
-	// Daily-stable index (same quote all day, changes tomorrow)
-	const dayKey = new Date().toISOString().slice(0, 10); // YYYY-MM-DD (UTC)
-	const hash = (s: string) => {
-		let h = 0;
-		for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
-		return h;
-	};
-	const quoteIndex = hash(dayKey + me.name) % loveQuotes.length;
-
-	const quote = loveQuotes[quoteIndex];
-	const quoteText = t(quote.lv, quote.en);
+	});
 </script>
 
 <svelte:head>
@@ -76,8 +57,8 @@
 	<meta
 		name="description"
 		content={t(
-			'Spotify “Now playing” un neliels sveiciens Samantai.',
-			'Spotify “Now playing” and a small note for Samantha.'
+			'Spotify “Now playing”',
+			'Spotify “Now playing”'
 		)}
 	/>
 </svelte:head>
@@ -103,7 +84,6 @@
 					<Icon icon="lucide:audio-lines" width="18" aria-hidden="true" />
 					<span>{t('Šobrīd skan', 'Now playing')}</span>
 				</h1>
-				<span class="hint">{t('Ja ir ieslēgts Spotify.', 'If Spotify is active.')}</span>
 			</div>
 
 			{#await nowPlayingModule then mod}
@@ -111,22 +91,19 @@
 			{/await}
 		</section>
 
-		<section class="card love" aria-label={t('Sveiciens Samantai', 'A note for Samantha')}>
+		<section class="card love" aria-label="A note for Samantha">
 			<div class="love-ic" aria-hidden="true">
 				<Icon icon="lucide:heart" width="18" />
 			</div>
 
 			<div class="love-body">
-				<div class="love-title">{t('Samantha', 'Samantha')}</div>
+				<div class="love-title">Samantha</div>
 
 				<p class="love-text">
-					{quoteText}
+					“{quoteText}”
 				</p>
 
-				<div class="love-meta muted">
-					<Icon icon="lucide:sparkles" width="14" aria-hidden="true" />
-					<span>{t('Šodienas citāts', 'Today’s quote')}</span>
-				</div>
+				<div class="love-author muted">{quoteAuthor}</div>
 			</div>
 		</section>
 	</main>
@@ -284,11 +261,8 @@
 		line-height: 1.6;
 	}
 
-	.love-meta {
-		margin-top: 10px;
-		display: inline-flex;
-		align-items: center;
-		gap: 8px;
+	.love-author {
+		margin-top: 8px;
 		font-size: 0.9rem;
 	}
 
