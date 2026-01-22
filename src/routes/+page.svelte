@@ -1,133 +1,126 @@
 <script lang="ts">
-	import Icon from '@iconify/svelte';
-	import { mailto } from '$lib/utils';
+  import Icon from '@iconify/svelte';
+  import { mailto } from '$lib/utils';
 
-	type Spotify = {
-		playing: boolean;
-		title: string;
-		artist: string;
-		album: string;
-		url: string;
-		image: string;
-	};
+  type Spotify = {
+    playing: boolean;
+    title: string;
+    artist: string;
+    album: string;
+    url: string;
+    image: string;
+  };
 
-	export let data: {
-		spotify: Spotify | null;
-		me: typeof import('$lib/me').me;
-		lang: 'lv' | 'en';
-	};
+  export let data: {
+    spotify: Spotify | null;
+    me: typeof import('$lib/me').me;
+    lang: 'lv' | 'en';
+  };
 
-	const { me, lang } = data;
-	const nowPlayingModule = import('$lib/components/NowPlaying.svelte');
+  const { me, lang } = data;
+  const nowPlayingModule = import('$lib/components/NowPlaying.svelte');
 
-	const t = (lv: string, en: string) => (lang === 'lv' ? lv : en);
+  const t = (lv: string, en: string) => (lang === 'lv' ? lv : en);
 
-	// --- Love quotes (edit freely) ---
-	const loveQuotes = [
-		{
-			lv: 'Paldies, ka esi. Tu padari pasauli mierīgāku ar savu klātbūtni. 💜',
-			en: 'Thank you for being you. You make the world feel calmer just by being in it. 💜'
-		},
-		{
-			lv: 'Ja šodien kaut kas ir smags — es esmu tepat. Vienmēr. 🤍',
-			en: 'If today feels heavy — I’m right here. Always. 🤍'
-		},
-		{
-			lv: 'Tu esi mana mīļākā doma dienas vidū. ✨',
-			en: 'You’re my favorite thought in the middle of the day. ✨'
-		},
-		{
-			lv: 'Lai šodiena ir maiga, un mūzika — tieši īstajā noskaņā. 🎶',
-			en: 'May today be gentle, and the music land exactly right. 🎶'
-		},
-		{
-			lv: 'Es tevi izvēlētos vēlreiz. Un vēlreiz. Un vēlreiz. ♾️',
-			en: 'I’d choose you again. And again. And again. ♾️'
-		},
-		{
-			lv: 'Tu esi mans miers un mana iedvesma vienlaikus. 🌙',
-			en: 'You are my peace and my inspiration at the same time. 🌙'
-		},
-		{
-			lv: 'Katru reizi, kad smaidi, man gribas apstāties un paskatīties. ☀️',
-			en: 'Every time you smile, I want to pause and just look. ☀️'
-		},
-		{
-			lv: 'Tevī ir kaut kas ļoti skaists — un tas nav tikai ārpusē. 🌷',
-			en: 'There’s something truly beautiful about you — and it’s not only on the outside. 🌷'
-		}
-	] as const;
+  const loveQuotes = [
+    {
+      lv: 'Paldies, ka esi. Tu padari pasauli mierīgāku ar savu klātbūtni. 💜',
+      en: 'Thank you for being you. You make the world feel calmer just by being in it. 💜'
+    },
+    {
+      lv: 'Ja šodien kaut kas ir smags — es esmu tepat. Vienmēr. 🤍',
+      en: 'If today feels heavy — I’m right here. Always. 🤍'
+    },
+    {
+      lv: 'Tu esi mana mīļākā doma dienas vidū. ✨',
+      en: 'You’re my favorite thought in the middle of the day. ✨'
+    },
+    {
+      lv: 'Lai šodiena ir maiga, un mūzika — tieši īstajā noskaņā. 🎶',
+      en: 'May today be gentle, and the music land exactly right. 🎶'
+    },
+    {
+      lv: 'Es tevi izvēlētos vēlreiz. Un vēlreiz. Un vēlreiz. ♾️',
+      en: 'I’d choose you again. And again. And again. ♾️'
+    },
+    {
+      lv: 'Tu esi mans miers un mana iedvesma vienlaikus. 🌙',
+      en: 'You are my peace and my inspiration at the same time. 🌙'
+    },
+    {
+      lv: 'Katru reizi, kad smaidi, man gribas apstāties un paskatīties. ☀️',
+      en: 'Every time you smile, I want to pause and just look. ☀️'
+    },
+    {
+      lv: 'Tevī ir kaut kas ļoti skaists — un tas nav tikai ārpusē. 🌷',
+      en: 'There’s something truly beautiful about you — and it’s not only on the outside. 🌷'
+    }
+  ] as const;
 
-	// Daily-stable index (same quote all day, changes tomorrow)
-	const dayKey = new Date().toISOString().slice(0, 10); // YYYY-MM-DD (UTC)
-	const hash = (s: string) => {
-		let h = 0;
-		for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
-		return h;
-	};
-	const quoteIndex = hash(dayKey + me.name) % loveQuotes.length;
+  // Stable for local day
+  const dayKey = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
 
-	const quote = loveQuotes[quoteIndex];
-	const quoteText = t(quote.lv, quote.en);
+  const hash = (s: string) => {
+    let h = 0;
+    for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+    return h;
+  };
+
+  const quoteIndex = hash(dayKey + me.name) % loveQuotes.length;
+  const quote = loveQuotes[quoteIndex];
+  const quoteText = t(quote.lv, quote.en);
 </script>
 
 <svelte:head>
-	<title>{me.name} · {t('Šobrīd skan', 'Now playing')}</title>
-	<meta
-		name="description"
-		content={t(
-			'Spotify “Now playing”',
-			'Spotify “Now playing”'
-		)}
-	/>
+  <title>{me.name} · {t('Šobrīd skan', 'Now playing')}</title>
+  <meta name="description" content={t('Spotify “Now playing”', 'Spotify “Now playing”')} />
 </svelte:head>
 
 <div class="page">
-	<header class="top">
-		<nav class="lang" aria-label="Language switcher">
-			<a href="/" class:active={lang === 'lv'}>LV</a>
-			<span aria-hidden="true">·</span>
-			<a href="/en" class:active={lang === 'en'}>EN</a>
-		</nav>
+  <header class="top">
+    <nav class="lang" aria-label="Language switcher">
+      <a href="/" class:active={lang === 'lv'}>LV</a>
+      <span aria-hidden="true">·</span>
+      <a href="/en" class:active={lang === 'en'}>EN</a>
+    </nav>
 
-		<a class="cta" href={mailto(me.email)} rel="noopener">
-			<Icon icon="lucide:mail" width="16" />
-			<span>{t('Sazināties', 'Contact')}</span>
-		</a>
-	</header>
+    <a class="cta" href={mailto(me.email)} rel="noopener">
+      <Icon icon="lucide:mail" width="16" />
+      <span>{t('Sazināties', 'Contact')}</span>
+    </a>
+  </header>
 
-	<main class="wrap">
-		<section class="card" aria-labelledby="np-heading">
-			<div class="card-head">
-				<h1 id="np-heading" class="title">
-					<Icon icon="lucide:audio-lines" width="18" aria-hidden="true" />
-					<span>{t('Šobrīd skan', 'Now playing')}</span>
-			</div>
+  <main class="wrap">
+    <section class="card" aria-labelledby="np-heading">
+      <div class="card-head">
+        <h1 id="np-heading" class="title">
+          <Icon icon="lucide:audio-lines" width="18" aria-hidden="true" />
+          <span>{t('Šobrīd skan', 'Now playing')}</span>
+        </h1>
+      </div>
 
-			{#await nowPlayingModule then mod}
-				<svelte:component this={mod.default} spotify={data.spotify} />
-			{/await}
-		</section>
+      {#await nowPlayingModule then mod}
+        <svelte:component this={mod.default} spotify={data.spotify} />
+      {/await}
+    </section>
 
-		<section class="card love" aria-label={t('Sveiciens Samantai', 'A note for Samantha')}>
-			<div class="love-ic" aria-hidden="true">
-				<Icon icon="lucide:heart" width="18" />
-			</div>
+    <section class="card love" aria-label={t('Sveiciens Samantai', 'A note for Samantha')}>
+      <div class="love-ic" aria-hidden="true">
+        <Icon icon="lucide:heart" width="18" />
+      </div>
 
-			<div class="love-body">
-				<div class="love-title">{t('Samantha', 'Samantha')}</div>
+      <div class="love-body">
+        <div class="love-title">{t('Samantha', 'Samantha')}</div>
 
-				<p class="love-text">
-					{quoteText}
-				</p>
+        <p class="love-text">{quoteText}</p>
 
-				<div class="love-meta muted">
-					<Icon icon="lucide:sparkles" width="14" aria-hidden="true" />
-					<span>{t('Šodienas citāts', 'Today’s quote')}</span>
-				</div>
-			</div>
-		</section>
-	</main>
+        <div class="love-meta muted">
+          <Icon icon="lucide:sparkles" width="14" aria-hidden="true" />
+          <span>{t('Šodienas citāts', 'Today’s quote')}</span>
+        </div>
+      </div>
+    </section>
+  </main>
 </div>
 
 <style>
