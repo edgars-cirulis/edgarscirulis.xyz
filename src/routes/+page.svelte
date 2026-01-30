@@ -1,4 +1,3 @@
-
 <script lang="ts">
 	import Icon from '@iconify/svelte';
 	import { mailto } from '$lib/utils';
@@ -227,7 +226,6 @@
 								<div class="hz-badge">{t('Šodien', 'Today')}</div>
 							</div>
 							<p class="hz-text">{data.horoscopes.aquarius}</p>
-						
 						</article>
 					{/if}
 
@@ -238,7 +236,6 @@
 								<div class="hz-badge">{t('Šodien', 'Today')}</div>
 							</div>
 							<p class="hz-text">{data.horoscopes.pisces}</p>
-						
 						</article>
 					{/if}
 				</div>
@@ -264,7 +261,9 @@
 		border-radius: 999px;
 		background: color-mix(in srgb, var(--surface) 85%, rgba(0, 0, 0, 0.1));
 		border: 1px solid var(--border);
-		box-shadow: var(--ring), 0 16px 50px rgba(0, 0, 0, 0.35);
+		box-shadow:
+			var(--ring),
+			0 16px 50px rgba(0, 0, 0, 0.35);
 		backdrop-filter: blur(14px) saturate(140%);
 	}
 
@@ -282,7 +281,9 @@
 		color: var(--muted);
 		text-decoration: none;
 		opacity: 0.85;
-		transition: opacity 0.12s ease, color 0.12s ease;
+		transition:
+			opacity 0.12s ease,
+			color 0.12s ease;
 		font-size: 0.85rem;
 	}
 
@@ -301,17 +302,22 @@
 		text-decoration: none;
 		color: var(--text);
 		border: 1px solid color-mix(in srgb, var(--tint) 38%, var(--border));
-		background: radial-gradient(120% 140% at 0% 0%, rgba(139, 92, 246, 0.18), transparent 55%),
+		background:
+			radial-gradient(120% 140% at 0% 0%, rgba(139, 92, 246, 0.18), transparent 55%),
 			rgba(255, 255, 255, 0.03);
 		box-shadow: var(--ring);
-		transition: transform 0.14s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.14s ease,
+		transition:
+			transform 0.14s cubic-bezier(0.2, 0.8, 0.2, 1),
+			border-color 0.14s ease,
 			box-shadow 0.14s ease;
 	}
 
 	.cta:hover {
 		transform: translateY(-1px);
 		border-color: color-mix(in srgb, var(--tint) 55%, var(--border));
-		box-shadow: var(--ring), 0 0 30px rgba(139, 92, 246, 0.28);
+		box-shadow:
+			var(--ring),
+			0 0 30px rgba(139, 92, 246, 0.28);
 	}
 
 	.wrap {
@@ -372,7 +378,8 @@
 		grid-template-columns: 40px 1fr;
 		gap: 12px;
 		align-items: start;
-		background: radial-gradient(
+		background:
+			radial-gradient(
 				900px 300px at 10% 0%,
 				color-mix(in srgb, var(--tint) 18%, transparent),
 				transparent 60%
@@ -389,10 +396,10 @@
 		border-radius: 14px;
 		border: 1px solid color-mix(in srgb, var(--tint) 28%, var(--border));
 		background: radial-gradient(
-				120% 120% at 30% 20%,
-				color-mix(in srgb, var(--tint) 22%, transparent),
-				rgba(255, 255, 255, 0.03) 55%
-			);
+			120% 120% at 30% 20%,
+			color-mix(in srgb, var(--tint) 22%, transparent),
+			rgba(255, 255, 255, 0.03) 55%
+		);
 		box-shadow: var(--ring);
 	}
 
@@ -432,7 +439,8 @@
 
 	/* Horoscope */
 	.hz {
-		background: radial-gradient(
+		background:
+			radial-gradient(
 				900px 280px at 0% 0%,
 				color-mix(in srgb, var(--tint) 12%, transparent),
 				transparent 60%
@@ -477,17 +485,16 @@
 		border-radius: 999px;
 	}
 
+	.hz-text {
+		margin: 0;
+		line-height: 1.65;
+		color: color-mix(in srgb, var(--text) 88%, transparent);
+		font-size: 0.98rem;
 
-.hz-text {
-	margin: 0;
-	line-height: 1.65;
-	color: color-mix(in srgb, var(--text) 88%, transparent);
-	font-size: 0.98rem;
-
-	/* show full text */
-	max-height: none;
-	overflow: visible;
-}
+		/* show full text */
+		max-height: none;
+		overflow: visible;
+	}
 
 	@media (prefers-reduced-transparency: reduce) {
 		.card,
