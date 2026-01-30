@@ -1,3 +1,4 @@
+
 <script lang="ts">
 	import Icon from '@iconify/svelte';
 	import { mailto } from '$lib/utils';
@@ -140,14 +141,13 @@
 		}
 	] as const;
 
-	// Daily-stable index (same quote all day, changes tomorrow)
 	// Latvia timezone (Europe/Riga)
 	const dayKey = new Intl.DateTimeFormat('en-CA', {
 		timeZone: 'Europe/Riga',
 		year: 'numeric',
 		month: '2-digit',
 		day: '2-digit'
-	}).format(new Date()); // YYYY-MM-DD in Latvia time
+	}).format(new Date());
 
 	const hash = (s: string) => {
 		let h = 0;
@@ -156,7 +156,6 @@
 	};
 
 	const quoteIndex = hash(dayKey + me.name) % loveQuotes.length;
-
 	const quote = loveQuotes[quoteIndex];
 	const quoteText = t(quote.lv, quote.en);
 </script>
@@ -201,7 +200,6 @@
 
 			<div class="love-body">
 				<div class="love-title">{t('Samantha', 'Samantha')}</div>
-
 				<p class="love-text">{quoteText}</p>
 
 				<div class="love-meta muted">
@@ -211,30 +209,37 @@
 			</div>
 		</section>
 
-		<!-- ✅ HOROSCOPE CARD (Aquarius + Pisces) -->
 		{#if data.horoscopes && (data.horoscopes.aquarius || data.horoscopes.pisces)}
-			<section class="card" aria-label={t('Dienas horoskops', 'Daily horoscope')}>
+			<section class="card hz" aria-label={t('Dienas horoskops', 'Daily horoscope')}>
 				<div class="card-head">
 					<h2 class="title">
 						<Icon icon="lucide:stars" width="18" aria-hidden="true" />
 						<span>{t('Dienas horoskops', 'Daily horoscope')}</span>
 					</h2>
-					<span class="hint">{dayKey}</span>
+					<span class="pill">{dayKey}</span>
 				</div>
 
 				<div class="hz-grid">
 					{#if data.horoscopes.aquarius}
-						<div class="hz-item">
-							<div class="hint">♒ Aquarius</div>
-							<p class="love-text">{data.horoscopes.aquarius}</p>
-						</div>
+						<article class="hz-item">
+							<div class="hz-head">
+								<div class="hz-sign">♒ Aquarius</div>
+								<div class="hz-badge">{t('Šodien', 'Today')}</div>
+							</div>
+							<p class="hz-text">{data.horoscopes.aquarius}</p>
+							<div class="hz-fade" aria-hidden="true"></div>
+						</article>
 					{/if}
 
 					{#if data.horoscopes.pisces}
-						<div class="hz-item">
-							<div class="hint">♓ Pisces</div>
-							<p class="love-text">{data.horoscopes.pisces}</p>
-						</div>
+						<article class="hz-item">
+							<div class="hz-head">
+								<div class="hz-sign">♓ Pisces</div>
+								<div class="hz-badge">{t('Šodien', 'Today')}</div>
+							</div>
+							<p class="hz-text">{data.horoscopes.pisces}</p>
+							<div class="hz-fade" aria-hidden="true"></div>
+						</article>
 					{/if}
 				</div>
 			</section>
@@ -361,14 +366,19 @@
 		font-size: 0.85rem;
 	}
 
-	/* Samantha note */
+	/* Samantha note (cleaner tint) */
 	.love {
 		display: grid;
 		grid-template-columns: 40px 1fr;
 		gap: 12px;
 		align-items: start;
-		background: radial-gradient(900px 260px at 0% 0%, rgba(139, 92, 246, 0.14), transparent 60%),
+		background: radial-gradient(
+				900px 300px at 10% 0%,
+				color-mix(in srgb, var(--tint) 18%, transparent),
+				transparent 60%
+			),
 			var(--surface-strong);
+		border: 1px solid color-mix(in srgb, var(--tint) 22%, var(--border-strong));
 	}
 
 	.love-ic {
@@ -377,8 +387,12 @@
 		display: grid;
 		place-items: center;
 		border-radius: 14px;
-		border: 1px solid var(--border);
-		background: rgba(255, 255, 255, 0.05);
+		border: 1px solid color-mix(in srgb, var(--tint) 28%, var(--border));
+		background: radial-gradient(
+				120% 120% at 30% 20%,
+				color-mix(in srgb, var(--tint) 22%, transparent),
+				rgba(255, 255, 255, 0.03) 55%
+			);
 		box-shadow: var(--ring);
 	}
 
@@ -390,8 +404,9 @@
 
 	.love-text {
 		margin: 0;
-		color: color-mix(in srgb, var(--text) 90%, transparent);
-		line-height: 1.6;
+		color: color-mix(in srgb, var(--text) 92%, transparent);
+		line-height: 1.7;
+		font-size: 1.02rem;
 	}
 
 	.love-meta {
@@ -402,17 +417,84 @@
 		font-size: 0.9rem;
 	}
 
-	/* Horoscope layout */
+	/* pill for date */
+	.pill {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		border: 1px solid var(--border);
+		background: rgba(255, 255, 255, 0.04);
+		color: var(--muted);
+		font-size: 0.82rem;
+	}
+
+	/* Horoscope */
+	.hz {
+		background: radial-gradient(
+				900px 280px at 0% 0%,
+				color-mix(in srgb, var(--tint) 12%, transparent),
+				transparent 60%
+			),
+			var(--surface-strong);
+	}
+
 	.hz-grid {
 		display: grid;
-		gap: 14px;
+		gap: 12px;
 	}
 
 	.hz-item {
-		padding: 12px;
-		border-radius: 16px;
+		position: relative;
+		padding: 14px;
+		border-radius: 18px;
+		border: 1px solid var(--border);
+		background: rgba(255, 255, 255, 0.035);
+		box-shadow: var(--ring);
+		overflow: hidden;
+	}
+
+	.hz-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 10px;
+		margin-bottom: 10px;
+	}
+
+	.hz-sign {
+		font-weight: 850;
+		letter-spacing: -0.01em;
+	}
+
+	.hz-badge {
+		font-size: 0.78rem;
+		color: var(--muted);
 		border: 1px solid var(--border);
 		background: rgba(255, 255, 255, 0.03);
+		padding: 4px 8px;
+		border-radius: 999px;
+	}
+
+	.hz-text {
+		margin: 0;
+		line-height: 1.65;
+		color: color-mix(in srgb, var(--text) 88%, transparent);
+		font-size: 0.98rem;
+		max-height: 9.8em;
+		overflow: hidden;
+	}
+
+	.hz-fade {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		height: 44px;
+		background: linear-gradient(to bottom, transparent, var(--surface-strong));
+		pointer-events: none;
+		opacity: 0.9;
 	}
 
 	@media (prefers-reduced-transparency: reduce) {
