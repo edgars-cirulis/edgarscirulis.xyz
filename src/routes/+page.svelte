@@ -26,87 +26,36 @@
 
 	const t = (lv: string, en: string) => (lang === 'lv' ? lv : en);
 
-
 const loveQuotes = [
 	{
-		lv: 'Man patīk, ka tu zini, ka esi karsta — un tev nav jācenšas. 🔥',
-		en: 'I love that you know you’re hot — and you don’t have to try. 🔥'
+		// ~360 chars
+		lv: 'Man patīk tas brīdis, kad tu esi pietiekami tuvu, lai sajustu manu klātbūtni, bet vēl ne tik tuvu, lai pieskartos. Tā spriedze starp mums paliek gaisā, un es to nesteidzinu. Es gribu, lai tu to pamani, sajūti un ļauj tai augt pati. 😌',
+		en: 'I love that moment when you’re close enough to feel my presence, but not close enough to touch. The tension hangs between us, and I don’t rush it. I want you to notice it, feel it, and let it build on its own. 😌'
 	},
 	{
-		lv: 'Tu mani uzvelc pat tad, kad neko nedari. 😈',
-		en: 'You turn me on even when you’re doing nothing. 😈'
+		// ~400 chars
+		lv: 'Es runāju klusi ne tāpēc, ka man nav ko teikt, bet tāpēc, ka man patīk, kad tev jānāk tuvāk. Kad tava uzmanība sašaurinās tikai uz mani, manu balsi, manu elpu. Tieši tajā mirklī viss kļūst daudz personīgāks. 🖤',
+		en: 'I speak softly not because I have nothing to say, but because I like when you have to come closer. When your attention narrows to just me, my voice, my breath. That’s when everything starts to feel much more personal. 🖤'
 	},
 	{
-		lv: 'Ir grūti domāt skaidri, kad tu esi man tik tuvu. 🫦',
-		en: 'It’s hard to think clearly when you’re this close to me. 🫦'
+		// ~420 chars
+		lv: 'Man patīk vilkt garumā to brīdi pirms pieskāriena. Tas ir mans mīļākais. Kad vēl nekas nav noticis, bet abi jau zina, ka tas ir tikai laika jautājums. Kad ķermenis reaģē ātrāk par prātu, un tu vairs neesi droša, kurš kuru kontrolē. 🔥',
+		en: 'I love stretching out the moment before a touch. It’s my favorite part. When nothing has happened yet, but both already know it’s only a matter of time. When the body reacts faster than the mind, and you’re no longer sure who’s controlling whom. 🔥'
 	},
 	{
-		lv: 'Man patīk, cik viegli tu mani izsit no līdzsvara. ⚡',
-		en: 'I like how easily you knock me off balance. ⚡'
+		// ~310 chars
+		lv: 'Es nesteidzos ar tevi. Man patīk vērot, kā tu lēnām kļūsti uzmanīgāka, klusāka, jūtīgāka. Kā tavs ķermenis sāk klausīties vēl pirms tu pati to apzinies. Tieši tur sākas īstā spriedze. 🌑',
+		en: 'I don’t rush with you. I like watching you slowly become more attentive, quieter, more sensitive. How your body starts listening before you even realize it. That’s exactly where the real tension begins. 🌑'
 	},
 	{
-		lv: 'Tu esi kā kārdinājums, kuram negribas pretoties. 🔥',
-		en: 'You’re the kind of temptation I don’t want to resist. 🔥'
+		// ~380 chars
+		lv: 'Ir kaut kas ļoti intīms tajā, ka es tevi neaiztieku uzreiz. Ka es ļauju tev sajust manu tuvumu bez pierādījumiem. Tā, lai tava iztēle izdara pusi darba manā vietā. Un es zinu — tā parasti ir bīstamākā daļa. 😏',
+		en: 'There’s something deeply intimate about not touching you right away. About letting you feel my closeness without proof. So your imagination does half the work for me. And I know — that’s usually the most dangerous part. 😏'
 	},
 	{
-		lv: 'Tava klātbūtne dara mani nepacietīgu. 😏',
-		en: 'Your presence makes me impatient. 😏'
-	},
-	{
-		lv: 'Man patīk doma, ka tu jūti, cik ļoti es tevi gribu. 🖤',
-		en: 'I like the thought of you feeling how much I want you. 🖤'
-	},
-	{
-		lv: 'Tu liec man gribēt lietas, ko es parasti neteiktu skaļi. 🌑',
-		en: 'You make me want things I wouldn’t usually say out loud. 🌑'
-	},
-	{
-		lv: 'Ar tevi robežas kļūst izplūdušas ļoti ātri. 🔥',
-		en: 'With you, boundaries blur very fast. 🔥'
-	},
-	{
-		lv: 'Man patīk, ka tu mani skaties tā, it kā jau zinātu, kas notiks. 👀',
-		en: 'I love when you look at me like you already know what’s coming. 👀'
-	},
-	{
-		lv: 'Tu mani padari bīstami godīgu par savām vēlmēm. 😈',
-		en: 'You make me dangerously honest about my desires. 😈'
-	},
-	{
-		lv: 'Ir kaut kas ļoti netīri pievilcīgs tavā mierā. 🖤',
-		en: 'There’s something dirty-attractive about how calm you are. 🖤'
-	},
-	{
-		lv: 'Man patīk, ka ar tevi spriedze tikai aug. 🔥',
-		en: 'I love how the tension only builds with you. 🔥'
-	},
-	{
-		lv: 'Tu esi iemesls, kāpēc man grūti turēt rokas pie sevis. 🫦',
-		en: 'You’re the reason it’s hard for me to keep my hands to myself. 🫦'
-	},
-	{
-		lv: 'Es tevi gribu ne skaļi — bet ļoti skaidri. 😏',
-		en: 'I want you not loudly — but very clearly. 😏'
-	},
-	{
-		lv: 'Tu mani padari mazliet bīstamu. 🔥',
-		en: 'You make me a little dangerous. 🔥'
-	},
-	{
-		lv: 'Man patīk, ka tu nejautā — tu jūti. 🖤',
-		en: 'I love that you don’t ask — you feel it. 🖤'
-	},
-	{
-		lv: 'Ar tevi pat skatieni ir netīri. 👁️🔥',
-		en: 'With you, even looks are dirty. 👁️🔥'
-	},
-	{
-		lv: 'Tu mani ievelc sevī lēni… un es ļauju. 🌒',
-		en: 'You pull me in slowly… and I let you. 🌒'
-	},
-	{
-		lv: 'Man patīk doma par tevi pārāk bieži. 😈',
-		en: 'I think about you way too often. 😈'
+		// ~340 chars
+		lv: 'Man patīk, kā mainās tava elpa, kad starp mums kļūst pārāk kluss. It kā ķermenis saprastu ātrāk par vārdiem, ka notiek kaut kas svarīgs. Es neko nesaku. Es tikai palieku. Un ļauju tam notikt. 🫦',
+		en: 'I like how your breathing changes when it gets too quiet between us. As if your body understands before words do that something important is happening. I don’t say anything. I just stay. And let it happen. 🫦'
 	}
 ] as const;
 
