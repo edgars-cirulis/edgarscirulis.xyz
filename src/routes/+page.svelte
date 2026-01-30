@@ -227,7 +227,7 @@
 								<div class="hz-badge">{t('Šodien', 'Today')}</div>
 							</div>
 							<p class="hz-text">{data.horoscopes.aquarius}</p>
-							<div class="hz-fade" aria-hidden="true"></div>
+						
 						</article>
 					{/if}
 
@@ -238,7 +238,7 @@
 								<div class="hz-badge">{t('Šodien', 'Today')}</div>
 							</div>
 							<p class="hz-text">{data.horoscopes.pisces}</p>
-							<div class="hz-fade" aria-hidden="true"></div>
+						
 						</article>
 					{/if}
 				</div>
@@ -477,25 +477,17 @@
 		border-radius: 999px;
 	}
 
-	.hz-text {
-		margin: 0;
-		line-height: 1.65;
-		color: color-mix(in srgb, var(--text) 88%, transparent);
-		font-size: 0.98rem;
-		max-height: 9.8em;
-		overflow: hidden;
-	}
 
-	.hz-fade {
-		position: absolute;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		height: 44px;
-		background: linear-gradient(to bottom, transparent, var(--surface-strong));
-		pointer-events: none;
-		opacity: 0.9;
-	}
+.hz-text {
+	margin: 0;
+	line-height: 1.65;
+	color: color-mix(in srgb, var(--text) 88%, transparent);
+	font-size: 0.98rem;
+
+	/* show full text */
+	max-height: none;
+	overflow: visible;
+}
 
 	@media (prefers-reduced-transparency: reduce) {
 		.card,
