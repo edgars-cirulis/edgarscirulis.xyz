@@ -41,10 +41,6 @@
 			en: 'You’re my favorite thought in the middle of the day. ✨'
 		},
 		{
-			lv: 'Lai šodiena ir maiga, un mūzika — tieši īstajā noskaņā. 🎶',
-			en: 'May today be gentle, and the music land exactly right. 🎶'
-		},
-		{
 			lv: 'Es tevi izvēlētos vēlreiz. Un vēlreiz. Un vēlreiz. ♾️',
 			en: 'I’d choose you again. And again. And again. ♾️'
 		},
