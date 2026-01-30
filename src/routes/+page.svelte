@@ -25,37 +25,30 @@
 	const nowPlayingModule = import('$lib/components/NowPlaying.svelte');
 
 	const t = (lv: string, en: string) => (lang === 'lv' ? lv : en);
-
 const loveQuotes = [
 	{
-		// ~360 chars
-		lv: 'Man patīk tas brīdis, kad tu esi pietiekami tuvu, lai sajustu manu klātbūtni, bet vēl ne tik tuvu, lai pieskartos. Tā spriedze starp mums paliek gaisā, un es to nesteidzinu. Es gribu, lai tu to pamani, sajūti un ļauj tai augt pati. 😌',
-		en: 'I love that moment when you’re close enough to feel my presence, but not close enough to touch. The tension hangs between us, and I don’t rush it. I want you to notice it, feel it, and let it build on its own. 😌'
+		lv: 'Es stāvu tev tik tuvu, ka tu jūti manu cietumu pret tavu vēderu, bet neaiztiekšu. Tava elpa kļūst smaga, tu mēģini nesaspiest kājas, bet es redzu — tu jau teci. Es čukstu ausī: “Saglabā to mitrumu manam mēlei vēlāk... es gribu to visu izlaizīt lēni, līdz tu trīc un lūdzies pēc mana locekļa iekšā.” 😈💦',
+		en: 'I stand so close you feel my hardness pressing against your stomach, but I won’t touch yet. Your breathing gets heavy, you try not to squeeze your thighs, but I see — you’re already dripping. I whisper in your ear: “Save that wetness for my tongue later… I want to lick it all slowly until you’re shaking and begging for my cock inside.” 😈💦'
 	},
 	{
-		// ~400 chars
-		lv: 'Es runāju klusi ne tāpēc, ka man nav ko teikt, bet tāpēc, ka man patīk, kad tev jānāk tuvāk. Kad tava uzmanība sašaurinās tikai uz mani, manu balsi, manu elpu. Tieši tajā mirklī viss kļūst daudz personīgāks. 🖤',
-		en: 'I speak softly not because I have nothing to say, but because I like when you have to come closer. When your attention narrows to just me, my voice, my breath. That’s when everything starts to feel much more personal. 🖤'
+		lv: 'Man patīk vilkt garumā brīdi, kad tu jau esi kaila man priekšā, bet es tikai skatos. Tavas sprauslas cietas, pīpīte sārta un mitra, tu knapi atturies nesatikt sevi. Es saku: “Pieskaries sev manā priekšā... rādi, kā tu sevi gatavo manam dziļajam triecienam.” Un es zinu — tu to izdarīsi. 🔥🫦',
+		en: 'I love dragging out the moment when you’re already naked in front of me, but I just watch. Nipples hard, pussy pink and wet, you can barely stop yourself from touching. I say: “Touch yourself for me… show me how you prepare for my deep thrusts.” And I know — you’ll do it. 🔥🫦'
 	},
 	{
-		// ~420 chars
-		lv: 'Man patīk vilkt garumā to brīdi pirms pieskāriena. Tas ir mans mīļākais. Kad vēl nekas nav noticis, bet abi jau zina, ka tas ir tikai laika jautājums. Kad ķermenis reaģē ātrāk par prātu, un tu vairs neesi droša, kurš kuru kontrolē. 🔥',
-		en: 'I love stretching out the moment before a touch. It’s my favorite part. When nothing has happened yet, but both already know it’s only a matter of time. When the body reacts faster than the mind, and you’re no longer sure who’s controlling whom. 🔥'
+		lv: 'Es turu tevi aiz gurniem, spiežu pie sienas, bet vēl neielaižu. Tu jūti manu galviņu pie ieejas, karstu un pulsējošu. Tava pīpīte saraujas no gaidīšanas. Es čukstu: “Saki man, cik dziļi tu gribi, lai es tevi izplešu... vai varbūt tu gribi, lai es tevi paņemu brutāli, līdz tu kliedz?” 😏🍆',
+		en: 'I hold you by the hips, pin you against the wall, but I don’t enter yet. You feel my tip at your entrance, hot and throbbing. Your pussy clenches in anticipation. I whisper: “Tell me how deep you want me to stretch you… or do you want it rough, until you scream?” 😏🍆'
 	},
 	{
-		// ~310 chars
-		lv: 'Es nesteidzos ar tevi. Man patīk vērot, kā tu lēnām kļūsti uzmanīgāka, klusāka, jūtīgāka. Kā tavs ķermenis sāk klausīties vēl pirms tu pati to apzinies. Tieši tur sākas īstā spriedze. 🌑',
-		en: 'I don’t rush with you. I like watching you slowly become more attentive, quieter, more sensitive. How your body starts listening before you even realize it. That’s exactly where the real tension begins. 🌑'
+		lv: 'Kad tu esi uz ceļiem man priekšā, es neļauju tev uzreiz paņemt mutē. Vispirms es berzu galviņu pa tavām lūpām, lieku tev laizīt tikai nedaudz. Tu jau elso, acis ūdeņainas no vēlmes. Tad es saku: “Tagad ņem dziļi... līdz kaklam... un rādi, cik ļoti tu gribi manu spermu.” 🌶️👅',
+		en: 'When you’re on your knees in front of me, I don’t let you take it in your mouth right away. First I rub the head across your lips, make you lick just a little. You’re already panting, eyes watery with want. Then I say: “Now take it deep… to the throat… and show me how badly you want my cum.” 🌶️👅'
 	},
 	{
-		// ~380 chars
-		lv: 'Ir kaut kas ļoti intīms tajā, ka es tevi neaiztieku uzreiz. Ka es ļauju tev sajust manu tuvumu bez pierādījumiem. Tā, lai tava iztēle izdara pusi darba manā vietā. Un es zinu — tā parasti ir bīstamākā daļa. 😏',
-		en: 'There’s something deeply intimate about not touching you right away. About letting you feel my closeness without proof. So your imagination does half the work for me. And I know — that’s usually the most dangerous part. 😏'
+		lv: 'Es lieku tev apsēsties man virsū, bet neļauju kustēties. Tu jūti mani pilnībā iekšā, bet es turu tevi stingri aiz vidukļa. Tava pīpīte pulsē ap mani, tu jau gandrīz raudi no spriedzes. Es čukstu: “Lūdzies... saki, cik stipri tu gribi, lai es tevi izdrāžu līdz squirtingam.” 💦😈',
+		en: 'I make you sit on me, but I don’t let you move. You feel me fully inside, but I grip your waist tight. Your pussy pulses around me, you’re almost crying from the tension. I whisper: “Beg… tell me how hard you want me to fuck you until you squirt.” 💦😈'
 	},
 	{
-		// ~340 chars
-		lv: 'Man patīk, kā mainās tava elpa, kad starp mums kļūst pārāk kluss. It kā ķermenis saprastu ātrāk par vārdiem, ka notiek kaut kas svarīgs. Es neko nesaku. Es tikai palieku. Un ļauju tam notikt. 🫦',
-		en: 'I like how your breathing changes when it gets too quiet between us. As if your body understands before words do that something important is happening. I don’t say anything. I just stay. And let it happen. 🫦'
+		lv: 'Man patīk skatīties, kā tu trīc, kad es tevi laizu no aizmugures — mēle ap tavu dupsi, tad dziļāk iekšā, kamēr tu spiež dupsi pret manu seju. Tu jau gaudi, rokas dreb, tu lūdzies: “Lūdzu, ieliec to iekšā...” Un es tikai smaidu — jo es zinu, ka tu vēl neesi gatava tam, cik stipri es tevi paņemšu. 🍑🔥',
+		en: 'I love watching you tremble when I eat you from behind — tongue around your ass, then deeper inside while you push back against my face. You’re already moaning, hands shaking, begging: “Please, put it in…” And I just smile — because I know you’re not ready for how hard I’m going to take you. 🍑🔥'
 	}
 ] as const;
 
