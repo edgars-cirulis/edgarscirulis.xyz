@@ -26,115 +26,89 @@
 
 	const t = (lv: string, en: string) => (lang === 'lv' ? lv : en);
 
-	// --- Love quotes (edit freely) ---
-	const loveQuotes = [
-		{
-			lv: 'Paldies, ka esi. Tu padari pasauli mierīgāku ar savu klātbūtni. 💜',
-			en: 'Thank you for being you. You make the world feel calmer just by being in it. 💜'
-		},
-		{
-			lv: 'Ja šodien kaut kas ir smags — es esmu tepat. Vienmēr. 🤍',
-			en: 'If today feels heavy — I’m right here. Always. 🤍'
-		},
-		{
-			lv: 'Tu esi mana mīļākā doma dienas vidū. ✨',
-			en: 'You’re my favorite thought in the middle of the day. ✨'
-		},
-		{
-			lv: 'Es tevi izvēlētos vēlreiz. Un vēlreiz. Un vēlreiz. ♾️',
-			en: 'I’d choose you again. And again. And again. ♾️'
-		},
-		{
-			lv: 'Tu esi mans miers un mana iedvesma vienlaikus. 🌙',
-			en: 'You are my peace and my inspiration at the same time. 🌙'
-		},
-		{
-			lv: 'Katru reizi, kad smaidi, man gribas apstāties un paskatīties. ☀️',
-			en: 'Every time you smile, I want to pause and just look. ☀️'
-		},
-		{
-			lv: 'Tevī ir kaut kas ļoti skaists — un tas nav tikai ārpusē. 🌷',
-			en: 'There’s something truly beautiful about you — and it’s not only on the outside. 🌷'
-		},
 
-		// --- deeper additions ---
-		{
-			lv: 'Tu man atgādini, ka maigums nav vājums — tas ir spēks. 🕊️',
-			en: 'You remind me that softness isn’t weakness — it’s strength. 🕊️'
-		},
-		{
-			lv: 'Es nemeklēju perfektu. Es meklēju īstu. Un tu esi īsta. 🤍',
-			en: 'I’m not looking for perfect. I’m looking for real. And you feel real. 🤍'
-		},
-		{
-			lv: 'Tu esi tā vieta manī, kur stress apklust. 🌙',
-			en: 'You’re the place in me where the noise goes quiet. 🌙'
-		},
-		{
-			lv: 'Kad tu esi laimīga, man kļūst vieglāk elpot. ☁️',
-			en: 'When you’re happy, it feels easier for me to breathe. ☁️'
-		},
-		{
-			lv: 'Es gribu būt tev blakus ne tikai skaistajās dienās, bet arī tajās, kurās vajag plecu. 🤍',
-			en: 'I want to be next to you not only on the good days, but also on the days you need a shoulder. 🤍'
-		},
-		{
-			lv: 'Tu esi vairāk nekā mirkļa sajūta — tu esi kaut kas, ko gribas sargāt. 🫶',
-			en: 'You’re more than a moment — you’re something I want to protect. 🫶'
-		},
-		{
-			lv: 'Es mīlu to, kā tu jūti pasauli. Tā ir reta lieta. ✨',
-			en: 'I love the way you feel the world. That’s a rare thing. ✨'
-		},
-		{
-			lv: 'Ja man būtu jāizvēlas viens “mājās” — man šķiet, tas būtu tavā balsī. 🕯️',
-			en: 'If I had to choose one “home,” I think it would be in your voice. 🕯️'
-		},
-		{
-			lv: 'Tu man iemāci, ka tuvums var būt drošs. 🤍',
-			en: 'You teach me that closeness can be safe. 🤍'
-		},
-		{
-			lv: 'Es tevi redzu. Ne tikai skatoties — bet pa īstam. 👁️✨',
-			en: 'I see you. Not just looking — truly. 👁️✨'
-		},
-		{
-			lv: 'Pat klusumā ar tevi ir siltums. 🫧',
-			en: 'Even in silence with you, there’s warmth. 🫧'
-		},
-		{
-			lv: 'Tu esi mans “jā” mieram. Mans “jā” maigumam. 🌿',
-			en: 'You are my “yes” to peace. My “yes” to softness. 🌿'
-		},
-		{
-			lv: 'Es gribu tevi kopt, nevis mainīt. 🌷',
-			en: 'I want to care for you, not change you. 🌷'
-		},
-		{
-			lv: 'Ja pasaule skrien, es ar tevi atceros, kā ir palikt. 🕊️',
-			en: 'When the world runs, with you I remember how to stay. 🕊️'
-		},
-		{
-			lv: 'Tu esi tāda gaisma, kas nesadedzina — tikai sasilda. 🕯️',
-			en: 'You’re a kind of light that doesn’t burn — it only warms. 🕯️'
-		},
-		{
-			lv: 'Man patīk, kā tu esi. Bez maskām. Bez lieka. Vienkārši tu. 🤍',
-			en: 'I love how you are. No mask. No extra. Just you. 🤍'
-		},
-		{
-			lv: 'Es tev uzticos ar savu mieru. Un tas man ir daudz. 🌙',
-			en: 'I trust you with my peace. And that means a lot to me. 🌙'
-		},
-		{
-			lv: 'Tu esi tas “kāpēc” manām labākajām domām. ✨',
-			en: 'You’re the “why” behind my better thoughts. ✨'
-		},
-		{
-			lv: 'Ja tev kādreiz pietrūkst ticības sev — es aizdošu savējo. 🤍',
-			en: 'If you ever run out of belief in yourself — I’ll lend you mine. 🤍'
-		}
-	] as const;
+const loveQuotes = [
+	{
+		lv: 'Man patīk, ka tu zini, ka esi karsta — un tev nav jācenšas. 🔥',
+		en: 'I love that you know you’re hot — and you don’t have to try. 🔥'
+	},
+	{
+		lv: 'Tu mani uzvelc pat tad, kad neko nedari. 😈',
+		en: 'You turn me on even when you’re doing nothing. 😈'
+	},
+	{
+		lv: 'Ir grūti domāt skaidri, kad tu esi man tik tuvu. 🫦',
+		en: 'It’s hard to think clearly when you’re this close to me. 🫦'
+	},
+	{
+		lv: 'Man patīk, cik viegli tu mani izsit no līdzsvara. ⚡',
+		en: 'I like how easily you knock me off balance. ⚡'
+	},
+	{
+		lv: 'Tu esi kā kārdinājums, kuram negribas pretoties. 🔥',
+		en: 'You’re the kind of temptation I don’t want to resist. 🔥'
+	},
+	{
+		lv: 'Tava klātbūtne dara mani nepacietīgu. 😏',
+		en: 'Your presence makes me impatient. 😏'
+	},
+	{
+		lv: 'Man patīk doma, ka tu jūti, cik ļoti es tevi gribu. 🖤',
+		en: 'I like the thought of you feeling how much I want you. 🖤'
+	},
+	{
+		lv: 'Tu liec man gribēt lietas, ko es parasti neteiktu skaļi. 🌑',
+		en: 'You make me want things I wouldn’t usually say out loud. 🌑'
+	},
+	{
+		lv: 'Ar tevi robežas kļūst izplūdušas ļoti ātri. 🔥',
+		en: 'With you, boundaries blur very fast. 🔥'
+	},
+	{
+		lv: 'Man patīk, ka tu mani skaties tā, it kā jau zinātu, kas notiks. 👀',
+		en: 'I love when you look at me like you already know what’s coming. 👀'
+	},
+	{
+		lv: 'Tu mani padari bīstami godīgu par savām vēlmēm. 😈',
+		en: 'You make me dangerously honest about my desires. 😈'
+	},
+	{
+		lv: 'Ir kaut kas ļoti netīri pievilcīgs tavā mierā. 🖤',
+		en: 'There’s something dirty-attractive about how calm you are. 🖤'
+	},
+	{
+		lv: 'Man patīk, ka ar tevi spriedze tikai aug. 🔥',
+		en: 'I love how the tension only builds with you. 🔥'
+	},
+	{
+		lv: 'Tu esi iemesls, kāpēc man grūti turēt rokas pie sevis. 🫦',
+		en: 'You’re the reason it’s hard for me to keep my hands to myself. 🫦'
+	},
+	{
+		lv: 'Es tevi gribu ne skaļi — bet ļoti skaidri. 😏',
+		en: 'I want you not loudly — but very clearly. 😏'
+	},
+	{
+		lv: 'Tu mani padari mazliet bīstamu. 🔥',
+		en: 'You make me a little dangerous. 🔥'
+	},
+	{
+		lv: 'Man patīk, ka tu nejautā — tu jūti. 🖤',
+		en: 'I love that you don’t ask — you feel it. 🖤'
+	},
+	{
+		lv: 'Ar tevi pat skatieni ir netīri. 👁️🔥',
+		en: 'With you, even looks are dirty. 👁️🔥'
+	},
+	{
+		lv: 'Tu mani ievelc sevī lēni… un es ļauju. 🌒',
+		en: 'You pull me in slowly… and I let you. 🌒'
+	},
+	{
+		lv: 'Man patīk doma par tevi pārāk bieži. 😈',
+		en: 'I think about you way too often. 😈'
+	}
+] as const;
 
 	// Latvia timezone (Europe/Riga)
 	const dayKey = new Intl.DateTimeFormat('en-CA', {
