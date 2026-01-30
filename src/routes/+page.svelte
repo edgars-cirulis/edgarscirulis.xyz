@@ -15,6 +15,10 @@
 		spotify: Spotify | null;
 		me: typeof import('$lib/me').me;
 		lang: 'lv' | 'en';
+		horoscopes?: {
+			aquarius: string | null;
+			pisces: string | null;
+		};
 	};
 
 	const { me, lang } = data;
@@ -22,133 +26,135 @@
 
 	const t = (lv: string, en: string) => (lang === 'lv' ? lv : en);
 
-// --- Love quotes (edit freely) ---
-const loveQuotes = [
-	{
-		lv: 'Paldies, ka esi. Tu padari pasauli mierīgāku ar savu klātbūtni. 💜',
-		en: 'Thank you for being you. You make the world feel calmer just by being in it. 💜'
-	},
-	{
-		lv: 'Ja šodien kaut kas ir smags — es esmu tepat. Vienmēr. 🤍',
-		en: 'If today feels heavy — I’m right here. Always. 🤍'
-	},
-	{
-		lv: 'Tu esi mana mīļākā doma dienas vidū. ✨',
-		en: 'You’re my favorite thought in the middle of the day. ✨'
-	},
-	{
-		lv: 'Lai šodiena ir maiga, un mūzika — tieši īstajā noskaņā. 🎶',
-		en: 'May today be gentle, and the music land exactly right. 🎶'
-	},
-	{
-		lv: 'Es tevi izvēlētos vēlreiz. Un vēlreiz. Un vēlreiz. ♾️',
-		en: 'I’d choose you again. And again. And again. ♾️'
-	},
-	{
-		lv: 'Tu esi mans miers un mana iedvesma vienlaikus. 🌙',
-		en: 'You are my peace and my inspiration at the same time. 🌙'
-	},
-	{
-		lv: 'Katru reizi, kad smaidi, man gribas apstāties un paskatīties. ☀️',
-		en: 'Every time you smile, I want to pause and just look. ☀️'
-	},
-	{
-		lv: 'Tevī ir kaut kas ļoti skaists — un tas nav tikai ārpusē. 🌷',
-		en: 'There’s something truly beautiful about you — and it’s not only on the outside. 🌷'
-	},
+	// --- Love quotes (edit freely) ---
+	const loveQuotes = [
+		{
+			lv: 'Paldies, ka esi. Tu padari pasauli mierīgāku ar savu klātbūtni. 💜',
+			en: 'Thank you for being you. You make the world feel calmer just by being in it. 💜'
+		},
+		{
+			lv: 'Ja šodien kaut kas ir smags — es esmu tepat. Vienmēr. 🤍',
+			en: 'If today feels heavy — I’m right here. Always. 🤍'
+		},
+		{
+			lv: 'Tu esi mana mīļākā doma dienas vidū. ✨',
+			en: 'You’re my favorite thought in the middle of the day. ✨'
+		},
+		{
+			lv: 'Lai šodiena ir maiga, un mūzika — tieši īstajā noskaņā. 🎶',
+			en: 'May today be gentle, and the music land exactly right. 🎶'
+		},
+		{
+			lv: 'Es tevi izvēlētos vēlreiz. Un vēlreiz. Un vēlreiz. ♾️',
+			en: 'I’d choose you again. And again. And again. ♾️'
+		},
+		{
+			lv: 'Tu esi mans miers un mana iedvesma vienlaikus. 🌙',
+			en: 'You are my peace and my inspiration at the same time. 🌙'
+		},
+		{
+			lv: 'Katru reizi, kad smaidi, man gribas apstāties un paskatīties. ☀️',
+			en: 'Every time you smile, I want to pause and just look. ☀️'
+		},
+		{
+			lv: 'Tevī ir kaut kas ļoti skaists — un tas nav tikai ārpusē. 🌷',
+			en: 'There’s something truly beautiful about you — and it’s not only on the outside. 🌷'
+		},
 
-	// --- deeper additions ---
-	{
-		lv: 'Tu man atgādini, ka maigums nav vājums — tas ir spēks. 🕊️',
-		en: 'You remind me that softness isn’t weakness — it’s strength. 🕊️'
-	},
-	{
-		lv: 'Es nemeklēju perfektu. Es meklēju īstu. Un tu esi īsta. 🤍',
-		en: 'I’m not looking for perfect. I’m looking for real. And you feel real. 🤍'
-	},
-	{
-		lv: 'Tu esi tā vieta manī, kur stress apklust. 🌙',
-		en: 'You’re the place in me where the noise goes quiet. 🌙'
-	},
-	{
-		lv: 'Kad tu esi laimīga, man kļūst vieglāk elpot. ☁️',
-		en: 'When you’re happy, it feels easier for me to breathe. ☁️'
-	},
-	{
-		lv: 'Es gribu būt tev blakus ne tikai skaistajās dienās, bet arī tajās, kurās vajag plecu. 🤍',
-		en: 'I want to be next to you not only on the good days, but also on the days you need a shoulder. 🤍'
-	},
-	{
-		lv: 'Tu esi vairāk nekā mirkļa sajūta — tu esi kaut kas, ko gribas sargāt. 🫶',
-		en: 'You’re more than a moment — you’re something I want to protect. 🫶'
-	},
-	{
-		lv: 'Es mīlu to, kā tu jūti pasauli. Tā ir reta lieta. ✨',
-		en: 'I love the way you feel the world. That’s a rare thing. ✨'
-	},
-	{
-		lv: 'Ja man būtu jāizvēlas viens “mājās” — man šķiet, tas būtu tavā balsī. 🕯️',
-		en: 'If I had to choose one “home,” I think it would be in your voice. 🕯️'
-	},
-	{
-		lv: 'Tu man iemāci, ka tuvums var būt drošs. 🤍',
-		en: 'You teach me that closeness can be safe. 🤍'
-	},
-	{
-		lv: 'Es tevi redzu. Ne tikai skatoties — bet pa īstam. 👁️✨',
-		en: 'I see you. Not just looking — truly. 👁️✨'
-	},
-	{
-		lv: 'Pat klusumā ar tevi ir siltums. 🫧',
-		en: 'Even in silence with you, there’s warmth. 🫧'
-	},
-	{
-		lv: 'Tu esi mans “jā” mieram. Mans “jā” maigumam. 🌿',
-		en: 'You are my “yes” to peace. My “yes” to softness. 🌿'
-	},
-	{
-		lv: 'Es gribu tevi kopt, nevis mainīt. 🌷',
-		en: 'I want to care for you, not change you. 🌷'
-	},
-	{
-		lv: 'Ja pasaule skrien, es ar tevi atceros, kā ir palikt. 🕊️',
-		en: 'When the world runs, with you I remember how to stay. 🕊️'
-	},
-	{
-		lv: 'Tu esi tāda gaisma, kas nesadedzina — tikai sasilda. 🕯️',
-		en: 'You’re a kind of light that doesn’t burn — it only warms. 🕯️'
-	},
-	{
-		lv: 'Man patīk, kā tu esi. Bez maskām. Bez lieka. Vienkārši tu. 🤍',
-		en: 'I love how you are. No mask. No extra. Just you. 🤍'
-	},
-	{
-		lv: 'Es tev uzticos ar savu mieru. Un tas man ir daudz. 🌙',
-		en: 'I trust you with my peace. And that means a lot to me. 🌙'
-	},
-	{
-		lv: 'Tu esi tas “kāpēc” manām labākajām domām. ✨',
-		en: 'You’re the “why” behind my better thoughts. ✨'
-	},
-	{
-		lv: 'Ja tev kādreiz pietrūkst ticības sev — es aizdošu savējo. 🤍',
-		en: 'If you ever run out of belief in yourself — I’ll lend you mine. 🤍'
-	}
-] as const;
+		// --- deeper additions ---
+		{
+			lv: 'Tu man atgādini, ka maigums nav vājums — tas ir spēks. 🕊️',
+			en: 'You remind me that softness isn’t weakness — it’s strength. 🕊️'
+		},
+		{
+			lv: 'Es nemeklēju perfektu. Es meklēju īstu. Un tu esi īsta. 🤍',
+			en: 'I’m not looking for perfect. I’m looking for real. And you feel real. 🤍'
+		},
+		{
+			lv: 'Tu esi tā vieta manī, kur stress apklust. 🌙',
+			en: 'You’re the place in me where the noise goes quiet. 🌙'
+		},
+		{
+			lv: 'Kad tu esi laimīga, man kļūst vieglāk elpot. ☁️',
+			en: 'When you’re happy, it feels easier for me to breathe. ☁️'
+		},
+		{
+			lv: 'Es gribu būt tev blakus ne tikai skaistajās dienās, bet arī tajās, kurās vajag plecu. 🤍',
+			en: 'I want to be next to you not only on the good days, but also on the days you need a shoulder. 🤍'
+		},
+		{
+			lv: 'Tu esi vairāk nekā mirkļa sajūta — tu esi kaut kas, ko gribas sargāt. 🫶',
+			en: 'You’re more than a moment — you’re something I want to protect. 🫶'
+		},
+		{
+			lv: 'Es mīlu to, kā tu jūti pasauli. Tā ir reta lieta. ✨',
+			en: 'I love the way you feel the world. That’s a rare thing. ✨'
+		},
+		{
+			lv: 'Ja man būtu jāizvēlas viens “mājās” — man šķiet, tas būtu tavā balsī. 🕯️',
+			en: 'If I had to choose one “home,” I think it would be in your voice. 🕯️'
+		},
+		{
+			lv: 'Tu man iemāci, ka tuvums var būt drošs. 🤍',
+			en: 'You teach me that closeness can be safe. 🤍'
+		},
+		{
+			lv: 'Es tevi redzu. Ne tikai skatoties — bet pa īstam. 👁️✨',
+			en: 'I see you. Not just looking — truly. 👁️✨'
+		},
+		{
+			lv: 'Pat klusumā ar tevi ir siltums. 🫧',
+			en: 'Even in silence with you, there’s warmth. 🫧'
+		},
+		{
+			lv: 'Tu esi mans “jā” mieram. Mans “jā” maigumam. 🌿',
+			en: 'You are my “yes” to peace. My “yes” to softness. 🌿'
+		},
+		{
+			lv: 'Es gribu tevi kopt, nevis mainīt. 🌷',
+			en: 'I want to care for you, not change you. 🌷'
+		},
+		{
+			lv: 'Ja pasaule skrien, es ar tevi atceros, kā ir palikt. 🕊️',
+			en: 'When the world runs, with you I remember how to stay. 🕊️'
+		},
+		{
+			lv: 'Tu esi tāda gaisma, kas nesadedzina — tikai sasilda. 🕯️',
+			en: 'You’re a kind of light that doesn’t burn — it only warms. 🕯️'
+		},
+		{
+			lv: 'Man patīk, kā tu esi. Bez maskām. Bez lieka. Vienkārši tu. 🤍',
+			en: 'I love how you are. No mask. No extra. Just you. 🤍'
+		},
+		{
+			lv: 'Es tev uzticos ar savu mieru. Un tas man ir daudz. 🌙',
+			en: 'I trust you with my peace. And that means a lot to me. 🌙'
+		},
+		{
+			lv: 'Tu esi tas “kāpēc” manām labākajām domām. ✨',
+			en: 'You’re the “why” behind my better thoughts. ✨'
+		},
+		{
+			lv: 'Ja tev kādreiz pietrūkst ticības sev — es aizdošu savējo. 🤍',
+			en: 'If you ever run out of belief in yourself — I’ll lend you mine. 🤍'
+		}
+	] as const;
 
 	// Daily-stable index (same quote all day, changes tomorrow)
 	// Latvia timezone (Europe/Riga)
-const dayKey = new Intl.DateTimeFormat('en-CA', {
-	timeZone: 'Europe/Riga',
-	year: 'numeric',
-	month: '2-digit',
-	day: '2-digit'
-}).format(new Date()); // YYYY-MM-DD in Latvia time
+	const dayKey = new Intl.DateTimeFormat('en-CA', {
+		timeZone: 'Europe/Riga',
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit'
+	}).format(new Date()); // YYYY-MM-DD in Latvia time
+
 	const hash = (s: string) => {
 		let h = 0;
 		for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
 		return h;
 	};
+
 	const quoteIndex = hash(dayKey + me.name) % loveQuotes.length;
 
 	const quote = loveQuotes[quoteIndex];
@@ -157,13 +163,7 @@ const dayKey = new Intl.DateTimeFormat('en-CA', {
 
 <svelte:head>
 	<title>{me.name} · {t('Šobrīd skan', 'Now playing')}</title>
-	<meta
-		name="description"
-		content={t(
-			'Spotify “Now playing”',
-			'Spotify “Now playing”'
-		)}
-	/>
+	<meta name="description" content={t('Spotify “Now playing”', 'Spotify “Now playing”')} />
 </svelte:head>
 
 <div class="page">
@@ -202,9 +202,7 @@ const dayKey = new Intl.DateTimeFormat('en-CA', {
 			<div class="love-body">
 				<div class="love-title">{t('Samantha', 'Samantha')}</div>
 
-				<p class="love-text">
-					{quoteText}
-				</p>
+				<p class="love-text">{quoteText}</p>
 
 				<div class="love-meta muted">
 					<Icon icon="lucide:sparkles" width="14" aria-hidden="true" />
@@ -212,6 +210,35 @@ const dayKey = new Intl.DateTimeFormat('en-CA', {
 				</div>
 			</div>
 		</section>
+
+		<!-- ✅ HOROSCOPE CARD (Aquarius + Pisces) -->
+		{#if data.horoscopes && (data.horoscopes.aquarius || data.horoscopes.pisces)}
+			<section class="card" aria-label={t('Dienas horoskops', 'Daily horoscope')}>
+				<div class="card-head">
+					<h2 class="title">
+						<Icon icon="lucide:stars" width="18" aria-hidden="true" />
+						<span>{t('Dienas horoskops', 'Daily horoscope')}</span>
+					</h2>
+					<span class="hint">{dayKey}</span>
+				</div>
+
+				<div class="hz-grid">
+					{#if data.horoscopes.aquarius}
+						<div class="hz-item">
+							<div class="hint">♒ Aquarius</div>
+							<p class="love-text">{data.horoscopes.aquarius}</p>
+						</div>
+					{/if}
+
+					{#if data.horoscopes.pisces}
+						<div class="hz-item">
+							<div class="hint">♓ Pisces</div>
+							<p class="love-text">{data.horoscopes.pisces}</p>
+						</div>
+					{/if}
+				</div>
+			</section>
+		{/if}
 	</main>
 </div>
 
@@ -373,6 +400,19 @@ const dayKey = new Intl.DateTimeFormat('en-CA', {
 		align-items: center;
 		gap: 8px;
 		font-size: 0.9rem;
+	}
+
+	/* Horoscope layout */
+	.hz-grid {
+		display: grid;
+		gap: 14px;
+	}
+
+	.hz-item {
+		padding: 12px;
+		border-radius: 16px;
+		border: 1px solid var(--border);
+		background: rgba(255, 255, 255, 0.03);
 	}
 
 	@media (prefers-reduced-transparency: reduce) {
