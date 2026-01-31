@@ -73,7 +73,7 @@ const loveQuotes = [
 	const quoteText = t(quote.lv, quote.en);
 
 	// ---------------- TIME KNOWN COUNTER ----------------
-	const knownSince = new Date('2026-01-09T12:06:00+02:00');
+	const knownSince = new Date('2026-01-09T21:26:00+02:00');
 
 	let knownDays = 0;
 	let knownHours = 0;
