@@ -191,5 +191,261 @@ const loveQuotes = [
 </div>
 
 <style>
-	/* layout + cards omitted for brevity — KEEP YOUR EXISTING STYLES HERE */
+	.page {
+		min-height: 100vh;
+		display: grid;
+		grid-template-rows: auto 1fr;
+		gap: 18px;
+	}
+
+	.top {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		padding: 10px 12px;
+		border-radius: 999px;
+		background: color-mix(in srgb, var(--surface) 85%, rgba(0, 0, 0, 0.1));
+		border: 1px solid var(--border);
+		box-shadow:
+			var(--ring),
+			0 16px 50px rgba(0, 0, 0, 0.35);
+		backdrop-filter: blur(14px) saturate(140%);
+	}
+
+	.lang {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 7px 10px;
+		border-radius: 999px;
+		border: 1px solid var(--border);
+		background: rgba(255, 255, 255, 0.03);
+	}
+
+	.lang a {
+		color: var(--muted);
+		text-decoration: none;
+		opacity: 0.85;
+		transition:
+			opacity 0.12s ease,
+			color 0.12s ease;
+		font-size: 0.85rem;
+	}
+
+	.lang a.active {
+		opacity: 1;
+		color: var(--text);
+		font-weight: 750;
+	}
+
+	.cta {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 12px;
+		border-radius: 999px;
+		text-decoration: none;
+		color: var(--text);
+		border: 1px solid color-mix(in srgb, var(--tint) 38%, var(--border));
+		background:
+			radial-gradient(120% 140% at 0% 0%, rgba(139, 92, 246, 0.18), transparent 55%),
+			rgba(255, 255, 255, 0.03);
+		box-shadow: var(--ring);
+		transition:
+			transform 0.14s cubic-bezier(0.2, 0.8, 0.2, 1),
+			border-color 0.14s ease,
+			box-shadow 0.14s ease;
+	}
+
+	.cta:hover {
+		transform: translateY(-1px);
+		border-color: color-mix(in srgb, var(--tint) 55%, var(--border));
+		box-shadow:
+			var(--ring),
+			0 0 30px rgba(139, 92, 246, 0.28);
+	}
+
+	.wrap {
+		width: 100%;
+		display: grid;
+		gap: 14px;
+		align-content: start;
+	}
+
+	.card {
+		position: relative;
+		overflow: hidden;
+		border-radius: var(--radius-xl);
+		padding: 18px;
+		background: var(--surface-strong);
+		border: 1px solid var(--border-strong);
+		box-shadow: var(--shadow-1);
+		backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat))
+			brightness(var(--glass-bright));
+	}
+
+	.card::before {
+		content: '';
+		position: absolute;
+		inset: -40% -20% auto -20%;
+		height: 60%;
+		background: radial-gradient(800px 260px at 30% 0%, rgba(255, 255, 255, 0.12), transparent 70%);
+		opacity: 0.45;
+		pointer-events: none;
+	}
+
+	.card-head {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 12px;
+		margin-bottom: 10px;
+	}
+
+	.title {
+		margin: 0;
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		font-family: var(--font-head);
+		font-size: 1.05rem;
+		letter-spacing: -0.01em;
+	}
+
+	.hint {
+		color: var(--muted);
+		font-size: 0.85rem;
+	}
+
+	/* Samantha note (cleaner tint) */
+	.love {
+		display: grid;
+		grid-template-columns: 40px 1fr;
+		gap: 12px;
+		align-items: start;
+		background:
+			radial-gradient(
+				900px 300px at 10% 0%,
+				color-mix(in srgb, var(--tint) 18%, transparent),
+				transparent 60%
+			),
+			var(--surface-strong);
+		border: 1px solid color-mix(in srgb, var(--tint) 22%, var(--border-strong));
+	}
+
+	.love-ic {
+		width: 40px;
+		height: 40px;
+		display: grid;
+		place-items: center;
+		border-radius: 14px;
+		border: 1px solid color-mix(in srgb, var(--tint) 28%, var(--border));
+		background: radial-gradient(
+			120% 120% at 30% 20%,
+			color-mix(in srgb, var(--tint) 22%, transparent),
+			rgba(255, 255, 255, 0.03) 55%
+		);
+		box-shadow: var(--ring);
+	}
+
+	.love-title {
+		font-weight: 850;
+		letter-spacing: -0.01em;
+		margin-bottom: 6px;
+	}
+
+	.love-text {
+		margin: 0;
+		color: color-mix(in srgb, var(--text) 92%, transparent);
+		line-height: 1.7;
+		font-size: 1.02rem;
+	}
+
+	.love-meta {
+		margin-top: 10px;
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 0.9rem;
+	}
+
+	/* pill for date */
+	.pill {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		border: 1px solid var(--border);
+		background: rgba(255, 255, 255, 0.04);
+		color: var(--muted);
+		font-size: 0.82rem;
+	}
+
+	/* Horoscope */
+	.hz {
+		background:
+			radial-gradient(
+				900px 280px at 0% 0%,
+				color-mix(in srgb, var(--tint) 12%, transparent),
+				transparent 60%
+			),
+			var(--surface-strong);
+	}
+
+	.hz-grid {
+		display: grid;
+		gap: 12px;
+	}
+
+	.hz-item {
+		position: relative;
+		padding: 14px;
+		border-radius: 18px;
+		border: 1px solid var(--border);
+		background: rgba(255, 255, 255, 0.035);
+		box-shadow: var(--ring);
+		overflow: hidden;
+	}
+
+	.hz-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 10px;
+		margin-bottom: 10px;
+	}
+
+	.hz-sign {
+		font-weight: 850;
+		letter-spacing: -0.01em;
+	}
+
+	.hz-badge {
+		font-size: 0.78rem;
+		color: var(--muted);
+		border: 1px solid var(--border);
+		background: rgba(255, 255, 255, 0.03);
+		padding: 4px 8px;
+		border-radius: 999px;
+	}
+
+	.hz-text {
+		margin: 0;
+		line-height: 1.65;
+		color: color-mix(in srgb, var(--text) 88%, transparent);
+		font-size: 0.98rem;
+
+		/* show full text */
+		max-height: none;
+		overflow: visible;
+	}
+
+	@media (prefers-reduced-transparency: reduce) {
+		.card,
+		.top {
+			backdrop-filter: none;
+		}
+	}
 </style>
