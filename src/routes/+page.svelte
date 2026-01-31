@@ -29,10 +29,6 @@
 
 const loveQuotes = [
 	{
-		lv: 'Es stāvu tev tik tuvu, ka tu jūti manu cietumu pret tavu vēderu, bet neaiztiekšu. Tava elpa kļūst smaga, tu mēģini nesaspiest kājas, bet es redzu — tu jau teci. Es čukstu ausī: “Saglabā to mitrumu manam mēlei vēlāk... es gribu to visu izlaizīt lēni, līdz tu trīc un lūdzies pēc mana locekļa iekšā.” 😈💦',
-		en: 'I stand so close you feel my hardness pressing against your stomach, but I won’t touch yet. Your breathing gets heavy, you try not to squeeze your thighs, but I see — you’re already dripping. I whisper in your ear: “Save that wetness for my tongue later… I want to lick it all slowly until you’re shaking and begging for my cock inside.” 😈💦'
-	},
-	{
 		lv: 'Man patīk vilkt garumā brīdi, kad tu jau esi kaila man priekšā, bet es tikai skatos. Tavas sprauslas cietas, pīpīte sārta un mitra, tu knapi atturies nesatikt sevi. Es saku: “Pieskaries sev manā priekšā... rādi, kā tu sevi gatavo manam dziļajam triecienam.” Un es zinu — tu to izdarīsi. 🔥🫦',
 		en: 'I love dragging out the moment when you’re already naked in front of me, but I just watch. Nipples hard, pussy pink and wet, you can barely stop yourself from touching. I say: “Touch yourself for me… show me how you prepare for my deep thrusts.” And I know — you’ll do it. 🔥🫦'
 	},
