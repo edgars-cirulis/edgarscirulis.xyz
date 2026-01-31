@@ -216,8 +216,8 @@ const loveQuotes = [
 
 			<p class="time-note muted">
 				{t(
-					'Kopš 2026. gada 9. janvāra, 12:06 (Latvijas laiks)',
-					'Since January 9, 2026, 12:06 PM (Latvia time)'
+					'Kopš 2026. gada 9. janvāra, 21:26 (Latvijas laiks)',
+					'Since January 9, 2026, 9:26 AM (Latvia time)'
 				)}
 			</p>
 		</section>
