@@ -157,11 +157,45 @@ const loveQuotes = [
 			</div>
 		</section>
 
+
+{#if data.horoscopes && (data.horoscopes.aquarius || data.horoscopes.pisces)}
+	<section class="card hz" aria-label={t('Dienas horoskops', 'Daily horoscope')}>
+		<div class="card-head">
+			<h2 class="title">
+				<Icon icon="lucide:stars" width="18" aria-hidden="true" />
+				<span>{t('Dienas horoskops', 'Daily horoscope')}</span>
+			</h2>
+			<span class="pill">{dayKey}</span>
+		</div>
+
+		<div class="hz-grid">
+			{#if data.horoscopes.aquarius}
+				<article class="hz-item">
+					<div class="hz-head">
+						<div class="hz-sign">♒ Aquarius</div>
+						<div class="hz-badge">{t('Šodien', 'Today')}</div>
+					</div>
+					<p class="hz-text">{data.horoscopes.aquarius}</p>
+				</article>
+			{/if}
+
+			{#if data.horoscopes.pisces}
+				<article class="hz-item">
+					<div class="hz-head">
+						<div class="hz-sign">♓ Pisces</div>
+						<div class="hz-badge">{t('Šodien', 'Today')}</div>
+					</div>
+					<p class="hz-text">{data.horoscopes.pisces}</p>
+				</article>
+			{/if}
+		</div>
+	</section>
+{/if}
 		<section class="card time">
 			<div class="card-head">
 				<h2 class="title">
 					<Icon icon="lucide:clock" width="18" />
-					<span>{t('Cik ilgi mēs pazīstamies', 'Time we’ve known each other')}</span>
+					<span>{t('Cik ilgi mēs pazīstami?', 'Time we’ve known each other?')}</span>
 				</h2>
 			</div>
 
