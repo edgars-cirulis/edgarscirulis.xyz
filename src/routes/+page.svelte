@@ -46,19 +46,7 @@
 	const t = (lv: string, en: string) => (lang === 'lv' ? lv : en);
 
 const loveQuotes = [
-  {
-    lv: 'Edgars ievelk Samantu tumšā alejā, spiež pret koku, rokas paceltas virs galvas, turētas stingri. Viņš čukst ausī: “Klusi, mīļā, kāds var dzirdēt... bet es zinu, ka tu gribi, lai es tevi paņemu tieši šeit, riskanti un ātri, līdz tu trīc no baudas.” Viņa elsojums ir atbilde. 🌑😈',
-    en: 'Edgars pulls Samantha into a dark alley, presses her against a tree, hands raised above her head, held tight. He whispers in her ear: “Quiet, darling, someone might hear... but I know you want me to take you right here, risky and fast, until you shake with pleasure.” Her panting is the answer. 🌑😈'
-  },
-  {
-    lv: 'Samanta ir sasieta ar zīda šallēm pie krēsla, acis aizsietas, un Edgars lēnām glāsta viņas ķermeni ar ledus gabaliņu, liekot ādai sarauties. Viņš saka: “Pastāsti man savus tumšākos noslēpumus, vai es turpināšu šo mocīšanu... līdz tu lūdzies pēc mana pieskāriena, kas aizvedīs tevi līdz ekstāzei.” Viņa balsī dzirdama vēlme. ❄️🔥',
-    en: 'Samantha is tied with silk scarves to the chair, eyes blindfolded, and Edgars slowly traces her body with an ice cube, making her skin contract. He says: “Tell me your darkest secrets, or I’ll continue this torment... until you beg for my touch that will take you to ecstasy.” Her voice reveals desire. ❄️🔥'
-  },
-  {
-    lv: 'Edgars aizved Samantu uz jumta, vēja šalkā, un spiež viņu pret margu, ķermenis pret ķermeni. Viņš čukst: “Skaties uz pilsētu zem mums, kamēr es tevi aizpildīšu ar savu kaisli... ātri, intensīvi, līdz tu kliedz vējam līdzi.” Viņas rokas satver margu stingrāk. 🌃💨',
-    en: 'Edgars leads Samantha to the rooftop, in the whisper of the wind, and presses her against the railing, body to body. He whispers: “Look at the city below us while I fill you with my passion... fast, intense, until you scream with the wind.” Her hands grip the railing tighter. 🌃💨'
-  },
-  {
+{
     lv: 'Samanta guļ uz vēdera meža pļavā, Edgars virs viņas, rokas tur viņas plaukstas zemē. Viņš murmina: “Šeit, dabā, es tevi paņemšu primitīvi, kā dzīvnieks... līdz tu sajūti katru triecienu dziļi dvēselē.” Viņas elpa paātrinās no uzbudinājuma. 🌿🐺',
     en: 'Samantha lies on her stomach in a forest clearing, Edgars above her, hands holding her wrists to the ground. He murmurs: “Here, in nature, I’ll take you primitively, like an animal... until you feel every thrust deep in your soul.” Her breath quickens with excitement. 🌿🐺'
   },
