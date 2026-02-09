@@ -206,11 +206,6 @@ const cardBadge = (entry?: HoroscopeEntry | null) => {
 			<span>·</span>
 			<a href="/en" class:active={lang === 'en'}>EN</a>
 		</nav>
-
-		<a class="cta" href={mailto(me.email)}>
-			<Icon icon="lucide:mail" width="16" />
-			<span>{t('Sazināties', 'Contact')}</span>
-		</a>
 	</header>
 
 	<main class="wrap">
