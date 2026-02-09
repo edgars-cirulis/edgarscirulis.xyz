@@ -46,10 +46,6 @@
 	const t = (lv: string, en: string) => (lang === 'lv' ? lv : en);
 
 const loveQuotes = [
-{
-    lv: 'Samanta guļ uz vēdera meža pļavā, Edgars virs viņas, rokas tur viņas plaukstas zemē. Viņš murmina: “Šeit, dabā, es tevi paņemšu primitīvi, kā dzīvnieks... līdz tu sajūti katru triecienu dziļi dvēselē.” Viņas elpa paātrinās no uzbudinājuma. 🌿🐺',
-    en: 'Samantha lies on her stomach in a forest clearing, Edgars above her, hands holding her wrists to the ground. He murmurs: “Here, in nature, I’ll take you primitively, like an animal... until you feel every thrust deep in your soul.” Her breath quickens with excitement. 🌿🐺'
-  },
   {
     lv: 'Edgars ieslēdz Samantu tumšā istabā ar vibrējošu rotaļlietu, bet neļauj tai pieskarties. Viņš vēro caur durvju spraugu un saka: “Lūdzies man, lai es ienāku un pastiprinu tavu baudu... līdz tu eksplodē no intensitātes.” Viņas saucieni piepilda telpu. 🖤🕯️',
     en: 'Edgars locks Samantha in a dark room with a vibrating toy, but doesn’t let her touch it. He watches through the door crack and says: “Beg me to come in and amplify your pleasure... until you explode from the intensity.” Her cries fill the space. 🖤🕯️'
