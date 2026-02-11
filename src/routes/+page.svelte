@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	import { mailto } from '$lib/utils';
 	import { onMount } from 'svelte';
 
 	type Spotify = {
@@ -45,14 +44,16 @@
 
 	const t = (lv: string, en: string) => (lang === 'lv' ? lv : en);
 
+	// ────────────────────────────────────────────────
+	//  Daily love quote
+	// ────────────────────────────────────────────────
 	const loveQuotes = [
 		{
-			lv: 'Viņš ievelk Samantu vannas istabā, piespiež ceļos dušā un pavēl: “Rauj muti vaļā un lūdz, lai es tevi nomocu ar aukstu ūdeni un savu mēli vienlaikus. Ja neizturēsi un sāksi vaimanāt par karstumu – es tevi turēšu zem ledus strūklas, līdz tu lūgsies tikai par manu pieskārienu.” Viņas ķermenis trīc no aukstuma un karstuma sajaukuma, bet mute paliek atvērta – lūgums klusā, bet ķermenis kliedz. 🖤❄️🔥',
+			lv: 'Viņš ievelk Samantu vannas istabā, piespiež ceļos dušā un pavēl: “Rauj muti vaļā un lūdz, lai es tevi nomocu ar aukstu ūdeni un savu mēli vienlaikus. Ja neizturēsi un sāksi vaimanāt par karstumu – es tevi turēsi zem ledus strūklas, līdz tu lūgsies tikai par manu pieskārienu.” Viņas ķermenis trīc no aukstuma un karstuma sajaukuma, bet mute paliek atvērta – lūgums klusā, bet ķermenis kliedz. 🖤❄️🔥',
 			en: 'He drags Samantha into the bathroom, forces her to her knees in the shower and commands: “Open your mouth wide and beg me to torment you with cold water and my tongue at the same time. If you can’t take it and start whining for warmth – I’ll hold you under the ice stream until you beg only for my touch.” Her body trembles from the mix of cold and heat, but her mouth stays open – the plea is silent, yet her body screams. 🖤❄️🔥'
 		}
 	] as const;
 
-	// ---------------- DAILY QUOTE PICK ----------------
 	const dayKey = new Intl.DateTimeFormat('en-CA', {
 		timeZone: 'Europe/Riga',
 		year: 'numeric',
@@ -70,45 +71,73 @@
 	const quote = loveQuotes[quoteIndex];
 	const quoteText = t(quote.lv, quote.en);
 
-	// ---------------- TIME KNOWN COUNTER ----------------
+	// ────────────────────────────────────────────────
+	//  Riga time helper
+	// ────────────────────────────────────────────────
+	function getRigaNow(): Date {
+		const str = new Intl.DateTimeFormat('en-US', {
+			timeZone: 'Europe/Riga',
+			year: 'numeric',
+			month: 'numeric',
+			day: 'numeric',
+			hour: 'numeric',
+			minute: 'numeric',
+			second: 'numeric',
+			hour12: false
+		}).format(new Date());
+
+		const [datePart, timePart] = str.split(', ');
+		const [month, day, year] = datePart.split('/');
+		const [hour, minute, second] = timePart.split(':');
+
+		return new Date(+year, +month - 1, +day, +hour, +minute, +second);
+	}
+
+	// ────────────────────────────────────────────────
+	//  Time known
+	// ────────────────────────────────────────────────
 	const knownSince = new Date('2026-01-09T21:26:00+02:00');
 
+	let knownMonths = 0;
 	let knownDays = 0;
 	let knownHours = 0;
 	let knownMinutes = 0;
 
-	let knownMonths = 0;
-	let knownDaysAdjusted = knownDays;
+	function updateKnownTime() {
+		const now = getRigaNow();
+		const diffMs = now.getTime() - knownSince.getTime();
+		if (diffMs < 0) {
+			knownMonths = knownDays = knownHours = knownMinutes = 0;
+			return;
+		}
 
-	const updateKnownTime = () => {
-		const now = new Date();
+		// Count full months
 		let months = 0;
 		let temp = new Date(knownSince);
-
-		while (
-			temp.getFullYear() < now.getFullYear() ||
-			(temp.getFullYear() === now.getFullYear() && temp.getMonth() < now.getMonth())
-		) {
-			temp.setMonth(temp.getMonth() + 1);
+		while (true) {
+			const next = new Date(temp);
+			next.setMonth(next.getMonth() + 1);
+			if (next > now) break;
+			temp = next;
 			months++;
 		}
 
-		// atlikušās dienas pēc mēnešiem
-		const monthAdjusted = new Date(knownSince);
-		monthAdjusted.setMonth(monthAdjusted.getMonth() + months);
-		const daysDiff = Math.floor((now.getTime() - monthAdjusted.getTime()) / (1000 * 60 * 60 * 24));
+		// Remaining days after last full month
+		const remainingMs = now.getTime() - temp.getTime();
+		const remainingDays = Math.floor(remainingMs / 86400000);
 
 		knownMonths = months;
-		knownDaysAdjusted = daysDiff >= 0 ? daysDiff : 0; // drošībai
+		knownDays = remainingDays >= 0 ? remainingDays : 0;
 
-		// stundas un minūtes paliek pēc dienas
-		const diffMs = now.getTime() - knownSince.getTime();
-		const totalMinutes = Math.floor(diffMs / 60000);
-		knownHours = Math.floor((totalMinutes % (60 * 24)) / 60);
-		knownMinutes = totalMinutes % 60;
-	};
+		// Hours & minutes
+		const totalHours = Math.floor(diffMs / 3600000);
+		knownHours = totalHours % 24;
+		knownMinutes = Math.floor((diffMs % 3600000) / 60000);
+	}
 
-	// ---------------- DESTINY COUNTDOWN ----------------
+	// ────────────────────────────────────────────────
+	//  Destiny countdown
+	// ────────────────────────────────────────────────
 	const destinyDeadline = new Date('2026-02-23T23:59:00+02:00');
 
 	let cdDays = 0;
@@ -117,33 +146,27 @@
 	let cdSeconds = 0;
 	let cdProgress = 0;
 
-	let countdownStart: Date;
-
-	const updateCountdown = () => {
-		const now = new Date(); // vari izmantot savu formatēto versiju, bet vienkāršāk new Date()
-
+	function updateCountdown() {
+		const now = getRigaNow();
 		const leftMs = destinyDeadline.getTime() - now.getTime();
 		const safeLeft = Math.max(0, leftMs);
 
-		const totalMs = destinyDeadline.getTime() - knownSince.getTime(); // vai fiksēts periods no 9.jan līdz 23.feb
+		const totalMs = destinyDeadline.getTime() - knownSince.getTime();
+		cdProgress = totalMs > 0 ? Math.min(100, 100 - (safeLeft / totalMs) * 100) : 100;
 
-		// ja vēlies precīzu % no visa perioda
-		cdProgress = Math.min(100, Math.max(0, 100 - (safeLeft / totalMs) * 100));
-
-		// atlikušais laiks (kā tev jau ir)
 		const totalSeconds = Math.floor(safeLeft / 1000);
 		cdDays = Math.floor(totalSeconds / 86400);
 		cdHours = Math.floor((totalSeconds % 86400) / 3600);
 		cdMinutes = Math.floor((totalSeconds % 3600) / 60);
 		cdSeconds = totalSeconds % 60;
-	};
+	}
 
 	onMount(() => {
 		updateKnownTime();
 		updateCountdown();
 
 		const knownInterval = setInterval(updateKnownTime, 60_000);
-		const countdownInterval = setInterval(updateCountdown, 1000);
+		const countdownInterval = setInterval(updateCountdown, 1_000);
 
 		return () => {
 			clearInterval(knownInterval);
@@ -151,7 +174,9 @@
 		};
 	});
 
-	// ---------------- HOROSCOPE PERIOD UI ----------------
+	// ────────────────────────────────────────────────
+	//  Horoscope UI logic
+	// ────────────────────────────────────────────────
 	let hzPeriod: 'daily' | 'weekly' | 'monthly' = 'daily';
 
 	const periodLabel = (p: typeof hzPeriod) =>
@@ -164,22 +189,17 @@
 	const getEntry = (sign: 'aquarius' | 'pisces') => data.horoscopes?.[sign]?.[hzPeriod];
 
 	const periodPill = () => {
-		const aq = getEntry('aquarius');
-		const meta = aq?.meta;
-
+		const entry = getEntry('aquarius');
+		const meta = entry?.meta;
 		if (hzPeriod === 'weekly' && meta?.week) return meta.week;
 		if (hzPeriod === 'monthly' && meta?.month) return meta.month;
-
-		return dayKey; // daily fallback
+		return dayKey;
 	};
 
 	const cardBadge = (entry?: HoroscopeEntry | null) => {
 		if (!entry) return '';
-
 		if (hzPeriod === 'weekly') return entry.meta.week ?? t('Nedēļa', 'Week');
 		if (hzPeriod === 'monthly') return entry.meta.month ?? t('Mēnesis', 'Month');
-
-		// daily
 		return dayKey;
 	};
 
@@ -205,6 +225,7 @@
 	</header>
 
 	<main class="wrap">
+		<!-- Now Playing -->
 		<section class="card">
 			<div class="card-head">
 				<h1 class="title">
@@ -212,21 +233,19 @@
 					<span>{t('Šobrīd skan', 'Now playing')}</span>
 				</h1>
 			</div>
-
 			{#await nowPlayingModule then mod}
 				<svelte:component this={mod.default} spotify={data.spotify} />
 			{/await}
 		</section>
 
+		<!-- Samantha quote -->
 		<section class="card love">
 			<div class="love-ic">
 				<Icon icon="lucide:heart" width="18" />
 			</div>
-
 			<div class="love-body">
 				<div class="love-title">Samantha</div>
 				<p class="love-text">{quoteText}</p>
-
 				<div class="love-meta muted">
 					<Icon icon="lucide:sparkles" width="14" />
 					<span>{t('Šodienas citāts', 'Today’s quote')}</span>
@@ -234,6 +253,7 @@
 			</div>
 		</section>
 
+		<!-- Horoscopes -->
 		{#if data.horoscopes}
 			<section class="card hz" aria-label={t('Horoskops', 'Horoscope')}>
 				<div class="card-head">
@@ -241,7 +261,6 @@
 						<Icon icon="lucide:stars" width="18" aria-hidden="true" />
 						<span>{t('Horoskops', 'Horoscope')}</span>
 					</h2>
-
 					<div class="hz-right">
 						<div class="hz-tabs">
 							<button class:active={hzPeriod === 'daily'} on:click={() => (hzPeriod = 'daily')}>
@@ -254,38 +273,37 @@
 								{t('Mēnesis', 'Month')}
 							</button>
 						</div>
-
 						<span class="pill">{periodPill()}</span>
 					</div>
 				</div>
 
 				<div class="hz-grid">
-					{#each ['aquarius', 'pisces'] as const as sign}
-						{#if getEntry(sign)?.text}
+					{#each ['aquarius', 'pisces'] as sign}
+						{@const entry = getEntry(sign as 'aquarius' | 'pisces')}
+						{#if entry?.text}
 							<article class="hz-item">
 								<div class="hz-head">
 									<div class="hz-sign">{sign === 'aquarius' ? '♒ Aquarius' : '♓ Pisces'}</div>
-									<div class="hz-badge">{cardBadge(getEntry(sign))}</div>
+									<div class="hz-badge">{cardBadge(entry)}</div>
 								</div>
 
-								{#if hzPeriod !== 'daily' && (getEntry(sign)?.meta?.challenging_days || getEntry(sign)?.meta?.standout_days)}
+								{#if hzPeriod !== 'daily' && (entry.meta?.challenging_days || entry.meta?.standout_days)}
 									<div class="hz-days">
-										{#if getEntry(sign)?.meta?.standout_days}
+										{#if entry.meta?.standout_days}
 											<div class="hz-days-row">
 												<span class="hz-days-label">{t('Labās dienas', 'Standout')}</span>
 												<div class="hz-days-chips">
-													{#each splitDays(getEntry(sign)?.meta?.standout_days) as d}
+													{#each splitDays(entry.meta.standout_days) as d}
 														<span class="chip">{d}</span>
 													{/each}
 												</div>
 											</div>
 										{/if}
-
-										{#if getEntry(sign)?.meta?.challenging_days}
+										{#if entry.meta?.challenging_days}
 											<div class="hz-days-row">
 												<span class="hz-days-label">{t('Sarežģītās', 'Challenging')}</span>
 												<div class="hz-days-chips">
-													{#each splitDays(getEntry(sign)?.meta?.challenging_days) as d}
+													{#each splitDays(entry.meta.challenging_days) as d}
 														<span class="chip chip-warn">{d}</span>
 													{/each}
 												</div>
@@ -294,7 +312,7 @@
 									</div>
 								{/if}
 
-								<p class="hz-text">{getEntry(sign)?.text}</p>
+								<p class="hz-text">{entry.text}</p>
 							</article>
 						{/if}
 					{/each}
@@ -302,6 +320,7 @@
 			</section>
 		{/if}
 
+		<!-- Countdown -->
 		<section class="card countdown" data-urgent={cdDays === 0} aria-label="Likteņa taimeris">
 			<div class="card-head">
 				<h2 class="title">
@@ -339,6 +358,7 @@
 			</p>
 		</section>
 
+		<!-- Time known -->
 		<section class="card time">
 			<div class="card-head">
 				<h2 class="title">
@@ -348,6 +368,12 @@
 			</div>
 
 			<div class="time-grid">
+				{#if knownMonths > 0}
+					<div class="time-box">
+						<div class="time-num">{knownMonths}</div>
+						<div class="time-label">{t('mēneši', 'months')}</div>
+					</div>
+				{/if}
 				<div class="time-box">
 					<div class="time-num">{knownDays}</div>
 					<div class="time-label">{t('dienas', 'days')}</div>
@@ -365,7 +391,7 @@
 			<p class="time-note muted">
 				{t(
 					'Kopš 2026. gada 9. janvāra, 21:26 (Latvijas laiks)',
-					'Since January 9, 2026, 9:26 AM (Latvia time)'
+					'Since January 9, 2026, 21:26 (Latvia time)'
 				)}
 			</p>
 		</section>
@@ -378,424 +404,303 @@
 		display: grid;
 		grid-template-rows: auto 1fr;
 		gap: 18px;
+		padding: 16px;
 	}
 
 	.top {
 		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 12px;
-		padding: 12px 14px;
+		justify-content: flex-end;
+		padding: 12px 16px;
 		border-radius: 999px;
 		background: color-mix(in srgb, var(--surface) 85%, rgba(0, 0, 0, 0.1));
 		border: 1px solid var(--border);
+		backdrop-filter: blur(14px) saturate(140%);
 		box-shadow:
 			var(--ring),
-			0 16px 50px rgba(0, 0, 0, 0.35);
-		backdrop-filter: blur(14px) saturate(140%);
+			0 8px 32px rgba(0, 0, 0, 0.25);
 	}
 
 	.lang {
-		display: inline-flex;
-		align-items: center;
+		display: flex;
 		gap: 8px;
-		padding: 7px 10px;
+		align-items: center;
+		padding: 6px 10px;
 		border-radius: 999px;
 		border: 1px solid var(--border);
-		background: rgba(255, 255, 255, 0.03);
+		background: rgba(255, 255, 255, 0.04);
 	}
 
 	.lang a {
+		padding: 4px 8px;
+		border-radius: 999px;
 		color: var(--muted);
 		text-decoration: none;
-		opacity: 0.85;
-		transition:
-			opacity 0.12s ease,
-			color 0.12s ease;
-		font-size: 0.85rem;
-		padding: 4px 6px;
-		border-radius: 999px;
+		font-size: 0.9rem;
+		transition: all 0.15s ease;
 	}
 
 	.lang a.active {
-		opacity: 1;
+		background: rgba(255, 255, 255, 0.12);
 		color: var(--text);
-		font-weight: 750;
-	}
-
-	.cta {
-		display: inline-flex;
-		align-items: center;
-		gap: 8px;
-		padding: 8px 12px;
-		border-radius: 999px;
-		text-decoration: none;
-		color: var(--text);
-		border: 1px solid color-mix(in srgb, var(--tint) 38%, var(--border));
-		background:
-			radial-gradient(120% 140% at 0% 0%, rgba(139, 92, 246, 0.18), transparent 55%),
-			rgba(255, 255, 255, 0.03);
-		box-shadow: var(--ring);
-		transition:
-			transform 0.14s cubic-bezier(0.2, 0.8, 0.2, 1),
-			border-color 0.14s ease,
-			box-shadow 0.14s ease;
-	}
-
-	.cta:hover {
-		transform: translateY(-1px);
-		border-color: color-mix(in srgb, var(--tint) 55%, var(--border));
-		box-shadow:
-			var(--ring),
-			0 0 30px rgba(139, 92, 246, 0.28);
+		font-weight: 600;
 	}
 
 	.wrap {
-		width: 100%;
 		display: grid;
-		gap: 14px;
-		align-content: start;
+		gap: 16px;
+		max-width: 720px;
+		margin: 0 auto;
 	}
 
 	.card {
-		position: relative;
-		overflow: hidden;
-		border-radius: var(--radius-xl);
-		padding: 18px;
+		border-radius: 20px;
+		padding: 20px;
 		background: var(--surface-strong);
 		border: 1px solid var(--border-strong);
-		box-shadow: var(--shadow-1);
-		backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat))
-			brightness(var(--glass-bright));
+		backdrop-filter: blur(var(--glass-blur, 12px)) saturate(var(--glass-sat, 180%));
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.22);
+		position: relative;
+		overflow: hidden;
 	}
 
 	.card::before {
 		content: '';
 		position: absolute;
-		inset: -40% -20% auto -20%;
-		height: 60%;
-		background: radial-gradient(800px 260px at 30% 0%, rgba(255, 255, 255, 0.12), transparent 70%);
-		opacity: 0.45;
+		inset: -50% -30% auto -30%;
+		height: 70%;
+		background: radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.14), transparent 60%);
 		pointer-events: none;
 	}
 
 	.card-head {
 		display: flex;
-		align-items: baseline;
 		justify-content: space-between;
+		align-items: baseline;
+		margin-bottom: 16px;
 		gap: 12px;
-		margin-bottom: 10px;
 	}
 
 	.title {
-		margin: 0;
-		display: inline-flex;
+		display: flex;
 		align-items: center;
 		gap: 10px;
-		font-family: var(--font-head);
-		font-size: 1.05rem;
+		font-size: 1.18rem;
+		font-weight: 700;
 		letter-spacing: -0.01em;
+		margin: 0;
 	}
 
-	.muted {
-		color: var(--muted);
-	}
-
-	/* Samantha note */
+	/* Love quote */
 	.love {
 		display: grid;
-		grid-template-columns: 40px 1fr;
-		gap: 12px;
-		align-items: start;
+		grid-template-columns: 48px 1fr;
+		gap: 16px;
 		background:
-			radial-gradient(
-				900px 300px at 10% 0%,
-				color-mix(in srgb, var(--tint) 18%, transparent),
-				transparent 60%
-			),
-			var(--surface-strong);
-		border: 1px solid color-mix(in srgb, var(--tint) 22%, var(--border-strong));
-		border-radius: 26px;
-		box-shadow:
-			var(--ring),
-			0 0 0 1px color-mix(in srgb, var(--tint) 25%, transparent),
-			0 25px 80px rgba(139, 92, 246, 0.18);
-	}
-
-	.love-ic {
-		width: 40px;
-		height: 40px;
-		display: grid;
-		place-items: center;
-		border-radius: 14px;
-		border: 1px solid color-mix(in srgb, var(--tint) 28%, var(--border));
-		background: radial-gradient(
-			120% 120% at 30% 20%,
-			color-mix(in srgb, var(--tint) 22%, transparent),
-			rgba(255, 255, 255, 0.03) 55%
-		);
-		box-shadow: var(--ring);
+			linear-gradient(145deg, rgba(139, 92, 246, 0.08), transparent 60%), var(--surface-strong);
+		border: 1px solid color-mix(in srgb, var(--tint), var(--border-strong) 70%);
+		border-radius: 24px;
+		padding: 20px;
 	}
 
 	.love-title {
-		font-weight: 850;
-		letter-spacing: -0.01em;
+		font-weight: 800;
+		font-size: 1.15rem;
 		margin-bottom: 6px;
 	}
 
 	.love-text {
+		line-height: 1.7;
+		color: color-mix(in srgb, var(--text) 90%, transparent);
 		margin: 0;
-		color: color-mix(in srgb, var(--text) 92%, transparent);
-		line-height: 1.75;
-		font-size: 1.05rem;
 	}
 
 	.love-meta {
-		margin-top: 10px;
-		display: inline-flex;
+		display: flex;
 		align-items: center;
 		gap: 8px;
-		font-size: 0.9rem;
-	}
-
-	.pill {
-		display: inline-flex;
-		align-items: center;
-		gap: 8px;
-		padding: 6px 10px;
-		border-radius: 999px;
-		border: 1px solid var(--border);
-		background: rgba(255, 255, 255, 0.04);
-		color: var(--muted);
-		font-size: 0.82rem;
+		font-size: 0.88rem;
+		margin-top: 12px;
 	}
 
 	/* Horoscope */
-	.hz {
-		background:
-			radial-gradient(
-				900px 280px at 0% 0%,
-				color-mix(in srgb, var(--tint) 12%, transparent),
-				transparent 60%
-			),
-			var(--surface-strong);
-	}
-
 	.hz-right {
-		display: inline-flex;
+		display: flex;
 		align-items: center;
-		gap: 10px;
+		gap: 12px;
 	}
 
 	.hz-tabs {
-		display: inline-flex;
+		display: flex;
 		gap: 6px;
+		background: rgba(255, 255, 255, 0.04);
+		padding: 4px;
+		border-radius: 999px;
+		border: 1px solid var(--border);
 	}
 
 	.hz-tabs button {
-		padding: 6px 10px;
+		padding: 6px 14px;
 		border-radius: 999px;
-		border: 1px solid var(--border);
-		background: rgba(255, 255, 255, 0.04);
+		border: none;
+		background: transparent;
 		color: var(--muted);
-		font-size: 0.75rem;
+		font-size: 0.86rem;
 		cursor: pointer;
-		transition: all 0.15s ease;
+		transition: all 0.15s;
 	}
 
 	.hz-tabs button.active {
+		background: rgba(255, 255, 255, 0.12);
 		color: var(--text);
-		font-weight: 700;
-		border-color: color-mix(in srgb, var(--tint) 45%, var(--border));
+		font-weight: 600;
 		box-shadow: var(--ring);
 	}
 
 	.hz-grid {
 		display: grid;
-		gap: 12px;
+		gap: 14px;
 	}
 
 	.hz-item {
-		position: relative;
-		padding: 14px;
-		border-radius: 18px;
-		border: 1px solid var(--border);
+		padding: 16px;
+		border-radius: 16px;
 		background: rgba(255, 255, 255, 0.035);
+		border: 1px solid var(--border);
 		box-shadow: var(--ring);
-		overflow: hidden;
-	}
-
-	.hz-item::after {
-		content: '';
-		position: absolute;
-		inset: auto 0 0 0;
-		height: 40px;
-		background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.25));
-		pointer-events: none;
 	}
 
 	.hz-head {
 		display: flex;
-		align-items: center;
 		justify-content: space-between;
-		gap: 10px;
-		margin-bottom: 10px;
+		align-items: center;
+		margin-bottom: 12px;
 	}
 
 	.hz-sign {
-		font-weight: 850;
-		letter-spacing: -0.01em;
+		font-weight: 800;
+		font-size: 1.1rem;
 	}
 
 	.hz-badge {
-		font-size: 0.78rem;
-		color: var(--muted);
-		border: 1px solid var(--border);
-		background: rgba(255, 255, 255, 0.03);
-		padding: 4px 8px;
-		border-radius: 999px;
-	}
-
-	.hz-days {
-		display: grid;
-		gap: 8px;
-		margin: 8px 0 10px;
-	}
-
-	.hz-days-row {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 10px;
-	}
-
-	.hz-days-label {
-		font-size: 0.78rem;
-		color: var(--muted);
-		white-space: nowrap;
-	}
-
-	.hz-days-chips {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: flex-end;
-		gap: 6px;
-	}
-
-	.chip {
-		font-size: 0.72rem;
-		padding: 3px 8px;
+		font-size: 0.82rem;
+		padding: 4px 10px;
 		border-radius: 999px;
 		border: 1px solid var(--border);
-		background: rgba(255, 255, 255, 0.03);
-		color: var(--text);
-		opacity: 0.9;
-	}
-
-	.chip-warn {
-		border-color: rgba(244, 63, 94, 0.35);
+		background: rgba(255, 255, 255, 0.04);
+		color: var(--muted);
 	}
 
 	.hz-text {
-		margin: 0;
-		line-height: 1.6;
+		line-height: 1.65;
 		color: color-mix(in srgb, var(--text) 88%, transparent);
-		font-size: 0.95rem;
-		max-height: none;
-		overflow: visible;
+		margin: 0;
 	}
 
 	/* Countdown */
-	.countdown {
-		background:
-			radial-gradient(
-				900px 280px at 10% 0%,
-				color-mix(in srgb, var(--tint) 16%, transparent),
-				transparent 60%
-			),
-			var(--surface-strong);
-	}
-
 	.cd-grid {
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
 		gap: 12px;
-		margin-bottom: 14px;
+		margin: 16px 0;
 	}
 
 	.cd-box {
 		text-align: center;
-		padding: 10px 6px;
+		padding: 12px 8px;
 		border-radius: 14px;
+		background: rgba(255, 255, 255, 0.04);
 		border: 1px solid var(--border);
-		background: rgba(255, 255, 255, 0.035);
 		box-shadow: var(--ring);
 	}
 
 	.cd-num {
-		font-size: 1.25rem;
+		font-size: 1.6rem;
 		font-weight: 900;
-		letter-spacing: -0.03em;
+		line-height: 1;
 	}
 
 	.cd-label {
-		font-size: 0.75rem;
+		font-size: 0.82rem;
 		color: var(--muted);
+		margin-top: 4px;
 	}
 
 	.cd-bar {
-		position: relative;
-		height: 10px;
-		border-radius: 999px;
+		height: 12px;
 		background: rgba(255, 255, 255, 0.08);
+		border-radius: 999px;
 		overflow: hidden;
 		border: 1px solid var(--border);
-		box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25);
-	}
-
-	@keyframes destinyPulse {
-		0%,
-		100% {
-			filter: brightness(1);
-		}
-		50% {
-			filter: brightness(1.15);
-		}
+		margin: 12px 0;
 	}
 
 	.cd-bar-fill {
 		height: 100%;
-		background: linear-gradient(
-			90deg,
-			color-mix(in srgb, var(--tint) 65%, #fff),
-			color-mix(in srgb, var(--tint) 35%, #000)
-		);
-		transition: width 0.6s ease;
-		animation: destinyPulse 3.5s ease-in-out infinite;
-		will-change: width;
+		background: linear-gradient(90deg, var(--tint), color-mix(in srgb, var(--tint) 40%, #000));
+		transition: width 0.8s ease;
+		animation: pulse 4s infinite ease-in-out;
+	}
+
+	@keyframes pulse {
+		0%,
+		100% {
+			opacity: 0.92;
+		}
+		50% {
+			opacity: 1;
+		}
 	}
 
 	.countdown[data-urgent='true'] .cd-bar-fill {
 		background: linear-gradient(90deg, #f43f5e, #fb7185);
 	}
 
-	.cd-note {
-		margin-top: 10px;
-		font-size: 0.85rem;
+	/* Time known */
+	.time-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(88px, 1fr));
+		gap: 12px;
+		margin: 16px 0;
+	}
+
+	.time-box {
+		text-align: center;
+		padding: 12px 8px;
+		border-radius: 14px;
+		background: rgba(255, 255, 255, 0.04);
+		border: 1px solid var(--border);
+		box-shadow: var(--ring);
 	}
 
 	.time-num {
-		letter-spacing: -0.03em;
-		transition:
-			transform 0.25s ease,
-			opacity 0.25s ease;
-		will-change: transform;
+		font-size: 1.55rem;
+		font-weight: 900;
+		line-height: 1;
 	}
 
-	@media (prefers-reduced-transparency: reduce) {
-		.card,
-		.top {
-			backdrop-filter: none;
+	.time-label {
+		font-size: 0.84rem;
+		color: var(--muted);
+		margin-top: 4px;
+	}
+
+	.pill {
+		padding: 6px 12px;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.05);
+		border: 1px solid var(--border);
+		font-size: 0.84rem;
+		color: var(--muted);
+	}
+
+	.muted {
+		color: var(--muted);
+	}
+
+	@media (max-width: 480px) {
+		.cd-grid,
+		.time-grid {
+			grid-template-columns: repeat(2, 1fr);
 		}
 	}
 </style>
