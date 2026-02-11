@@ -45,13 +45,12 @@
 
 	const t = (lv: string, en: string) => (lang === 'lv' ? lv : en);
 
-const loveQuotes = [
-  {
-    lv: 'Viņš ievelk Samantu vannas istabā, piespiež ceļos dušā un pavēl: “Rauj muti vaļā un lūdz, lai es tevi nomocu ar aukstu ūdeni un savu mēli vienlaikus. Ja neizturēsi un sāksi vaimanāt par karstumu – es tevi turēšu zem ledus strūklas, līdz tu lūgsies tikai par manu pieskārienu.” Viņas ķermenis trīc no aukstuma un karstuma sajaukuma, bet mute paliek atvērta – lūgums klusā, bet ķermenis kliedz. 🖤❄️🔥',
-    en: 'He drags Samantha into the bathroom, forces her to her knees in the shower and commands: “Open your mouth wide and beg me to torment you with cold water and my tongue at the same time. If you can’t take it and start whining for warmth – I’ll hold you under the ice stream until you beg only for my touch.” Her body trembles from the mix of cold and heat, but her mouth stays open – the plea is silent, yet her body screams. 🖤❄️🔥'
-  },
-] as const;
-
+	const loveQuotes = [
+		{
+			lv: 'Viņš ievelk Samantu vannas istabā, piespiež ceļos dušā un pavēl: “Rauj muti vaļā un lūdz, lai es tevi nomocu ar aukstu ūdeni un savu mēli vienlaikus. Ja neizturēsi un sāksi vaimanāt par karstumu – es tevi turēšu zem ledus strūklas, līdz tu lūgsies tikai par manu pieskārienu.” Viņas ķermenis trīc no aukstuma un karstuma sajaukuma, bet mute paliek atvērta – lūgums klusā, bet ķermenis kliedz. 🖤❄️🔥',
+			en: 'He drags Samantha into the bathroom, forces her to her knees in the shower and commands: “Open your mouth wide and beg me to torment you with cold water and my tongue at the same time. If you can’t take it and start whining for warmth – I’ll hold you under the ice stream until you beg only for my touch.” Her body trembles from the mix of cold and heat, but her mouth stays open – the plea is silent, yet her body screams. 🖤❄️🔥'
+		}
+	] as const;
 
 	// ---------------- DAILY QUOTE PICK ----------------
 	const dayKey = new Intl.DateTimeFormat('en-CA', {
@@ -78,24 +77,33 @@ const loveQuotes = [
 	let knownHours = 0;
 	let knownMinutes = 0;
 
-	const updateKnownTime = () => {
-		const now = new Date(
-			new Intl.DateTimeFormat('en-US', {
-				timeZone: 'Europe/Riga',
-				hour12: false,
-				year: 'numeric',
-				month: '2-digit',
-				day: '2-digit',
-				hour: '2-digit',
-				minute: '2-digit',
-				second: '2-digit'
-			}).format(new Date())
-		);
+	let knownMonths = 0;
+	let knownDaysAdjusted = knownDays;
 
+	const updateKnownTime = () => {
+		const now = new Date();
+		let months = 0;
+		let temp = new Date(knownSince);
+
+		while (
+			temp.getFullYear() < now.getFullYear() ||
+			(temp.getFullYear() === now.getFullYear() && temp.getMonth() < now.getMonth())
+		) {
+			temp.setMonth(temp.getMonth() + 1);
+			months++;
+		}
+
+		// atlikušās dienas pēc mēnešiem
+		const monthAdjusted = new Date(knownSince);
+		monthAdjusted.setMonth(monthAdjusted.getMonth() + months);
+		const daysDiff = Math.floor((now.getTime() - monthAdjusted.getTime()) / (1000 * 60 * 60 * 24));
+
+		knownMonths = months;
+		knownDaysAdjusted = daysDiff >= 0 ? daysDiff : 0; // drošībai
+
+		// stundas un minūtes paliek pēc dienas
 		const diffMs = now.getTime() - knownSince.getTime();
 		const totalMinutes = Math.floor(diffMs / 60000);
-
-		knownDays = Math.floor(totalMinutes / (60 * 24));
 		knownHours = Math.floor((totalMinutes % (60 * 24)) / 60);
 		knownMinutes = totalMinutes % 60;
 	};
@@ -112,34 +120,22 @@ const loveQuotes = [
 	let countdownStart: Date;
 
 	const updateCountdown = () => {
-		const now = new Date(
-			new Intl.DateTimeFormat('en-US', {
-				timeZone: 'Europe/Riga',
-				hour12: false,
-				year: 'numeric',
-				month: '2-digit',
-				day: '2-digit',
-				hour: '2-digit',
-				minute: '2-digit',
-				second: '2-digit'
-			}).format(new Date())
-		);
+		const now = new Date(); // vari izmantot savu formatēto versiju, bet vienkāršāk new Date()
 
-		if (!countdownStart) countdownStart = now;
-
-		const totalMs = destinyDeadline.getTime() - countdownStart.getTime();
 		const leftMs = destinyDeadline.getTime() - now.getTime();
-
 		const safeLeft = Math.max(0, leftMs);
-		const totalSeconds = Math.floor(safeLeft / 1000);
 
+		const totalMs = destinyDeadline.getTime() - knownSince.getTime(); // vai fiksēts periods no 9.jan līdz 23.feb
+
+		// ja vēlies precīzu % no visa perioda
+		cdProgress = Math.min(100, Math.max(0, 100 - (safeLeft / totalMs) * 100));
+
+		// atlikušais laiks (kā tev jau ir)
+		const totalSeconds = Math.floor(safeLeft / 1000);
 		cdDays = Math.floor(totalSeconds / 86400);
 		cdHours = Math.floor((totalSeconds % 86400) / 3600);
 		cdMinutes = Math.floor((totalSeconds % 3600) / 60);
 		cdSeconds = totalSeconds % 60;
-
-		const elapsed = totalMs - safeLeft;
-		cdProgress = Math.min(100, Math.max(0, (elapsed / totalMs) * 100));
 	};
 
 	onMount(() => {
@@ -159,7 +155,11 @@ const loveQuotes = [
 	let hzPeriod: 'daily' | 'weekly' | 'monthly' = 'daily';
 
 	const periodLabel = (p: typeof hzPeriod) =>
-		p === 'daily' ? t('Šodien', 'Today') : p === 'weekly' ? t('Nedēļa', 'Week') : t('Mēnesis', 'Month');
+		p === 'daily'
+			? t('Šodien', 'Today')
+			: p === 'weekly'
+				? t('Nedēļa', 'Week')
+				: t('Mēnesis', 'Month');
 
 	const getEntry = (sign: 'aquarius' | 'pisces') => data.horoscopes?.[sign]?.[hzPeriod];
 
@@ -173,15 +173,15 @@ const loveQuotes = [
 		return dayKey; // daily fallback
 	};
 
-const cardBadge = (entry?: HoroscopeEntry | null) => {
-	if (!entry) return '';
+	const cardBadge = (entry?: HoroscopeEntry | null) => {
+		if (!entry) return '';
 
-	if (hzPeriod === 'weekly') return entry.meta.week ?? t('Nedēļa', 'Week');
-	if (hzPeriod === 'monthly') return entry.meta.month ?? t('Mēnesis', 'Month');
+		if (hzPeriod === 'weekly') return entry.meta.week ?? t('Nedēļa', 'Week');
+		if (hzPeriod === 'monthly') return entry.meta.month ?? t('Mēnesis', 'Month');
 
-	// daily
-	return dayKey;
-};
+		// daily
+		return dayKey;
+	};
 
 	const splitDays = (s?: string | null) =>
 		(s ?? '')
@@ -260,7 +260,7 @@ const cardBadge = (entry?: HoroscopeEntry | null) => {
 				</div>
 
 				<div class="hz-grid">
-					{#each (['aquarius', 'pisces'] as const) as sign}
+					{#each ['aquarius', 'pisces'] as const as sign}
 						{#if getEntry(sign)?.text}
 							<article class="hz-item">
 								<div class="hz-head">
@@ -268,8 +268,7 @@ const cardBadge = (entry?: HoroscopeEntry | null) => {
 									<div class="hz-badge">{cardBadge(getEntry(sign))}</div>
 								</div>
 
-								{#if hzPeriod !== 'daily' &&
-								(getEntry(sign)?.meta?.challenging_days || getEntry(sign)?.meta?.standout_days)}
+								{#if hzPeriod !== 'daily' && (getEntry(sign)?.meta?.challenging_days || getEntry(sign)?.meta?.standout_days)}
 									<div class="hz-days">
 										{#if getEntry(sign)?.meta?.standout_days}
 											<div class="hz-days-row">
@@ -335,7 +334,9 @@ const cardBadge = (entry?: HoroscopeEntry | null) => {
 				<div class="cd-bar-fill" style="width: {cdProgress}%"></div>
 			</div>
 
-			<p class="muted cd-note">{t('Laiks līdz neizbēgamajam lēmumam.', 'Time until the inevitable moment.')}</p>
+			<p class="muted cd-note">
+				{t('Laiks līdz neizbēgamajam lēmumam.', 'Time until the inevitable moment.')}
+			</p>
 		</section>
 
 		<section class="card time">
@@ -362,7 +363,10 @@ const cardBadge = (entry?: HoroscopeEntry | null) => {
 			</div>
 
 			<p class="time-note muted">
-				{t('Kopš 2026. gada 9. janvāra, 21:26 (Latvijas laiks)', 'Since January 9, 2026, 9:26 AM (Latvia time)')}
+				{t(
+					'Kopš 2026. gada 9. janvāra, 21:26 (Latvijas laiks)',
+					'Since January 9, 2026, 9:26 AM (Latvia time)'
+				)}
 			</p>
 		</section>
 	</main>
@@ -385,7 +389,9 @@ const cardBadge = (entry?: HoroscopeEntry | null) => {
 		border-radius: 999px;
 		background: color-mix(in srgb, var(--surface) 85%, rgba(0, 0, 0, 0.1));
 		border: 1px solid var(--border);
-		box-shadow: var(--ring), 0 16px 50px rgba(0, 0, 0, 0.35);
+		box-shadow:
+			var(--ring),
+			0 16px 50px rgba(0, 0, 0, 0.35);
 		backdrop-filter: blur(14px) saturate(140%);
 	}
 
@@ -403,7 +409,9 @@ const cardBadge = (entry?: HoroscopeEntry | null) => {
 		color: var(--muted);
 		text-decoration: none;
 		opacity: 0.85;
-		transition: opacity 0.12s ease, color 0.12s ease;
+		transition:
+			opacity 0.12s ease,
+			color 0.12s ease;
 		font-size: 0.85rem;
 		padding: 4px 6px;
 		border-radius: 999px;
@@ -424,17 +432,22 @@ const cardBadge = (entry?: HoroscopeEntry | null) => {
 		text-decoration: none;
 		color: var(--text);
 		border: 1px solid color-mix(in srgb, var(--tint) 38%, var(--border));
-		background: radial-gradient(120% 140% at 0% 0%, rgba(139, 92, 246, 0.18), transparent 55%),
+		background:
+			radial-gradient(120% 140% at 0% 0%, rgba(139, 92, 246, 0.18), transparent 55%),
 			rgba(255, 255, 255, 0.03);
 		box-shadow: var(--ring);
-		transition: transform 0.14s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.14s ease,
+		transition:
+			transform 0.14s cubic-bezier(0.2, 0.8, 0.2, 1),
+			border-color 0.14s ease,
 			box-shadow 0.14s ease;
 	}
 
 	.cta:hover {
 		transform: translateY(-1px);
 		border-color: color-mix(in srgb, var(--tint) 55%, var(--border));
-		box-shadow: var(--ring), 0 0 30px rgba(139, 92, 246, 0.28);
+		box-shadow:
+			var(--ring),
+			0 0 30px rgba(139, 92, 246, 0.28);
 	}
 
 	.wrap {
@@ -452,7 +465,8 @@ const cardBadge = (entry?: HoroscopeEntry | null) => {
 		background: var(--surface-strong);
 		border: 1px solid var(--border-strong);
 		box-shadow: var(--shadow-1);
-		backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+		backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat))
+			brightness(var(--glass-bright));
 	}
 
 	.card::before {
@@ -493,7 +507,8 @@ const cardBadge = (entry?: HoroscopeEntry | null) => {
 		grid-template-columns: 40px 1fr;
 		gap: 12px;
 		align-items: start;
-		background: radial-gradient(
+		background:
+			radial-gradient(
 				900px 300px at 10% 0%,
 				color-mix(in srgb, var(--tint) 18%, transparent),
 				transparent 60%
@@ -501,7 +516,9 @@ const cardBadge = (entry?: HoroscopeEntry | null) => {
 			var(--surface-strong);
 		border: 1px solid color-mix(in srgb, var(--tint) 22%, var(--border-strong));
 		border-radius: 26px;
-		box-shadow: var(--ring), 0 0 0 1px color-mix(in srgb, var(--tint) 25%, transparent),
+		box-shadow:
+			var(--ring),
+			0 0 0 1px color-mix(in srgb, var(--tint) 25%, transparent),
 			0 25px 80px rgba(139, 92, 246, 0.18);
 	}
 
@@ -512,7 +529,11 @@ const cardBadge = (entry?: HoroscopeEntry | null) => {
 		place-items: center;
 		border-radius: 14px;
 		border: 1px solid color-mix(in srgb, var(--tint) 28%, var(--border));
-		background: radial-gradient(120% 120% at 30% 20%, color-mix(in srgb, var(--tint) 22%, transparent), rgba(255, 255, 255, 0.03) 55%);
+		background: radial-gradient(
+			120% 120% at 30% 20%,
+			color-mix(in srgb, var(--tint) 22%, transparent),
+			rgba(255, 255, 255, 0.03) 55%
+		);
 		box-shadow: var(--ring);
 	}
 
@@ -551,7 +572,8 @@ const cardBadge = (entry?: HoroscopeEntry | null) => {
 
 	/* Horoscope */
 	.hz {
-		background: radial-gradient(
+		background:
+			radial-gradient(
 				900px 280px at 0% 0%,
 				color-mix(in srgb, var(--tint) 12%, transparent),
 				transparent 60%
@@ -685,7 +707,8 @@ const cardBadge = (entry?: HoroscopeEntry | null) => {
 
 	/* Countdown */
 	.countdown {
-		background: radial-gradient(
+		background:
+			radial-gradient(
 				900px 280px at 10% 0%,
 				color-mix(in srgb, var(--tint) 16%, transparent),
 				transparent 60%
@@ -763,7 +786,9 @@ const cardBadge = (entry?: HoroscopeEntry | null) => {
 
 	.time-num {
 		letter-spacing: -0.03em;
-		transition: transform 0.25s ease, opacity 0.25s ease;
+		transition:
+			transform 0.25s ease,
+			opacity 0.25s ease;
 		will-change: transform;
 	}
 
