@@ -47,9 +47,9 @@
 
 const loveQuotes = [
   {
-    lv: 'Edgars ieslēdz Samantu tumšā istabā ar vibrējošu rotaļlietu, bet neļauj tai pieskarties. Viņš vēro caur durvju spraugu un saka: “Lūdzies man, lai es ienāku un pastiprinu tavu baudu... līdz tu eksplodē no intensitātes.” Viņas saucieni piepilda telpu. 🖤🕯️',
-    en: 'Edgars locks Samantha in a dark room with a vibrating toy, but doesn’t let her touch it. He watches through the door crack and says: “Beg me to come in and amplify your pleasure... until you explode from the intensity.” Her cries fill the space. 🖤🕯️'
-  }
+    lv: 'Viņš ievelk Samantu vannas istabā, piespiež ceļos dušā un pavēl: “Rauj muti vaļā un lūdz, lai es tevi nomocu ar aukstu ūdeni un savu mēli vienlaikus. Ja neizturēsi un sāksi vaimanāt par karstumu – es tevi turēšu zem ledus strūklas, līdz tu lūgsies tikai par manu pieskārienu.” Viņas ķermenis trīc no aukstuma un karstuma sajaukuma, bet mute paliek atvērta – lūgums klusā, bet ķermenis kliedz. 🖤❄️🔥',
+    en: 'He drags Samantha into the bathroom, forces her to her knees in the shower and commands: “Open your mouth wide and beg me to torment you with cold water and my tongue at the same time. If you can’t take it and start whining for warmth – I’ll hold you under the ice stream until you beg only for my touch.” Her body trembles from the mix of cold and heat, but her mouth stays open – the plea is silent, yet her body screams. 🖤❄️🔥'
+  },
 ] as const;
 
 
