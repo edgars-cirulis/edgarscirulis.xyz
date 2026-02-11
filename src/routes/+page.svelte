@@ -191,15 +191,13 @@
 	const periodPill = () => {
 		const entry = getEntry('aquarius');
 		const meta = entry?.meta;
-		if (hzPeriod === 'weekly' && meta?.week) return meta.week;
-		if (hzPeriod === 'monthly' && meta?.month) return meta.month;
+
 		return dayKey;
 	};
 
 	const cardBadge = (entry?: HoroscopeEntry | null) => {
 		if (!entry) return '';
-		if (hzPeriod === 'weekly') return entry.meta.week ?? t('Nedēļa', 'Week');
-		if (hzPeriod === 'monthly') return entry.meta.month ?? t('Mēnesis', 'Month');
+
 		return dayKey;
 	};
 
@@ -261,20 +259,6 @@
 						<Icon icon="lucide:stars" width="18" aria-hidden="true" />
 						<span>{t('Horoskops', 'Horoscope')}</span>
 					</h2>
-					<div class="hz-right">
-						<div class="hz-tabs">
-							<button class:active={hzPeriod === 'daily'} on:click={() => (hzPeriod = 'daily')}>
-								{t('Šodien', 'Today')}
-							</button>
-							<button class:active={hzPeriod === 'weekly'} on:click={() => (hzPeriod = 'weekly')}>
-								{t('Nedēļa', 'Week')}
-							</button>
-							<button class:active={hzPeriod === 'monthly'} on:click={() => (hzPeriod = 'monthly')}>
-								{t('Mēnesis', 'Month')}
-							</button>
-						</div>
-						<span class="pill">{periodPill()}</span>
-					</div>
 				</div>
 
 				<div class="hz-grid">
@@ -401,10 +385,13 @@
 <style>
 	.page {
 		min-height: 100vh;
+		margin: 0;
+		padding: 0; /* ensure no outer padding squeezes */
 		display: grid;
 		grid-template-rows: auto 1fr;
 		gap: 18px;
-		padding: 16px;
+		width: 100%;
+		box-sizing: border-box;
 	}
 
 	.top {
@@ -446,10 +433,14 @@
 	}
 
 	.wrap {
+		width: 100%;
+		max-width: 100%; /* explicit – prevents any inherited limit */
+		margin: 0;
+		padding: 0 10px; /* 10–12px side padding → looks wide but text doesn't touch edge */
 		display: grid;
-		gap: 16px;
-		max-width: 720px;
-		margin: 0 auto;
+		gap: 14px;
+		align-content: start;
+		box-sizing: border-box;
 	}
 
 	.card {
@@ -520,40 +511,6 @@
 		gap: 8px;
 		font-size: 0.88rem;
 		margin-top: 12px;
-	}
-
-	/* Horoscope */
-	.hz-right {
-		display: flex;
-		align-items: center;
-		gap: 12px;
-	}
-
-	.hz-tabs {
-		display: flex;
-		gap: 6px;
-		background: rgba(255, 255, 255, 0.04);
-		padding: 4px;
-		border-radius: 999px;
-		border: 1px solid var(--border);
-	}
-
-	.hz-tabs button {
-		padding: 6px 14px;
-		border-radius: 999px;
-		border: none;
-		background: transparent;
-		color: var(--muted);
-		font-size: 0.86rem;
-		cursor: pointer;
-		transition: all 0.15s;
-	}
-
-	.hz-tabs button.active {
-		background: rgba(255, 255, 255, 0.12);
-		color: var(--text);
-		font-weight: 600;
-		box-shadow: var(--ring);
 	}
 
 	.hz-grid {
