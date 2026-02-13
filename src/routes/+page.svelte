@@ -68,11 +68,12 @@
 	//  Daily love quote
 	// ────────────────────────────────────────────────
 	const loveQuotes = [
-		{
-			lv: 'Viņš ievelk Samantu vannas istabā, piespiež ceļos dušā un pavēl: “Rauj muti vaļā un lūdz, lai es tevi nomocu ar aukstu ūdeni un savu mēli vienlaikus. Ja neizturēsi un sāksi vaimanāt par karstumu – es tevi turēsi zem ledus strūklas, līdz tu lūgsies tikai par manu pieskārienu.” Viņas ķermenis trīc no aukstuma un karstuma sajaukuma, bet mute paliek atvērta – lūgums klusā, bet ķermenis kliedz. 🖤❄️🔥',
-			en: 'He drags Samantha into the bathroom, forces her to her knees in the shower and commands: “Open your mouth wide and beg me to torment you with cold water and my tongue at the same time. If you can’t take it and start whining for warmth – I’ll hold you under the ice stream until you beg only for my touch.” Her body trembles from the mix of cold and heat, but her mouth stays open – the plea is silent, yet her body screams. 🖤❄️🔥'
-		}
-	] as const;
+  // ... previous entries ...
+  {
+    lv: 'Viņš ievelk viņu dušā aiz matiem, ieslēdz ledus ūdeni pilnā spēkā un piespiež seju pie slapjās flīzes. „Atver muti kā laba kucēna un turies — es tev tagad ielauzīšu kaklu ar savu locekli, kamēr tu slīksti aukstumā. Ja izvilksi to ārā vai sāksi elst — es tevi apgriezīšu otrādi, piesienu pie dušas stieņa un ļaušu ūdenim sist pa izstieptu pīķi, līdz tu gaudosi un lūgsies, lai es tevi beidzot izdrāžu kā pelnītu caurumu.” Viņas ceļi trīc, ūdens tek pa vaigiem sajaukts ar siekalām, bet mute paliek vaļā — dziļa, trokšņaina rīšana sākas, kamēr viņa ķermenis nodevīgi saraujas no aukstuma un pazemojošas kāres. 🖤🧊⛓️💦',
+    en: 'He yanks her into the shower by the hair, cranks the ice-cold water full blast and slams her face against the wet tile. “Open that mouth like a good little bitch and stay — I’m throat-fucking you raw while you drown in the cold. Pull away or gasp for air — I’ll flip you upside down, cuff you to the shower rod and let the stream pound your stretched cunt until you’re howling and begging to finally get used like the earned hole you are.” Her knees buckle, water streams down her cheeks mixed with drool, but her mouth stays open — deep, noisy gagging begins as her body betrays her with shivers of cold and humiliating need. 🖤🧊⛓️💦'
+  }
+] as const;
 
 	const dayKey = new Intl.DateTimeFormat('en-CA', {
 		timeZone: 'Europe/Riga',
