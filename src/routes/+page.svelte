@@ -45,19 +45,19 @@
 	const t = (lv: string, en: string) => (lang === 'lv' ? lv : en);
 
 	// ────────────────────────────────────────────────
-	//  Password protection
+	//  Password protection – modern gate
 	// ────────────────────────────────────────────────
 	let password = '';
 	let isAuthenticated = false;
 	let error = false;
 
-	const CORRECT_PASSWORD = '21:26';
+	const CORRECT_PASSWORD = '21:26'; // or '2126' without colon — your choice
 
 	function checkPassword() {
 		if (password.trim() === CORRECT_PASSWORD) {
 			isAuthenticated = true;
 			error = false;
-			localStorage.setItem('access_granted', 'true');
+			localStorage.setItem('access_granted_2026', 'true');
 		} else {
 			error = true;
 			password = '';
@@ -179,16 +179,16 @@
 	}
 
 	onMount(() => {
-		// Check if already authenticated
-		if (localStorage.getItem('access_granted') === 'true') {
+		// Check saved access
+		if (localStorage.getItem('access_granted_2026') === 'true') {
 			isAuthenticated = true;
 		}
 
 		updateKnownTime();
 		updateCountdown();
 
-		const knownInterval = setInterval(updateKnownTime, 60_000);
-		const countdownInterval = setInterval(updateCountdown, 1_000);
+		const knownInterval = setInterval(updateKnownTime, 60000);
+		const countdownInterval = setInterval(updateCountdown, 1000);
 
 		return () => {
 			clearInterval(knownInterval);
@@ -210,13 +210,9 @@
 
 	const getEntry = (sign: 'aquarius' | 'pisces') => data.horoscopes?.[sign]?.[hzPeriod];
 
-	const periodPill = () => {
-		return dayKey;
-	};
+	const periodPill = () => dayKey;
 
-	const cardBadge = (entry?: HoroscopeEntry | null) => {
-		return dayKey;
-	};
+	const cardBadge = () => dayKey;
 
 	const splitDays = (s?: string | null) =>
 		(s ?? '')
@@ -231,28 +227,47 @@
 </svelte:head>
 
 {#if !isAuthenticated}
-	<div class="auth-screen">
-		<div class="auth-box">
-			<h1>Protected</h1>
+	<div class="auth-wrapper">
+		<div class="auth-container">
+			<div class="auth-glow"></div>
 
-			<form on:submit|preventDefault={checkPassword}>
-				<input
-					type="password"
-					bind:value={password}
-					placeholder="Password"
-					autofocus
-					autocomplete="off"
-					class:error={error}
-				/>
+			<div class="auth-content">
+				<div class="auth-header">
+					<div class="auth-symbol">✦</div>
+					<h1>Private Access</h1>
+				</div>
 
-				{#if error}
-					<div class="error-msg">Wrong</div>
-				{/if}
+				<form on:submit|preventDefault={checkPassword} class="auth-form">
+					<div class="input-wrapper">
+						<input
+							type="password"
+							bind:value={password}
+							placeholder="Enter the time"
+							autofocus
+							autocomplete="off"
+							class:error={error}
+							required
+						/>
+						<div class="input-glow"></div>
+					</div>
 
-				<button type="submit">Enter</button>
-			</form>
+					{#if error}
+						<div class="error-message fade-in">Incorrect • Try again</div>
+					{/if}
 
-			<div class="hint">Time when I was born</div>
+					<button
+						type="submit"
+						class="auth-submit"
+						disabled={password.trim().length < 4}
+					>
+						Unlock
+					</button>
+				</form>
+
+				<div class="auth-hint">
+					<span>Time when I was born</span>
+				</div>
+			</div>
 		</div>
 	</div>
 {:else}
@@ -311,7 +326,7 @@
 								<article class="hz-item">
 									<div class="hz-head">
 										<div class="hz-sign">{sign === 'aquarius' ? '♒ Aquarius' : '♓ Pisces'}</div>
-										<div class="hz-badge">{cardBadge(entry)}</div>
+										<div class="hz-badge">{cardBadge()}</div>
 									</div>
 
 									{#if hzPeriod !== 'daily' && (entry.meta?.challenging_days || entry.meta?.standout_days)}
@@ -428,105 +443,192 @@
 
 <style>
 	/* ──────────────────────────────────────────────── */
-	/*                Password screen                   */
+	/*          Modern password screen (2025–2026 vibe) */
 	/* ──────────────────────────────────────────────── */
-	.auth-screen {
+	.auth-wrapper {
 		position: fixed;
 		inset: 0;
-		background: #000;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		z-index: 9999;
+		background: #0a0a0f;
+		display: grid;
+		place-items: center;
+		z-index: 10000;
+		overflow: hidden;
 	}
 
-	.auth-box {
+	.auth-container {
+		position: relative;
 		width: 100%;
-		max-width: 340px;
-		padding: 32px 24px;
-		background: rgba(20, 20, 30, 0.92);
-		border: 1px solid #444;
-		border-radius: 16px;
+		max-width: 380px;
+		padding: 3.5rem 2rem;
+		border-radius: 1.5rem;
+		background: linear-gradient(145deg, rgba(20, 20, 35, 0.85), rgba(10, 10, 20, 0.92));
+		backdrop-filter: blur(20px) saturate(180%);
+		border: 1px solid rgba(120, 100, 255, 0.12);
+		box-shadow:
+			0 25px 60px -15px rgba(0, 0, 0, 0.7),
+			0 0 0 1px rgba(120, 100, 255, 0.08) inset;
+		overflow: hidden;
+	}
+
+	.auth-glow {
+		position: absolute;
+		inset: -40%;
+		background: radial-gradient(
+			circle at 30% 20%,
+			rgba(139, 92, 246, 0.18) 0%,
+			rgba(79, 70, 229, 0.09) 30%,
+			transparent 60%
+		);
+		opacity: 0.7;
+		pointer-events: none;
+		animation: slow-breathe 18s infinite ease-in-out;
+	}
+
+	@keyframes slow-breathe {
+		0%, 100% { opacity: 0.6; transform: scale(1); }
+		50%      { opacity: 0.9; transform: scale(1.08); }
+	}
+
+	.auth-content {
+		position: relative;
+		z-index: 2;
+	}
+
+	.auth-header {
 		text-align: center;
-		backdrop-filter: blur(10px);
-		box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+		margin-bottom: 2.5rem;
 	}
 
-	.auth-box h1 {
-		font-size: 1.9rem;
-		font-weight: 800;
-		margin: 0 0 24px;
-		letter-spacing: -0.02em;
-		color: white;
+	.auth-symbol {
+		font-size: 2.8rem;
+		line-height: 1;
+		margin-bottom: 0.6rem;
+		color: #a5b4fc;
+		opacity: 0.9;
+		letter-spacing: -0.05em;
 	}
 
-	.auth-box input[type='password'] {
-		width: 100%;
-		padding: 14px;
-		font-size: 1.15rem;
-		text-align: center;
-		background: rgba(255, 255, 255, 0.06);
-		border: 1px solid #555;
-		border-radius: 10px;
-		color: white;
-		margin-bottom: 16px;
-		transition: border-color 0.2s;
-	}
-
-	.auth-box input:focus {
-		outline: none;
-		border-color: #a78bfa;
-		box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.2);
-	}
-
-	.auth-box input.error {
-		border-color: #f87171;
-		animation: shake 0.35s;
-	}
-
-	@keyframes shake {
-		20%,
-		60% {
-			transform: translateX(-5px);
-		}
-		40%,
-		80% {
-			transform: translateX(5px);
-		}
-	}
-
-	.error-msg {
-		color: #f87171;
-		font-size: 0.95rem;
-		margin: 8px 0 16px;
-	}
-
-	.auth-box button {
-		width: 100%;
-		padding: 14px;
-		font-size: 1.05rem;
+	.auth-header h1 {
+		font-size: 1.85rem;
 		font-weight: 700;
-		background: #8b5cf6;
 		color: white;
+		margin: 0;
+		letter-spacing: -0.025em;
+		background: linear-gradient(90deg, #c4b5fd, #a5b4fc);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+
+	.auth-form {
+		display: flex;
+		flex-direction: column;
+		gap: 1.4rem;
+	}
+
+	.input-wrapper {
+		position: relative;
+	}
+
+	input[type='password'] {
+		width: 100%;
+		padding: 1.1rem 1.4rem;
+		font-size: 1.15rem;
+		background: rgba(30, 30, 50, 0.6);
+		border: 1px solid rgba(120, 100, 255, 0.25);
+		border-radius: 0.9rem;
+		color: #f1f5f9;
+		font-family: inherit;
+		transition: all 0.25s ease;
+		text-align: center;
+		letter-spacing: 0.08em;
+	}
+
+	input:focus {
+		outline: none;
+		border-color: #a5b4fc;
+		box-shadow: 0 0 0 3.5px rgba(165, 180, 252, 0.22);
+		background: rgba(40, 40, 65, 0.7);
+	}
+
+	input.error {
+		border-color: #f87171;
+		animation: error-shake 0.4s ease;
+	}
+
+	@keyframes error-shake {
+		0%, 100% { transform: translateX(0); }
+		20%, 60% { transform: translateX(-6px); }
+		40%, 80% { transform: translateX(6px); }
+	}
+
+	.input-glow {
+		position: absolute;
+		inset: 0;
+		border-radius: 0.9rem;
+		pointer-events: none;
+		opacity: 0;
+		transition: opacity 0.4s;
+		background: linear-gradient(90deg, transparent, rgba(165, 180, 252, 0.15), transparent);
+	}
+
+	input:focus + .input-glow {
+		opacity: 1;
+	}
+
+	.auth-submit {
+		padding: 1rem;
+		font-size: 1.05rem;
+		font-weight: 600;
+		color: white;
+		background: linear-gradient(90deg, #7c3aed, #a78bfa);
 		border: none;
-		border-radius: 10px;
+		border-radius: 0.9rem;
 		cursor: pointer;
-		transition: background 0.2s;
+		transition: all 0.3s ease;
+		letter-spacing: 0.02em;
 	}
 
-	.auth-box button:hover {
-		background: #7c3aed;
+	.auth-submit:hover:not(:disabled) {
+		transform: translateY(-2px);
+		box-shadow: 0 12px 32px rgba(124, 58, 237, 0.35);
 	}
 
-	.hint {
-		margin-top: 28px;
-		color: #888;
+	.auth-submit:disabled {
+		opacity: 0.4;
+		cursor: not-allowed;
+	}
+
+	.error-message {
+		color: #fca5a5;
+		font-size: 0.95rem;
+		text-align: center;
+		animation: fadeIn 0.5s ease;
+	}
+
+	.auth-hint {
+		margin-top: 2.2rem;
 		font-size: 0.9rem;
+		color: #94a3b8;
+		text-align: center;
+		letter-spacing: 0.01em;
+	}
+
+	.auth-hint span {
+		opacity: 0.85;
 		font-style: italic;
 	}
 
+	.fade-in {
+		animation: fadeIn 0.6s ease-out;
+	}
+
+	@keyframes fadeIn {
+		from { opacity: 0; transform: translateY(8px); }
+		to   { opacity: 1; transform: translateY(0); }
+	}
+
 	/* ──────────────────────────────────────────────── */
-	/*                Original page styles              */
+	/*               Original page styles               */
 	/* ──────────────────────────────────────────────── */
 	.page {
 		min-height: 100vh;
@@ -624,7 +726,6 @@
 		margin: 0;
 	}
 
-	/* Love quote */
 	.love {
 		display: grid;
 		grid-template-columns: 48px 1fr;
@@ -695,7 +796,6 @@
 		margin: 0;
 	}
 
-	/* Countdown */
 	.cd-grid {
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
@@ -741,20 +841,14 @@
 	}
 
 	@keyframes pulse {
-		0%,
-		100% {
-			opacity: 0.92;
-		}
-		50% {
-			opacity: 1;
-		}
+		0%, 100% { opacity: 0.92; }
+		50%      { opacity: 1; }
 	}
 
 	.countdown[data-urgent='true'] .cd-bar-fill {
 		background: linear-gradient(90deg, #f43f5e, #fb7185);
 	}
 
-	/* Time known */
 	.time-grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(88px, 1fr));
