@@ -45,6 +45,26 @@
 	const t = (lv: string, en: string) => (lang === 'lv' ? lv : en);
 
 	// ────────────────────────────────────────────────
+	//  Password protection
+	// ────────────────────────────────────────────────
+	let password = '';
+	let isAuthenticated = false;
+	let error = false;
+
+	const CORRECT_PASSWORD = '21:26';
+
+	function checkPassword() {
+		if (password.trim() === CORRECT_PASSWORD) {
+			isAuthenticated = true;
+			error = false;
+			localStorage.setItem('access_granted', 'true');
+		} else {
+			error = true;
+			password = '';
+		}
+	}
+
+	// ────────────────────────────────────────────────
 	//  Daily love quote
 	// ────────────────────────────────────────────────
 	const loveQuotes = [
@@ -111,7 +131,6 @@
 			return;
 		}
 
-		// Count full months
 		let months = 0;
 		let temp = new Date(knownSince);
 		while (true) {
@@ -122,14 +141,12 @@
 			months++;
 		}
 
-		// Remaining days after last full month
 		const remainingMs = now.getTime() - temp.getTime();
 		const remainingDays = Math.floor(remainingMs / 86400000);
 
 		knownMonths = months;
 		knownDays = remainingDays >= 0 ? remainingDays : 0;
 
-		// Hours & minutes
 		const totalHours = Math.floor(diffMs / 3600000);
 		knownHours = totalHours % 24;
 		knownMinutes = Math.floor((diffMs % 3600000) / 60000);
@@ -162,6 +179,11 @@
 	}
 
 	onMount(() => {
+		// Check if already authenticated
+		if (localStorage.getItem('access_granted') === 'true') {
+			isAuthenticated = true;
+		}
+
 		updateKnownTime();
 		updateCountdown();
 
@@ -189,15 +211,10 @@
 	const getEntry = (sign: 'aquarius' | 'pisces') => data.horoscopes?.[sign]?.[hzPeriod];
 
 	const periodPill = () => {
-		const entry = getEntry('aquarius');
-		const meta = entry?.meta;
-
 		return dayKey;
 	};
 
 	const cardBadge = (entry?: HoroscopeEntry | null) => {
-		if (!entry) return '';
-
 		return dayKey;
 	};
 
@@ -213,180 +230,308 @@
 	<meta name="description" content={t('Spotify “Now playing”', 'Spotify “Now playing”')} />
 </svelte:head>
 
-<div class="page">
-	<header class="top">
-		<nav class="lang">
-			<a href="/" class:active={lang === 'lv'}>LV</a>
-			<span>·</span>
-			<a href="/en" class:active={lang === 'en'}>EN</a>
-		</nav>
-	</header>
+{#if !isAuthenticated}
+	<div class="auth-screen">
+		<div class="auth-box">
+			<h1>Protected</h1>
 
-	<main class="wrap">
-		<!-- Now Playing -->
-		<section class="card">
-			<div class="card-head">
-				<h1 class="title">
-					<Icon icon="lucide:audio-lines" width="18" />
-					<span>{t('Šobrīd skan', 'Now playing')}</span>
-				</h1>
-			</div>
-			{#await nowPlayingModule then mod}
-				<svelte:component this={mod.default} spotify={data.spotify} />
-			{/await}
-		</section>
+			<form on:submit|preventDefault={checkPassword}>
+				<input
+					type="password"
+					bind:value={password}
+					placeholder="Password"
+					autofocus
+					autocomplete="off"
+					class:error={error}
+				/>
 
-		<!-- Samantha quote -->
-		<section class="card love">
-			<div class="love-ic">
-				<Icon icon="lucide:heart" width="18" />
-			</div>
-			<div class="love-body">
-				<div class="love-title">Samantha</div>
-				<p class="love-text">{quoteText}</p>
-				<div class="love-meta muted">
-					<Icon icon="lucide:sparkles" width="14" />
-					<span>{t('Šodienas citāts', 'Today’s quote')}</span>
+				{#if error}
+					<div class="error-msg">Wrong</div>
+				{/if}
+
+				<button type="submit">Enter</button>
+			</form>
+
+			<div class="hint">Time when I was born</div>
+		</div>
+	</div>
+{:else}
+	<div class="page">
+		<header class="top">
+			<nav class="lang">
+				<a href="/" class:active={lang === 'lv'}>LV</a>
+				<span>·</span>
+				<a href="/en" class:active={lang === 'en'}>EN</a>
+			</nav>
+		</header>
+
+		<main class="wrap">
+			<!-- Now Playing -->
+			<section class="card">
+				<div class="card-head">
+					<h1 class="title">
+						<Icon icon="lucide:audio-lines" width="18" />
+						<span>{t('Šobrīd skan', 'Now playing')}</span>
+					</h1>
 				</div>
-			</div>
-		</section>
+				{#await nowPlayingModule then mod}
+					<svelte:component this={mod.default} spotify={data.spotify} />
+				{/await}
+			</section>
 
-		<!-- Horoscopes -->
-		{#if data.horoscopes}
-			<section class="card hz" aria-label={t('Horoskops', 'Horoscope')}>
+			<!-- Samantha quote -->
+			<section class="card love">
+				<div class="love-ic">
+					<Icon icon="lucide:heart" width="18" />
+				</div>
+				<div class="love-body">
+					<div class="love-title">Samantha</div>
+					<p class="love-text">{quoteText}</p>
+					<div class="love-meta muted">
+						<Icon icon="lucide:sparkles" width="14" />
+						<span>{t('Šodienas citāts', 'Today’s quote')}</span>
+					</div>
+				</div>
+			</section>
+
+			<!-- Horoscopes -->
+			{#if data.horoscopes}
+				<section class="card hz" aria-label={t('Horoskops', 'Horoscope')}>
+					<div class="card-head">
+						<h2 class="title">
+							<Icon icon="lucide:stars" width="18" aria-hidden="true" />
+							<span>{t('Horoskops', 'Horoscope')}</span>
+						</h2>
+					</div>
+
+					<div class="hz-grid">
+						{#each ['aquarius', 'pisces'] as sign}
+							{@const entry = getEntry(sign as 'aquarius' | 'pisces')}
+							{#if entry?.text}
+								<article class="hz-item">
+									<div class="hz-head">
+										<div class="hz-sign">{sign === 'aquarius' ? '♒ Aquarius' : '♓ Pisces'}</div>
+										<div class="hz-badge">{cardBadge(entry)}</div>
+									</div>
+
+									{#if hzPeriod !== 'daily' && (entry.meta?.challenging_days || entry.meta?.standout_days)}
+										<div class="hz-days">
+											{#if entry.meta?.standout_days}
+												<div class="hz-days-row">
+													<span class="hz-days-label">{t('Labās dienas', 'Standout')}</span>
+													<div class="hz-days-chips">
+														{#each splitDays(entry.meta.standout_days) as d}
+															<span class="chip">{d}</span>
+														{/each}
+													</div>
+												</div>
+											{/if}
+											{#if entry.meta?.challenging_days}
+												<div class="hz-days-row">
+													<span class="hz-days-label">{t('Sarežģītās', 'Challenging')}</span>
+													<div class="hz-days-chips">
+														{#each splitDays(entry.meta.challenging_days) as d}
+															<span class="chip chip-warn">{d}</span>
+														{/each}
+													</div>
+												</div>
+											{/if}
+										</div>
+									{/if}
+
+									<p class="hz-text">{entry.text}</p>
+								</article>
+							{/if}
+						{/each}
+					</div>
+				</section>
+			{/if}
+
+			<!-- Countdown -->
+			<section class="card countdown" data-urgent={cdDays === 0} aria-label="Likteņa taimeris">
 				<div class="card-head">
 					<h2 class="title">
-						<Icon icon="lucide:stars" width="18" aria-hidden="true" />
-						<span>{t('Horoskops', 'Horoscope')}</span>
+						<Icon icon="lucide:hourglass" width="18" />
+						<span>Likteņa taimeris</span>
+					</h2>
+					<span class="pill">2026-02-23 · 23:59</span>
+				</div>
+
+				<div class="cd-grid">
+					<div class="cd-box">
+						<div class="cd-num">{cdDays}</div>
+						<div class="cd-label">{t('dienas', 'days')}</div>
+					</div>
+					<div class="cd-box">
+						<div class="cd-num">{cdHours}</div>
+						<div class="cd-label">{t('stundas', 'hours')}</div>
+					</div>
+					<div class="cd-box">
+						<div class="cd-num">{cdMinutes}</div>
+						<div class="cd-label">{t('minūtes', 'minutes')}</div>
+					</div>
+					<div class="cd-box">
+						<div class="cd-num">{cdSeconds}</div>
+						<div class="cd-label">{t('sekundes', 'seconds')}</div>
+					</div>
+				</div>
+
+				<div class="cd-bar" aria-label={t('Progresa josla', 'Progress bar')}>
+					<div class="cd-bar-fill" style="width: {cdProgress}%"></div>
+				</div>
+
+				<p class="muted cd-note">
+					{t('Laiks līdz neizbēgamajam lēmumam.', 'Time until the inevitable moment.')}
+				</p>
+			</section>
+
+			<!-- Time known -->
+			<section class="card time">
+				<div class="card-head">
+					<h2 class="title">
+						<Icon icon="lucide:clock" width="18" />
+						<span>{t('Cik ilgi mēs pazīstami?', 'Time we’ve known each other?')}</span>
 					</h2>
 				</div>
 
-				<div class="hz-grid">
-					{#each ['aquarius', 'pisces'] as sign}
-						{@const entry = getEntry(sign as 'aquarius' | 'pisces')}
-						{#if entry?.text}
-							<article class="hz-item">
-								<div class="hz-head">
-									<div class="hz-sign">{sign === 'aquarius' ? '♒ Aquarius' : '♓ Pisces'}</div>
-									<div class="hz-badge">{cardBadge(entry)}</div>
-								</div>
-
-								{#if hzPeriod !== 'daily' && (entry.meta?.challenging_days || entry.meta?.standout_days)}
-									<div class="hz-days">
-										{#if entry.meta?.standout_days}
-											<div class="hz-days-row">
-												<span class="hz-days-label">{t('Labās dienas', 'Standout')}</span>
-												<div class="hz-days-chips">
-													{#each splitDays(entry.meta.standout_days) as d}
-														<span class="chip">{d}</span>
-													{/each}
-												</div>
-											</div>
-										{/if}
-										{#if entry.meta?.challenging_days}
-											<div class="hz-days-row">
-												<span class="hz-days-label">{t('Sarežģītās', 'Challenging')}</span>
-												<div class="hz-days-chips">
-													{#each splitDays(entry.meta.challenging_days) as d}
-														<span class="chip chip-warn">{d}</span>
-													{/each}
-												</div>
-											</div>
-										{/if}
-									</div>
-								{/if}
-
-								<p class="hz-text">{entry.text}</p>
-							</article>
-						{/if}
-					{/each}
-				</div>
-			</section>
-		{/if}
-
-		<!-- Countdown -->
-		<section class="card countdown" data-urgent={cdDays === 0} aria-label="Likteņa taimeris">
-			<div class="card-head">
-				<h2 class="title">
-					<Icon icon="lucide:hourglass" width="18" />
-					<span>Likteņa taimeris</span>
-				</h2>
-				<span class="pill">2026-02-23 · 23:59</span>
-			</div>
-
-			<div class="cd-grid">
-				<div class="cd-box">
-					<div class="cd-num">{cdDays}</div>
-					<div class="cd-label">{t('dienas', 'days')}</div>
-				</div>
-				<div class="cd-box">
-					<div class="cd-num">{cdHours}</div>
-					<div class="cd-label">{t('stundas', 'hours')}</div>
-				</div>
-				<div class="cd-box">
-					<div class="cd-num">{cdMinutes}</div>
-					<div class="cd-label">{t('minūtes', 'minutes')}</div>
-				</div>
-				<div class="cd-box">
-					<div class="cd-num">{cdSeconds}</div>
-					<div class="cd-label">{t('sekundes', 'seconds')}</div>
-				</div>
-			</div>
-
-			<div class="cd-bar" aria-label={t('Progresa josla', 'Progress bar')}>
-				<div class="cd-bar-fill" style="width: {cdProgress}%"></div>
-			</div>
-
-			<p class="muted cd-note">
-				{t('Laiks līdz neizbēgamajam lēmumam.', 'Time until the inevitable moment.')}
-			</p>
-		</section>
-
-		<!-- Time known -->
-		<section class="card time">
-			<div class="card-head">
-				<h2 class="title">
-					<Icon icon="lucide:clock" width="18" />
-					<span>{t('Cik ilgi mēs pazīstami?', 'Time we’ve known each other?')}</span>
-				</h2>
-			</div>
-
-			<div class="time-grid">
-				{#if knownMonths > 0}
+				<div class="time-grid">
+					{#if knownMonths > 0}
+						<div class="time-box">
+							<div class="time-num">{knownMonths}</div>
+							<div class="time-label">{t('mēneši', 'months')}</div>
+						</div>
+					{/if}
 					<div class="time-box">
-						<div class="time-num">{knownMonths}</div>
-						<div class="time-label">{t('mēneši', 'months')}</div>
+						<div class="time-num">{knownDays}</div>
+						<div class="time-label">{t('dienas', 'days')}</div>
 					</div>
-				{/if}
-				<div class="time-box">
-					<div class="time-num">{knownDays}</div>
-					<div class="time-label">{t('dienas', 'days')}</div>
+					<div class="time-box">
+						<div class="time-num">{knownHours}</div>
+						<div class="time-label">{t('stundas', 'hours')}</div>
+					</div>
+					<div class="time-box">
+						<div class="time-num">{knownMinutes}</div>
+						<div class="time-label">{t('minūtes', 'minutes')}</div>
+					</div>
 				</div>
-				<div class="time-box">
-					<div class="time-num">{knownHours}</div>
-					<div class="time-label">{t('stundas', 'hours')}</div>
-				</div>
-				<div class="time-box">
-					<div class="time-num">{knownMinutes}</div>
-					<div class="time-label">{t('minūtes', 'minutes')}</div>
-				</div>
-			</div>
 
-			<p class="time-note muted">
-				{t(
-					'Kopš 2026. gada 9. janvāra, 21:26 (Latvijas laiks)',
-					'Since January 9, 2026, 21:26 (Latvia time)'
-				)}
-			</p>
-		</section>
-	</main>
-</div>
+				<p class="time-note muted">
+					{t(
+						'Kopš 2026. gada 9. janvāra, 21:26 (Latvijas laiks)',
+						'Since January 9, 2026, 21:26 (Latvia time)'
+					)}
+				</p>
+			</section>
+		</main>
+	</div>
+{/if}
 
 <style>
+	/* ──────────────────────────────────────────────── */
+	/*                Password screen                   */
+	/* ──────────────────────────────────────────────── */
+	.auth-screen {
+		position: fixed;
+		inset: 0;
+		background: #000;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 9999;
+	}
+
+	.auth-box {
+		width: 100%;
+		max-width: 340px;
+		padding: 32px 24px;
+		background: rgba(20, 20, 30, 0.92);
+		border: 1px solid #444;
+		border-radius: 16px;
+		text-align: center;
+		backdrop-filter: blur(10px);
+		box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+	}
+
+	.auth-box h1 {
+		font-size: 1.9rem;
+		font-weight: 800;
+		margin: 0 0 24px;
+		letter-spacing: -0.02em;
+		color: white;
+	}
+
+	.auth-box input[type='password'] {
+		width: 100%;
+		padding: 14px;
+		font-size: 1.15rem;
+		text-align: center;
+		background: rgba(255, 255, 255, 0.06);
+		border: 1px solid #555;
+		border-radius: 10px;
+		color: white;
+		margin-bottom: 16px;
+		transition: border-color 0.2s;
+	}
+
+	.auth-box input:focus {
+		outline: none;
+		border-color: #a78bfa;
+		box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.2);
+	}
+
+	.auth-box input.error {
+		border-color: #f87171;
+		animation: shake 0.35s;
+	}
+
+	@keyframes shake {
+		20%,
+		60% {
+			transform: translateX(-5px);
+		}
+		40%,
+		80% {
+			transform: translateX(5px);
+		}
+	}
+
+	.error-msg {
+		color: #f87171;
+		font-size: 0.95rem;
+		margin: 8px 0 16px;
+	}
+
+	.auth-box button {
+		width: 100%;
+		padding: 14px;
+		font-size: 1.05rem;
+		font-weight: 700;
+		background: #8b5cf6;
+		color: white;
+		border: none;
+		border-radius: 10px;
+		cursor: pointer;
+		transition: background 0.2s;
+	}
+
+	.auth-box button:hover {
+		background: #7c3aed;
+	}
+
+	.hint {
+		margin-top: 28px;
+		color: #888;
+		font-size: 0.9rem;
+		font-style: italic;
+	}
+
+	/* ──────────────────────────────────────────────── */
+	/*                Original page styles              */
+	/* ──────────────────────────────────────────────── */
 	.page {
 		min-height: 100vh;
 		margin: 0;
-		padding: 0; /* ensure no outer padding squeezes */
+		padding: 0;
 		display: grid;
 		grid-template-rows: auto 1fr;
 		gap: 18px;
@@ -402,9 +547,7 @@
 		background: color-mix(in srgb, var(--surface) 85%, rgba(0, 0, 0, 0.1));
 		border: 1px solid var(--border);
 		backdrop-filter: blur(14px) saturate(140%);
-		box-shadow:
-			var(--ring),
-			0 8px 32px rgba(0, 0, 0, 0.25);
+		box-shadow: var(--ring), 0 8px 32px rgba(0, 0, 0, 0.25);
 	}
 
 	.lang {
@@ -434,9 +577,9 @@
 
 	.wrap {
 		width: 100%;
-		max-width: 100%; /* explicit – prevents any inherited limit */
+		max-width: 100%;
 		margin: 0;
-		padding: 0 10px; /* 10–12px side padding → looks wide but text doesn't touch edge */
+		padding: 0 10px;
 		display: grid;
 		gap: 14px;
 		align-content: start;
@@ -486,8 +629,7 @@
 		display: grid;
 		grid-template-columns: 48px 1fr;
 		gap: 16px;
-		background:
-			linear-gradient(145deg, rgba(139, 92, 246, 0.08), transparent 60%), var(--surface-strong);
+		background: linear-gradient(145deg, rgba(139, 92, 246, 0.08), transparent 60%), var(--surface-strong);
 		border: 1px solid color-mix(in srgb, var(--tint), var(--border-strong) 70%);
 		border-radius: 24px;
 		padding: 20px;
