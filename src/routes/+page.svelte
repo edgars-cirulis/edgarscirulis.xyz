@@ -265,7 +265,7 @@
 				</form>
 
 				<div class="auth-hint">
-					<span>Time when I was born</span>
+					<span>Time when we started everything</span>
 				</div>
 			</div>
 		</div>
