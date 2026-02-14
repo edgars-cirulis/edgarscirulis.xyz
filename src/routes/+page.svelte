@@ -44,8 +44,8 @@
 			<h1>{t('Vietne vairs nav pieejama', 'Site No Longer Available')}</h1>
 			<p class="muted">
 				{t(
-					'Šī lapa ir arhivēta. Paliek tikai mūzikas atskaņošana.',
-					'This page has been archived. Only music playback remains.'
+					'Šī lapa ir arhivēta.',
+					'This page has been archived.'
 				)}
 			</p>
 		</div>
