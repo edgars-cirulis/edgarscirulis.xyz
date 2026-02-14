@@ -44,9 +44,15 @@
 		--radius: 28px;
 	}
 
-	/* background */
 	.scene {
-		min-height: 100vh;
+		/* ✅ true fullscreen on mobile */
+		min-height: 100dvh;
+
+		/* ✅ full-bleed even inside a constrained wrapper */
+		width: 100vw;
+		margin-left: calc(50% - 50vw);
+		margin-right: calc(50% - 50vw);
+
 		background: var(--bg);
 		display: grid;
 		place-items: center;
@@ -54,20 +60,27 @@
 		position: relative;
 		overflow: hidden;
 		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+		/* optional: comfy spacing from screen edges */
+		padding: 24px max(16px, env(safe-area-inset-right)) 24px max(16px, env(safe-area-inset-left));
 	}
 
+	/* ✅ background glow behind content */
 	.scene::before {
 		content: '';
 		position: absolute;
 		inset: 0;
+		z-index: 0; /* ✅ */
 		background:
 			radial-gradient(circle at 20% 30%, #2d1b47 0%, transparent 45%),
 			radial-gradient(circle at 80% 70%, #1e0f38 0%, transparent 50%);
 		opacity: 0.45;
 	}
 
-	/* entrance */
+	/* ✅ content above glow */
 	.content {
+		position: relative; /* ✅ */
+		z-index: 1; /* ✅ */
 		opacity: 0;
 		transform: translateY(24px);
 		transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
@@ -78,10 +91,8 @@
 		transform: translateY(0);
 	}
 
-	/* card */
 	.card {
-		width: 90%;
-		max-width: 420px;
+		width: min(420px, 90vw); /* ✅ more stable than width:90% + max-width */
 		padding: 3.2rem 2rem 2.8rem;
 		text-align: center;
 		background: var(--glass);
@@ -90,7 +101,6 @@
 		box-shadow: 0 25px 70px rgba(0, 0, 0, 0.55);
 	}
 
-	/* heart */
 	.icon {
 		font-size: 4.5rem;
 		margin-bottom: 1.4rem;
@@ -114,7 +124,6 @@
 		}
 	}
 
-	/* text */
 	.title {
 		font-size: 2.2rem;
 		font-weight: 800;

@@ -52,7 +52,7 @@
 </svelte:head>
 
 <div class="app">
-	<div class="ambient"></div>
+	<div class="ambient" aria-hidden="true"></div>
 
 	<main class="wrap">
 		{@render children()}
@@ -68,6 +68,7 @@
 
 	:global(html) {
 		background: radial-gradient(1200px 900px at 50% -10%, var(--bg-soft), var(--bg));
+		scrollbar-gutter: stable; /* ✅ keeps center stable */
 	}
 
 	:global(body) {
@@ -82,7 +83,6 @@
 		box-sizing: border-box;
 	}
 
-	/* layout */
 	.app {
 		min-height: 100vh;
 		position: relative;
@@ -95,7 +95,6 @@
 		padding: 0;
 	}
 
-	/* ambient glow background */
 	.ambient {
 		position: fixed;
 		inset: 0;
