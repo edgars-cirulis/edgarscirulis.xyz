@@ -3,17 +3,13 @@
 
 	let visible = false;
 
-	// Europe/Riga countdown target: 2026-02-20 00:00:00
+	// Europe/Riga: 2026-02-20 00:00:00 (GMT+2)
 	const target = new Date('2026-02-20T00:00:00+02:00').getTime();
-
-	let now = Date.now();
-	let t = Math.max(0, target - now);
 
 	let days = 0;
 	let hours = 0;
 	let minutes = 0;
 	let seconds = 0;
-
 	let done = false;
 
 	let tick: number;
@@ -23,15 +19,14 @@
 	}
 
 	function calc() {
-		now = Date.now();
-		t = Math.max(0, target - now);
-
+		const now = Date.now();
+		const t = Math.max(0, target - now);
 		done = t === 0;
 
-		const totalSeconds = Math.floor(t / 1000);
+		const total = Math.floor(t / 1000);
 
-		days = Math.floor(totalSeconds / 86400);
-		const r1 = totalSeconds % 86400;
+		days = Math.floor(total / 86400);
+		const r1 = total % 86400;
 
 		hours = Math.floor(r1 / 3600);
 		const r2 = r1 % 3600;
@@ -41,19 +36,18 @@
 	}
 
 	onMount(() => {
-		setTimeout(() => (visible = true), 250);
+		setTimeout(() => (visible = true), 200);
 		calc();
-		tick = window.setInterval(calc, 250);
+		tick = window.setInterval(calc, 1000);
 	});
 
-	onDestroy(() => {
-		clearInterval(tick);
-	});
+	onDestroy(() => clearInterval(tick));
 </script>
 
 <svelte:head>
 	<title>✦ Atvēršana drīzumā</title>
 	<meta name="theme-color" content="#050509" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 </svelte:head>
 
 <div class="scene">
@@ -66,59 +60,45 @@
 
 	<div class="content" class:visible>
 		<div class="card">
-			<div class="top">
-				<div class="badge">
-					<span class="dot"></span>
-					<span>Vietne atgriezīsies</span>
-				</div>
-
-				<div class="icon">
-					<span class="symbol">🖤</span>
-				</div>
-
-				<h1 class="title">Atvēršana drīzumā</h1>
-
-				<p class="subtitle">
-					Mēs pārtaisām visu no jauna — tīrāk, skaistāk un asāk.<br />
-					Atlikušais laiks līdz atvēršanai:
-				</p>
+			<div class="badge">
+				<span class="dot"></span>
+				<span>Vietne atgriezīsies</span>
 			</div>
+
+			<h1 class="title">Atvēršana drīzumā</h1>
+
+			<p class="subtitle">
+				Mēs pārtaisām visu no jauna — tīrāk, skaistāk un asāk.<br />
+				Atlikušais laiks līdz atvēršanai:
+			</p>
 
 			<div class="countdown" data-done={done}>
 				<div class="blob" aria-hidden="true"></div>
 
-				<div class="units">
+				<div class="row" role="timer" aria-live="polite">
 					<div class="unit">
-						<div class="num" style={`--glow:${Math.min(1, (seconds + 1) / 60)}`}>
-							{days}
-						</div>
+						<div class="num">{days}</div>
 						<div class="lbl">dienas</div>
 					</div>
 
-					<div class="sep">:</div>
+					<div class="sep" aria-hidden="true">:</div>
 
 					<div class="unit">
-						<div class="num" style={`--glow:${Math.min(1, (seconds + 1) / 60)}`}>
-							{pad2(hours)}
-						</div>
+						<div class="num">{pad2(hours)}</div>
 						<div class="lbl">stundas</div>
 					</div>
 
-					<div class="sep">:</div>
+					<div class="sep" aria-hidden="true">:</div>
 
 					<div class="unit">
-						<div class="num" style={`--glow:${Math.min(1, (seconds + 1) / 60)}`}>
-							{pad2(minutes)}
-						</div>
+						<div class="num">{pad2(minutes)}</div>
 						<div class="lbl">minūtes</div>
 					</div>
 
-					<div class="sep">:</div>
+					<div class="sep" aria-hidden="true">:</div>
 
 					<div class="unit">
-						<div class="num pulse" style={`--glow:${Math.min(1, (seconds + 1) / 60)}`}>
-							{pad2(seconds)}
-						</div>
+						<div class="num pulse">{pad2(seconds)}</div>
 						<div class="lbl">sekundes</div>
 					</div>
 				</div>
@@ -135,9 +115,7 @@
 
 			<div class="line"></div>
 
-			<p class="footer">
-				Paldies, ka gaidi. <span class="soft">Drīz atgriezīsimies.</span>
-			</p>
+			<p class="footer">Paldies, ka gaidi. <span class="soft">Drīz atgriezīsimies.</span></p>
 		</div>
 	</div>
 </div>
@@ -148,7 +126,6 @@
 		--text: #f1f5f9;
 		--muted: #94a3b8;
 
-		/* “liquid glass” palette */
 		--accent: #c084fc;
 		--accent2: #60a5fa;
 		--accent3: #34d399;
@@ -174,10 +151,13 @@
 		overflow: hidden;
 		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
-		padding: 24px max(16px, env(safe-area-inset-right)) 24px max(16px, env(safe-area-inset-left));
+		padding:
+			max(18px, env(safe-area-inset-top))
+			max(16px, env(safe-area-inset-right))
+			max(22px, env(safe-area-inset-bottom))
+			max(16px, env(safe-area-inset-left));
 	}
 
-	/* ===== Background FX ===== */
 	.fx {
 		position: absolute;
 		inset: -40px;
@@ -222,64 +202,43 @@
 	}
 
 	@keyframes drift1 {
-		0% {
-			transform: translate(-4%, -2%) rotate(0deg);
-		}
-		50% {
-			transform: translate(3%, 2%) rotate(10deg);
-		}
-		100% {
-			transform: translate(-4%, -2%) rotate(0deg);
-		}
+		0% { transform: translate(-4%, -2%) rotate(0deg); }
+		50% { transform: translate(3%, 2%) rotate(10deg); }
+		100% { transform: translate(-4%, -2%) rotate(0deg); }
 	}
 	@keyframes drift2 {
-		0% {
-			transform: translate(3%, 0%) rotate(0deg);
-		}
-		50% {
-			transform: translate(-2%, 3%) rotate(-12deg);
-		}
-		100% {
-			transform: translate(3%, 0%) rotate(0deg);
-		}
+		0% { transform: translate(3%, 0%) rotate(0deg); }
+		50% { transform: translate(-2%, 3%) rotate(-12deg); }
+		100% { transform: translate(3%, 0%) rotate(0deg); }
 	}
 	@keyframes drift3 {
-		0% {
-			transform: translate(0%, 0%) scale(1);
-		}
-		50% {
-			transform: translate(2%, -2%) scale(1.04);
-		}
-		100% {
-			transform: translate(0%, 0%) scale(1);
-		}
+		0% { transform: translate(0%, 0%) scale(1); }
+		50% { transform: translate(2%, -2%) scale(1.04); }
+		100% { transform: translate(0%, 0%) scale(1); }
 	}
 	@keyframes grainMove {
-		0% {
-			transform: translate(0, 0);
-		}
-		100% {
-			transform: translate(12px, -10px);
-		}
+		0% { transform: translate(0, 0); }
+		100% { transform: translate(12px, -10px); }
 	}
 
-	/* ===== Entrance ===== */
 	.content {
 		position: relative;
 		z-index: 1;
 		opacity: 0;
-		transform: translateY(22px);
-		transition: all 0.85s cubic-bezier(0.23, 1, 0.32, 1);
+		transform: translateY(18px);
+		transition: all 0.75s cubic-bezier(0.23, 1, 0.32, 1);
+		width: 100%;
+		display: grid;
+		place-items: center;
 	}
 	.content.visible {
 		opacity: 1;
 		transform: translateY(0);
 	}
 
-	/* ===== Card (Liquid Glass) ===== */
 	.card {
 		width: min(560px, 92vw);
-		padding: 2.6rem 2rem 2.2rem;
+		padding: 2.4rem 1.6rem 2.1rem;
 		text-align: center;
 
 		background: linear-gradient(180deg, var(--glass2), transparent), var(--glass);
@@ -296,7 +255,6 @@
 		overflow: hidden;
 	}
 
-	/* liquid highlight sweep */
 	.card::before {
 		content: '';
 		position: absolute;
@@ -309,20 +267,9 @@
 	}
 
 	@keyframes sheen {
-		0% {
-			transform: translateX(-6%) translateY(-2%);
-		}
-		50% {
-			transform: translateX(6%) translateY(2%);
-		}
-		100% {
-			transform: translateX(-6%) translateY(-2%);
-		}
-	}
-
-	.top {
-		position: relative;
-		z-index: 1;
+		0% { transform: translateX(-6%) translateY(-2%); }
+		50% { transform: translateX(6%) translateY(2%); }
+		100% { transform: translateX(-6%) translateY(-2%); }
 	}
 
 	.badge {
@@ -349,46 +296,14 @@
 	}
 
 	@keyframes blink {
-		0%,
-		100% {
-			transform: scale(1);
-			opacity: 0.85;
-		}
-		50% {
-			transform: scale(1.25);
-			opacity: 1;
-		}
-	}
-
-	.icon {
-		font-size: 4.2rem;
-		margin: 0.2rem 0 1rem;
-	}
-
-	.symbol {
-		display: inline-block;
-		animation: heartbeat 2.4s ease-in-out infinite;
-		filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.35));
-	}
-
-	@keyframes heartbeat {
-		0%,
-		100% {
-			transform: scale(1);
-		}
-		40% {
-			transform: scale(1.14);
-		}
-		60% {
-			transform: scale(0.92);
-		}
+		0%, 100% { transform: scale(1); opacity: 0.85; }
+		50% { transform: scale(1.25); opacity: 1; }
 	}
 
 	.title {
 		font-size: clamp(1.8rem, 3.2vw, 2.45rem);
 		font-weight: 900;
 		margin-bottom: 0.8rem;
-
 		background: linear-gradient(90deg, #e9d5ff, var(--accent), var(--accent2));
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
@@ -398,23 +313,24 @@
 		font-size: 1.05rem;
 		line-height: 1.6;
 		color: var(--muted);
-		margin-bottom: 1.6rem;
+		margin-bottom: 1.4rem;
 	}
 
-	/* ===== Countdown Glass ===== */
 	.countdown {
 		position: relative;
-		z-index: 1;
-		padding: 18px 16px 14px;
+		padding: 16px 14px 12px;
 		border-radius: 22px;
 		border: 1px solid rgba(255, 255, 255, 0.12);
 		background: rgba(255, 255, 255, 0.04);
 		backdrop-filter: blur(18px) saturate(175%);
 		-webkit-backdrop-filter: blur(18px) saturate(175%);
 		overflow: hidden;
+
+		width: 100%;
+		max-width: 520px;
+		margin: 0 auto;
 	}
 
-	/* “liquid blob” behind digits */
 	.blob {
 		position: absolute;
 		inset: -30%;
@@ -427,33 +343,31 @@
 	}
 
 	@keyframes blob {
-		0% {
-			transform: translate(-2%, -1%) scale(1) rotate(0deg);
-		}
-		50% {
-			transform: translate(2%, 1%) scale(1.06) rotate(12deg);
-		}
-		100% {
-			transform: translate(-2%, -1%) scale(1) rotate(0deg);
-		}
+		0% { transform: translate(-2%, -1%) scale(1) rotate(0deg); }
+		50% { transform: translate(2%, 1%) scale(1.06) rotate(12deg); }
+		100% { transform: translate(-2%, -1%) scale(1) rotate(0deg); }
 	}
 
-	.units {
+	.row {
 		position: relative;
-		display: grid;
-		grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
-		align-items: center;
+		display: flex;
+		justify-content: center;
+		align-items: stretch;
 		gap: 10px;
+		flex-wrap: nowrap;
 	}
 
 	.unit {
-		display: grid;
-		place-items: center;
-		padding: 10px 8px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 10px 10px;
 		border-radius: 18px;
 		background: rgba(0, 0, 0, 0.14);
 		border: 1px solid rgba(255, 255, 255, 0.08);
 		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+		min-width: 92px;
 	}
 
 	.num {
@@ -461,11 +375,11 @@
 		font-weight: 900;
 		font-size: clamp(1.35rem, 4.4vw, 2.2rem);
 		letter-spacing: 0.02em;
-
-		/* liquid-glass glow */
+		min-width: 2ch;
+		text-align: center;
 		text-shadow:
-			0 0 22px rgba(192, 132, 252, calc(0.25 + var(--glow) * 0.35)),
-			0 0 34px rgba(96, 165, 250, calc(0.10 + var(--glow) * 0.25));
+			0 0 22px rgba(192, 132, 252, 0.35),
+			0 0 34px rgba(96, 165, 250, 0.18);
 	}
 
 	.lbl {
@@ -477,9 +391,12 @@
 	}
 
 	.sep {
-		font-weight: 800;
-		opacity: 0.65;
+		display: grid;
+		place-items: center;
+		font-weight: 900;
+		opacity: 0.6;
 		transform: translateY(-8px);
+		width: 10px;
 	}
 
 	.pulse {
@@ -487,23 +404,18 @@
 	}
 
 	@keyframes pulse {
-		0%,
-		100% {
-			transform: translateY(0) scale(1);
-		}
-		50% {
-			transform: translateY(-1px) scale(1.04);
-		}
+		0%, 100% { transform: translateY(0) scale(1); }
+		50% { transform: translateY(-1px) scale(1.04); }
 	}
 
 	.hint {
-		position: relative;
 		margin-top: 12px;
 		display: flex;
 		justify-content: center;
 		align-items: baseline;
 		gap: 10px;
 		color: rgba(148, 163, 184, 0.9);
+		position: relative;
 	}
 
 	.date {
@@ -521,20 +433,16 @@
 		color: rgba(241, 245, 249, 0.92);
 	}
 
-	/* When done: freeze + soft “ready” glow */
 	.countdown[data-done='true'] .blob {
 		animation-play-state: paused;
 		opacity: 0.75;
-	}
-	.countdown[data-done='true'] {
-		box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.12), 0 0 40px rgba(52, 211, 153, 0.12);
 	}
 
 	.line {
 		width: 70px;
 		height: 2px;
 		background: linear-gradient(90deg, transparent, var(--accent), transparent);
-		margin: 1.5rem auto 1.2rem;
+		margin: 1.4rem auto 1.1rem;
 		opacity: 0.9;
 	}
 
@@ -547,16 +455,39 @@
 		color: rgba(241, 245, 249, 0.9);
 	}
 
-	/* Mobile spacing polish */
 	@media (max-width: 420px) {
 		.card {
-			padding: 2.2rem 1.25rem 2rem;
+			padding: 2.1rem 1.2rem 1.9rem;
 		}
-		.units {
+
+		.row {
 			gap: 8px;
 		}
+
+		.unit {
+			min-width: 78px;
+			padding: 10px 8px;
+		}
+
 		.sep {
 			transform: translateY(-6px);
+		}
+	}
+
+	@media (max-width: 340px) {
+		.row {
+			flex-wrap: wrap;
+			row-gap: 8px;
+		}
+		.sep {
+			display: none;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		* {
+			animation: none !important;
+			transition: none !important;
 		}
 	}
 </style>
