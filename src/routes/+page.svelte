@@ -1,35 +1,143 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 
 	let visible = false;
 
+	// Europe/Riga countdown target: 2026-02-20 00:00:00
+	const target = new Date('2026-02-20T00:00:00+02:00').getTime();
+
+	let now = Date.now();
+	let t = Math.max(0, target - now);
+
+	let days = 0;
+	let hours = 0;
+	let minutes = 0;
+	let seconds = 0;
+
+	let done = false;
+
+	let tick: number;
+
+	function pad2(n: number) {
+		return String(n).padStart(2, '0');
+	}
+
+	function calc() {
+		now = Date.now();
+		t = Math.max(0, target - now);
+
+		done = t === 0;
+
+		const totalSeconds = Math.floor(t / 1000);
+
+		days = Math.floor(totalSeconds / 86400);
+		const r1 = totalSeconds % 86400;
+
+		hours = Math.floor(r1 / 3600);
+		const r2 = r1 % 3600;
+
+		minutes = Math.floor(r2 / 60);
+		seconds = r2 % 60;
+	}
+
 	onMount(() => {
 		setTimeout(() => (visible = true), 250);
+		calc();
+		tick = window.setInterval(calc, 250);
+	});
+
+	onDestroy(() => {
+		clearInterval(tick);
 	});
 </script>
 
 <svelte:head>
-	<title>✦ Archived</title>
+	<title>✦ Atvēršana drīzumā</title>
 	<meta name="theme-color" content="#050509" />
 </svelte:head>
 
 <div class="scene">
+	<div class="fx" aria-hidden="true">
+		<div class="aurora a1"></div>
+		<div class="aurora a2"></div>
+		<div class="aurora a3"></div>
+		<div class="grain"></div>
+	</div>
+
 	<div class="content" class:visible>
 		<div class="card">
-			<div class="icon">
-				<span class="symbol">🖤</span>
+			<div class="top">
+				<div class="badge">
+					<span class="dot"></span>
+					<span>Vietne atgriezīsies</span>
+				</div>
+
+				<div class="icon">
+					<span class="symbol">🖤</span>
+				</div>
+
+				<h1 class="title">Atvēršana drīzumā</h1>
+
+				<p class="subtitle">
+					Mēs pārtaisām visu no jauna — tīrāk, skaistāk un asāk.<br />
+					Atlikušais laiks līdz atvēršanai:
+				</p>
 			</div>
 
-			<h1 class="title">This has ended</h1>
+			<div class="countdown" data-done={done}>
+				<div class="blob" aria-hidden="true"></div>
 
-			<p class="subtitle">
-				What once lived here is now memory.<br />
-				Thank you for being part of it.
-			</p>
+				<div class="units">
+					<div class="unit">
+						<div class="num" style={`--glow:${Math.min(1, (seconds + 1) / 60)}`}>
+							{days}
+						</div>
+						<div class="lbl">dienas</div>
+					</div>
+
+					<div class="sep">:</div>
+
+					<div class="unit">
+						<div class="num" style={`--glow:${Math.min(1, (seconds + 1) / 60)}`}>
+							{pad2(hours)}
+						</div>
+						<div class="lbl">stundas</div>
+					</div>
+
+					<div class="sep">:</div>
+
+					<div class="unit">
+						<div class="num" style={`--glow:${Math.min(1, (seconds + 1) / 60)}`}>
+							{pad2(minutes)}
+						</div>
+						<div class="lbl">minūtes</div>
+					</div>
+
+					<div class="sep">:</div>
+
+					<div class="unit">
+						<div class="num pulse" style={`--glow:${Math.min(1, (seconds + 1) / 60)}`}>
+							{pad2(seconds)}
+						</div>
+						<div class="lbl">sekundes</div>
+					</div>
+				</div>
+
+				<div class="hint">
+					{#if done}
+						<span class="ready">✅ Gatavs. Vari atsvaidzināt lapu.</span>
+					{:else}
+						<span class="date">20 · 02 · 2026</span>
+						<span class="mini">Rīga (GMT+2)</span>
+					{/if}
+				</div>
+			</div>
 
 			<div class="line"></div>
 
-			<p class="date">14 · 02 · 2026</p>
+			<p class="footer">
+				Paldies, ka gaidi. <span class="soft">Drīz atgriezīsimies.</span>
+			</p>
 		</div>
 	</div>
 </div>
@@ -37,18 +145,23 @@
 <style>
 	:root {
 		--bg: #050509;
-		--accent: #c084fc;
 		--text: #f1f5f9;
 		--muted: #94a3b8;
-		--glass: rgba(30, 30, 50, 0.28);
+
+		/* “liquid glass” palette */
+		--accent: #c084fc;
+		--accent2: #60a5fa;
+		--accent3: #34d399;
+
+		--glass: rgba(18, 18, 28, 0.42);
+		--glass2: rgba(255, 255, 255, 0.06);
+		--stroke: rgba(255, 255, 255, 0.12);
+
 		--radius: 28px;
 	}
 
 	.scene {
-		/* ✅ true fullscreen on mobile */
 		min-height: 100dvh;
-
-		/* ✅ full-bleed even inside a constrained wrapper */
 		width: 100vw;
 		margin-left: calc(50% - 50vw);
 		margin-right: calc(50% - 50vw);
@@ -61,54 +174,201 @@
 		overflow: hidden;
 		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
-		/* optional: comfy spacing from screen edges */
 		padding: 24px max(16px, env(safe-area-inset-right)) 24px max(16px, env(safe-area-inset-left));
 	}
 
-	/* ✅ background glow behind content */
-	.scene::before {
-		content: '';
+	/* ===== Background FX ===== */
+	.fx {
+		position: absolute;
+		inset: -40px;
+		z-index: 0;
+		pointer-events: none;
+	}
+
+	.aurora {
+		position: absolute;
+		inset: -30%;
+		filter: blur(28px);
+		opacity: 0.55;
+		transform: translate3d(0, 0, 0);
+		mix-blend-mode: screen;
+	}
+
+	.a1 {
+		background: radial-gradient(circle at 20% 30%, rgba(192, 132, 252, 0.55) 0%, transparent 55%),
+			radial-gradient(circle at 70% 60%, rgba(96, 165, 250, 0.45) 0%, transparent 55%);
+		animation: drift1 10s ease-in-out infinite;
+	}
+	.a2 {
+		background: radial-gradient(circle at 30% 80%, rgba(52, 211, 153, 0.35) 0%, transparent 55%),
+			radial-gradient(circle at 85% 20%, rgba(167, 139, 250, 0.35) 0%, transparent 55%);
+		animation: drift2 14s ease-in-out infinite;
+	}
+	.a3 {
+		background: radial-gradient(circle at 55% 45%, rgba(255, 255, 255, 0.18) 0%, transparent 60%);
+		animation: drift3 18s ease-in-out infinite;
+		opacity: 0.35;
+	}
+
+	.grain {
 		position: absolute;
 		inset: 0;
-		z-index: 0; /* ✅ */
-		background:
-			radial-gradient(circle at 20% 30%, #2d1b47 0%, transparent 45%),
-			radial-gradient(circle at 80% 70%, #1e0f38 0%, transparent 50%);
-		opacity: 0.45;
+		opacity: 0.12;
+		background-image:
+			repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.03) 0 1px, transparent 1px 2px),
+			repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.03) 0 1px, transparent 1px 3px);
+		mix-blend-mode: overlay;
+		animation: grainMove 2.5s steps(8) infinite;
 	}
 
-	/* ✅ content above glow */
+	@keyframes drift1 {
+		0% {
+			transform: translate(-4%, -2%) rotate(0deg);
+		}
+		50% {
+			transform: translate(3%, 2%) rotate(10deg);
+		}
+		100% {
+			transform: translate(-4%, -2%) rotate(0deg);
+		}
+	}
+	@keyframes drift2 {
+		0% {
+			transform: translate(3%, 0%) rotate(0deg);
+		}
+		50% {
+			transform: translate(-2%, 3%) rotate(-12deg);
+		}
+		100% {
+			transform: translate(3%, 0%) rotate(0deg);
+		}
+	}
+	@keyframes drift3 {
+		0% {
+			transform: translate(0%, 0%) scale(1);
+		}
+		50% {
+			transform: translate(2%, -2%) scale(1.04);
+		}
+		100% {
+			transform: translate(0%, 0%) scale(1);
+		}
+	}
+	@keyframes grainMove {
+		0% {
+			transform: translate(0, 0);
+		}
+		100% {
+			transform: translate(12px, -10px);
+		}
+	}
+
+	/* ===== Entrance ===== */
 	.content {
-		position: relative; /* ✅ */
-		z-index: 1; /* ✅ */
+		position: relative;
+		z-index: 1;
 		opacity: 0;
-		transform: translateY(24px);
-		transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+		transform: translateY(22px);
+		transition: all 0.85s cubic-bezier(0.23, 1, 0.32, 1);
 	}
-
 	.content.visible {
 		opacity: 1;
 		transform: translateY(0);
 	}
 
+	/* ===== Card (Liquid Glass) ===== */
 	.card {
-		width: min(420px, 90vw); /* ✅ more stable than width:90% + max-width */
-		padding: 3.2rem 2rem 2.8rem;
+		width: min(560px, 92vw);
+		padding: 2.6rem 2rem 2.2rem;
 		text-align: center;
-		background: var(--glass);
-		backdrop-filter: blur(24px) saturate(160%);
+
+		background: linear-gradient(180deg, var(--glass2), transparent), var(--glass);
+		border: 1px solid var(--stroke);
 		border-radius: var(--radius);
-		box-shadow: 0 25px 70px rgba(0, 0, 0, 0.55);
+
+		backdrop-filter: blur(22px) saturate(170%);
+		-webkit-backdrop-filter: blur(22px) saturate(170%);
+
+		box-shadow:
+			0 30px 90px rgba(0, 0, 0, 0.62),
+			inset 0 1px 0 rgba(255, 255, 255, 0.08);
+		position: relative;
+		overflow: hidden;
+	}
+
+	/* liquid highlight sweep */
+	.card::before {
+		content: '';
+		position: absolute;
+		inset: -2px;
+		background: radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.14), transparent 55%),
+			linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.06), transparent 70%);
+		opacity: 0.9;
+		pointer-events: none;
+		animation: sheen 6s ease-in-out infinite;
+	}
+
+	@keyframes sheen {
+		0% {
+			transform: translateX(-6%) translateY(-2%);
+		}
+		50% {
+			transform: translateX(6%) translateY(2%);
+		}
+		100% {
+			transform: translateX(-6%) translateY(-2%);
+		}
+	}
+
+	.top {
+		position: relative;
+		z-index: 1;
+	}
+
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		padding: 8px 12px;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.06);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		color: rgba(241, 245, 249, 0.92);
+		font-size: 0.9rem;
+		letter-spacing: 0.02em;
+		margin-bottom: 18px;
+	}
+
+	.dot {
+		width: 10px;
+		height: 10px;
+		border-radius: 999px;
+		background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+		box-shadow: 0 0 18px rgba(192, 132, 252, 0.6);
+		animation: blink 1.2s ease-in-out infinite;
+	}
+
+	@keyframes blink {
+		0%,
+		100% {
+			transform: scale(1);
+			opacity: 0.85;
+		}
+		50% {
+			transform: scale(1.25);
+			opacity: 1;
+		}
 	}
 
 	.icon {
-		font-size: 4.5rem;
-		margin-bottom: 1.4rem;
+		font-size: 4.2rem;
+		margin: 0.2rem 0 1rem;
 	}
 
 	.symbol {
 		display: inline-block;
 		animation: heartbeat 2.4s ease-in-out infinite;
+		filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.35));
 	}
 
 	@keyframes heartbeat {
@@ -117,7 +377,7 @@
 			transform: scale(1);
 		}
 		40% {
-			transform: scale(1.15);
+			transform: scale(1.14);
 		}
 		60% {
 			transform: scale(0.92);
@@ -125,10 +385,11 @@
 	}
 
 	.title {
-		font-size: 2.2rem;
-		font-weight: 800;
-		margin-bottom: 1rem;
-		background: linear-gradient(90deg, #e0bbff, #c084fc, #a78bfa);
+		font-size: clamp(1.8rem, 3.2vw, 2.45rem);
+		font-weight: 900;
+		margin-bottom: 0.8rem;
+
+		background: linear-gradient(90deg, #e9d5ff, var(--accent), var(--accent2));
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 	}
@@ -140,17 +401,162 @@
 		margin-bottom: 1.6rem;
 	}
 
-	.line {
-		width: 60px;
-		height: 2px;
-		background: linear-gradient(90deg, transparent, var(--accent), transparent);
-		margin: 0 auto 1.4rem;
+	/* ===== Countdown Glass ===== */
+	.countdown {
+		position: relative;
+		z-index: 1;
+		padding: 18px 16px 14px;
+		border-radius: 22px;
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		background: rgba(255, 255, 255, 0.04);
+		backdrop-filter: blur(18px) saturate(175%);
+		-webkit-backdrop-filter: blur(18px) saturate(175%);
+		overflow: hidden;
+	}
+
+	/* “liquid blob” behind digits */
+	.blob {
+		position: absolute;
+		inset: -30%;
+		background: radial-gradient(circle at 30% 35%, rgba(192, 132, 252, 0.25), transparent 55%),
+			radial-gradient(circle at 70% 65%, rgba(96, 165, 250, 0.18), transparent 55%),
+			radial-gradient(circle at 55% 55%, rgba(52, 211, 153, 0.12), transparent 60%);
+		filter: blur(16px);
+		opacity: 0.9;
+		animation: blob 7s ease-in-out infinite;
+	}
+
+	@keyframes blob {
+		0% {
+			transform: translate(-2%, -1%) scale(1) rotate(0deg);
+		}
+		50% {
+			transform: translate(2%, 1%) scale(1.06) rotate(12deg);
+		}
+		100% {
+			transform: translate(-2%, -1%) scale(1) rotate(0deg);
+		}
+	}
+
+	.units {
+		position: relative;
+		display: grid;
+		grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.unit {
+		display: grid;
+		place-items: center;
+		padding: 10px 8px;
+		border-radius: 18px;
+		background: rgba(0, 0, 0, 0.14);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+	}
+
+	.num {
+		font-variant-numeric: tabular-nums;
+		font-weight: 900;
+		font-size: clamp(1.35rem, 4.4vw, 2.2rem);
+		letter-spacing: 0.02em;
+
+		/* liquid-glass glow */
+		text-shadow:
+			0 0 22px rgba(192, 132, 252, calc(0.25 + var(--glow) * 0.35)),
+			0 0 34px rgba(96, 165, 250, calc(0.10 + var(--glow) * 0.25));
+	}
+
+	.lbl {
+		margin-top: 4px;
+		font-size: 0.78rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: rgba(148, 163, 184, 0.92);
+	}
+
+	.sep {
+		font-weight: 800;
+		opacity: 0.65;
+		transform: translateY(-8px);
+	}
+
+	.pulse {
+		animation: pulse 1s ease-in-out infinite;
+	}
+
+	@keyframes pulse {
+		0%,
+		100% {
+			transform: translateY(0) scale(1);
+		}
+		50% {
+			transform: translateY(-1px) scale(1.04);
+		}
+	}
+
+	.hint {
+		position: relative;
+		margin-top: 12px;
+		display: flex;
+		justify-content: center;
+		align-items: baseline;
+		gap: 10px;
+		color: rgba(148, 163, 184, 0.9);
 	}
 
 	.date {
-		font-size: 0.9rem;
-		color: var(--muted);
 		letter-spacing: 0.12em;
+		font-size: 0.92rem;
+		opacity: 0.85;
+	}
+
+	.mini {
+		font-size: 0.82rem;
 		opacity: 0.7;
+	}
+
+	.ready {
+		color: rgba(241, 245, 249, 0.92);
+	}
+
+	/* When done: freeze + soft “ready” glow */
+	.countdown[data-done='true'] .blob {
+		animation-play-state: paused;
+		opacity: 0.75;
+	}
+	.countdown[data-done='true'] {
+		box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.12), 0 0 40px rgba(52, 211, 153, 0.12);
+	}
+
+	.line {
+		width: 70px;
+		height: 2px;
+		background: linear-gradient(90deg, transparent, var(--accent), transparent);
+		margin: 1.5rem auto 1.2rem;
+		opacity: 0.9;
+	}
+
+	.footer {
+		color: rgba(148, 163, 184, 0.92);
+		font-size: 0.98rem;
+	}
+
+	.soft {
+		color: rgba(241, 245, 249, 0.9);
+	}
+
+	/* Mobile spacing polish */
+	@media (max-width: 420px) {
+		.card {
+			padding: 2.2rem 1.25rem 2rem;
+		}
+		.units {
+			gap: 8px;
+		}
+		.sep {
+			transform: translateY(-6px);
+		}
 	}
 </style>
