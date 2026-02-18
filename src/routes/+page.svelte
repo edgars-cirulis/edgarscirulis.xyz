@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 
-	let visible = false;
 	let mounted = false;
+	let visible = false;
 
 	// Target: 2026-02-20 00:00:00 GMT+2 (Riga)
 	const target = new Date('2026-02-20T00:00:00+02:00').getTime();
@@ -36,7 +36,6 @@
 		mounted = true;
 		calc();
 		tick = setInterval(calc, 1000);
-		// Stagger entrance animations
 		setTimeout(() => (visible = true), 100);
 	});
 
@@ -46,535 +45,397 @@
 </script>
 
 <svelte:head>
-	<title>✦ Atvēršana drīzumā</title>
-	<meta name="theme-color" content="#0a0a0f" />
+	<title>Atvēršana drīzumā — edgarscirulis.xyz</title>
+	<meta name="theme-color" content="#09090b" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 	<meta name="description" content="Vietne drīz atgriezīsies. Atvēršana 20.02.2026." />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </svelte:head>
 
 <div class="scene" class:mounted>
-	<div class="fx" aria-hidden="true">
-		<div class="gradient-sphere sphere-1"></div>
-		<div class="gradient-sphere sphere-2"></div>
-		<div class="gradient-sphere sphere-3"></div>
-		<div class="noise"></div>
-	</div>
-
-	<main class="content" class:visible>
+	<div class="ambient-glow" aria-hidden="true"></div>
+	
+	<main class="container" class:visible>
 		<div class="card">
-			<div class="card-glow" aria-hidden="true"></div>
-			
-			<div class="badge">
-				<span class="dot" aria-hidden="true"></span>
-				<span class="badge-text">Vietne atgriezīsies</span>
+			<div class="header">
+				<div class="status">
+					<span class="status-dot" aria-hidden="true"></span>
+					<span class="status-text">Vietne atgriezīsies</span>
+				</div>
 			</div>
 
 			<h1 class="title">Atvēršana drīzumā</h1>
-
-			<p class="subtitle">
+			
+			<p class="description">
 				Mēs pārtaisām visu no jauna — tīrāk, skaistāk un asāk.
-				<span class="subtitle-break">Atlikušais laiks līdz atvēršanai:</span>
 			</p>
 
-			<div class="countdown-container" data-done={done}>
-				<div class="countdown-glow" aria-hidden="true"></div>
+			<div class="countdown-section" data-done={done}>
+				<div class="countdown-header">Atlikušais laiks līdz atvēršanai</div>
 				
-				<div class="countdown" role="timer" aria-live="polite" aria-label="Atvēršanas laika atskaite">
-					<div class="time-unit">
-						<div class="time-value" aria-label="{days} dienas">
-							<span class="digit">{days}</span>
-						</div>
-						<span class="time-label">dienas</span>
+				<div class="timer" role="timer" aria-live="polite">
+					<div class="unit">
+						<div class="value" aria-label="{days} dienas">{days}</div>
+						<div class="label">Dienas</div>
 					</div>
-
-					<span class="separator" aria-hidden="true">:</span>
-
-					<div class="time-unit">
-						<div class="time-value" aria-label="{pad2(hours)} stundas">
-							<span class="digit">{pad2(hours)}</span>
-						</div>
-						<span class="time-label">stundas</span>
+					
+					<div class="separator" aria-hidden="true"></div>
+					
+					<div class="unit">
+						<div class="value" aria-label="{pad2(hours)} stundas">{pad2(hours)}</div>
+						<div class="label">Stundas</div>
 					</div>
-
-					<span class="separator" aria-hidden="true">:</span>
-
-					<div class="time-unit">
-						<div class="time-value" aria-label="{pad2(minutes)} minūtes">
-							<span class="digit">{pad2(minutes)}</span>
-						</div>
-						<span class="time-label">minūtes</span>
+					
+					<div class="separator" aria-hidden="true"></div>
+					
+					<div class="unit">
+						<div class="value" aria-label="{pad2(minutes)} minūtes">{pad2(minutes)}</div>
+						<div class="label">Minūtes</div>
 					</div>
-
-					<span class="separator" aria-hidden="true">:</span>
-
-					<div class="time-unit seconds-unit">
-						<div class="time-value" aria-label="{pad2(seconds)} sekundes">
-							<span class="digit seconds">{pad2(seconds)}</span>
-						</div>
-						<span class="time-label">sekundes</span>
+					
+					<div class="separator" aria-hidden="true"></div>
+					
+					<div class="unit">
+						<div class="value seconds" aria-label="{pad2(seconds)} sekundes">{pad2(seconds)}</div>
+						<div class="label">Sekundes</div>
 					</div>
 				</div>
 
 				<div class="meta">
 					{#if done}
-						<span class="ready-badge">
-							<span class="check">✓</span>
-							Gatavs — atsvaidzini lapu
-						</span>
+						<div class="complete-badge">
+							<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+								<path d="M3 8L7 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+							<span>Gatavs — atsvaidzini lapu</span>
+						</div>
 					{:else}
 						<time datetime="2026-02-20T00:00:00+02:00" class="target-date">
-							20 · 02 · 2026
+							20.02.2026
 						</time>
 						<span class="timezone">Rīga (GMT+2)</span>
 					{/if}
 				</div>
 			</div>
 
-			<div class="divider" aria-hidden="true"></div>
-
-			<p class="footer">
-				Paldies, ka gaidi. <span class="accent">Drīz atgriezīsimies.</span>
-			</p>
+			<footer class="footer">
+				<p>Paldies, ka gaidi. <span class="emphasis">Drīz atgriezīsimies.</span></p>
+			</footer>
 		</div>
 	</main>
 </div>
 
 <style>
 	:root {
-		--bg: #050509;
-		--bg-elevated: #0a0a12;
-		--text: #f8fafc;
-		--text-muted: #94a3b8;
-		--text-subtle: #64748b;
+		--bg: #09090b;
+		--bg-elevated: #18181b;
+		--surface: rgba(24, 24, 27, 0.6);
 		
-		--accent-purple: #c084fc;
-		--accent-blue: #60a5fa;
-		--accent-emerald: #34d399;
-		--accent-pink: #e879f9;
+		--text-primary: #fafafa;
+		--text-secondary: #a1a1aa;
+		--text-tertiary: #71717a;
 		
-		--glass-bg: rgba(15, 15, 25, 0.6);
-		--glass-border: rgba(255, 255, 255, 0.08);
-		--glass-highlight: rgba(255, 255, 255, 0.05);
+		--accent: #8b5cf6;
+		--accent-glow: rgba(139, 92, 246, 0.15);
 		
-		--shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-		--shadow-lg: 0 25px 80px rgba(0, 0, 0, 0.5), 0 10px 30px rgba(0, 0, 0, 0.3);
+		--border: rgba(255, 255, 255, 0.08);
+		--border-strong: rgba(255, 255, 255, 0.12);
 		
-		--radius-sm: 16px;
-		--radius-md: 24px;
-		--radius-lg: 32px;
-		--radius-full: 9999px;
+		--shadow: 0 0 0 1px var(--border), 0 20px 50px -10px rgba(0, 0, 0, 0.5);
+		
+		--radius-sm: 8px;
+		--radius-md: 12px;
+		--radius-lg: 16px;
+		
+		--space-xs: 0.5rem;
+		--space-sm: 0.75rem;
+		--space-md: 1rem;
+		--space-lg: 1.5rem;
+		--space-xl: 2rem;
+		--space-2xl: 3rem;
 	}
 
-	* {
+	:global(*) {
 		box-sizing: border-box;
 		margin: 0;
 		padding: 0;
 	}
 
 	:global(body) {
-		margin: 0;
+		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 		background: var(--bg);
-		color: var(--text);
-		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+		color: var(--text-primary);
+		line-height: 1.5;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 	}
 
 	.scene {
 		min-height: 100dvh;
-		width: 100%;
-		display: grid;
-		place-items: center;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		position: relative;
-		overflow: hidden;
-		background: radial-gradient(ellipse at top, #0f0f1a 0%, var(--bg) 50%, #020205 100%);
-		padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+		padding: var(--space-lg);
+		background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(139, 92, 246, 0.15), transparent);
 	}
 
-	/* Background Effects */
-	.fx {
+	.ambient-glow {
 		position: absolute;
 		inset: 0;
-		overflow: hidden;
 		pointer-events: none;
-		z-index: 0;
+		overflow: hidden;
 	}
 
-	.gradient-sphere {
+	.ambient-glow::before {
+		content: '';
 		position: absolute;
-		border-radius: 50%;
-		filter: blur(80px);
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: 800px;
+		height: 800px;
+		background: radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 60%);
 		opacity: 0;
 		transition: opacity 1.5s ease;
 	}
 
-	.mounted .gradient-sphere {
-		opacity: 0.4;
-	}
-
-	.sphere-1 {
-		width: 600px;
-		height: 600px;
-		background: radial-gradient(circle, var(--accent-purple) 0%, transparent 70%);
-		top: -200px;
-		left: -100px;
-		animation: float 20s ease-in-out infinite;
-	}
-
-	.sphere-2 {
-		width: 500px;
-		height: 500px;
-		background: radial-gradient(circle, var(--accent-blue) 0%, transparent 70%);
-		bottom: -150px;
-		right: -100px;
-		animation: float 25s ease-in-out infinite reverse;
-	}
-
-	.sphere-3 {
-		width: 400px;
-		height: 400px;
-		background: radial-gradient(circle, var(--accent-emerald) 0%, transparent 70%);
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		animation: pulse-glow 15s ease-in-out infinite;
-		opacity: 0.2;
-	}
-
-	.noise {
-		position: absolute;
-		inset: 0;
-		opacity: 0.03;
-		background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-		pointer-events: none;
-	}
-
-	@keyframes float {
-		0%, 100% { transform: translate(0, 0) scale(1); }
-		33% { transform: translate(30px, -30px) scale(1.05); }
-		66% { transform: translate(-20px, 20px) scale(0.95); }
-	}
-
-	@keyframes pulse-glow {
-		0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.2; }
-		50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.3; }
-	}
-
-	/* Content Layout */
-	.content {
-		position: relative;
-		z-index: 1;
-		width: 100%;
-		max-width: 600px;
-		padding: 20px;
-		opacity: 0;
-		transform: translateY(30px) scale(0.95);
-		transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-	}
-
-	.content.visible {
+	.mounted .ambient-glow::before {
 		opacity: 1;
-		transform: translateY(0) scale(1);
+	}
+
+	.container {
+		width: 100%;
+		max-width: 480px;
+		opacity: 0;
+		transform: translateY(20px);
+		transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.container.visible {
+		opacity: 1;
+		transform: translateY(0);
 	}
 
 	.card {
-		position: relative;
-		background: var(--glass-bg);
-		backdrop-filter: blur(24px) saturate(180%);
-		-webkit-backdrop-filter: blur(24px) saturate(180%);
-		border: 1px solid var(--glass-border);
+		background: var(--surface);
+		backdrop-filter: blur(20px) saturate(180%);
+		-webkit-backdrop-filter: blur(20px) saturate(180%);
+		border: 1px solid var(--border);
 		border-radius: var(--radius-lg);
-		padding: clamp(2rem, 6vw, 3rem) clamp(1.5rem, 5vw, 2.5rem);
-		box-shadow: var(--shadow-lg), inset 0 1px 0 var(--glass-highlight);
+		padding: var(--space-2xl);
+		box-shadow: var(--shadow);
+		position: relative;
 		overflow: hidden;
 	}
 
-	.card-glow {
+	.card::before {
+		content: '';
 		position: absolute;
 		inset: 0;
-		background: linear-gradient(135deg, rgba(192, 132, 252, 0.1) 0%, transparent 50%, rgba(96, 165, 250, 0.1) 100%);
+		background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, transparent 100%);
 		pointer-events: none;
-		opacity: 0;
-		transition: opacity 1s ease;
 	}
 
-	.visible .card-glow {
-		opacity: 1;
+	.header {
+		margin-bottom: var(--space-xl);
 	}
 
-	/* Badge */
-	.badge {
+	.status {
 		display: inline-flex;
 		align-items: center;
-		gap: 8px;
-		padding: 8px 16px;
+		gap: var(--space-sm);
+		padding: var(--space-xs) var(--space-md);
 		background: rgba(255, 255, 255, 0.03);
-		border: 1px solid rgba(255, 255, 255, 0.06);
+		border: 1px solid var(--border);
 		border-radius: var(--radius-full);
-		margin-bottom: 1.5rem;
-		font-size: 0.875rem;
-		color: var(--text-muted);
-		letter-spacing: 0.02em;
+		font-size: 0.8125rem;
+		font-weight: 500;
+		color: var(--text-secondary);
+		letter-spacing: 0.01em;
 	}
 
-	.dot {
-		width: 8px;
-		height: 8px;
-		background: linear-gradient(135deg, var(--accent-purple), var(--accent-emerald));
+	.status-dot {
+		width: 6px;
+		height: 6px;
+		background: var(--accent);
 		border-radius: 50%;
-		box-shadow: 0 0 12px rgba(192, 132, 252, 0.6);
-		animation: blink 2s ease-in-out infinite;
+		box-shadow: 0 0 8px var(--accent);
+		animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 	}
 
-	@keyframes blink {
-		0%, 100% { opacity: 0.6; transform: scale(0.9); }
-		50% { opacity: 1; transform: scale(1.1); }
+	@keyframes pulse {
+		0%, 100% { opacity: 1; }
+		50% { opacity: 0.5; }
 	}
 
-	/* Typography */
 	.title {
-		font-size: clamp(1.75rem, 5vw, 2.5rem);
-		font-weight: 800;
+		font-size: clamp(1.75rem, 5vw, 2.25rem);
+		font-weight: 700;
+		letter-spacing: -0.02em;
 		line-height: 1.2;
-		margin-bottom: 1rem;
-		background: linear-gradient(135deg, #fff 0%, #e9d5ff 25%, var(--accent-purple) 50%, var(--accent-blue) 100%);
-		background-size: 200% auto;
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-clip: text;
-		animation: gradient-shift 8s ease infinite;
+		margin-bottom: var(--space-md);
+		color: var(--text-primary);
 	}
 
-	@keyframes gradient-shift {
-		0%, 100% { background-position: 0% center; }
-		50% { background-position: 100% center; }
+	.description {
+		font-size: 1rem;
+		color: var(--text-secondary);
+		line-height: 1.6;
+		margin-bottom: var(--space-2xl);
 	}
 
-	.subtitle {
-		font-size: clamp(0.9375rem, 2vw, 1.0625rem);
-		line-height: 1.7;
-		color: var(--text-muted);
-		margin-bottom: 2rem;
-		max-width: 90%;
-		margin-left: auto;
-		margin-right: auto;
-	}
-
-	.subtitle-break {
-		display: block;
-		margin-top: 0.25rem;
-	}
-
-	/* Countdown */
-	.countdown-container {
-		position: relative;
+	.countdown-section {
 		background: rgba(0, 0, 0, 0.2);
-		border: 1px solid rgba(255, 255, 255, 0.06);
+		border: 1px solid var(--border);
 		border-radius: var(--radius-md);
-		padding: 1.5rem 1rem;
-		margin: 0 auto;
-		overflow: hidden;
-	}
-
-	.countdown-glow {
-		position: absolute;
-		inset: -50%;
-		background: radial-gradient(circle at 50% 50%, rgba(192, 132, 252, 0.15) 0%, transparent 60%);
-		opacity: 0.5;
-		pointer-events: none;
-	}
-
-	.countdown {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		gap: clamp(0.25rem, 2vw, 0.75rem);
+		padding: var(--space-xl);
+		margin-bottom: var(--space-xl);
 		position: relative;
-		z-index: 1;
 	}
 
-	.time-unit {
+	.countdown-header {
+		font-size: 0.75rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: var(--text-tertiary);
+		margin-bottom: var(--space-lg);
+		text-align: center;
+	}
+
+	.timer {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: var(--space-md);
+		margin-bottom: var(--space-lg);
+	}
+
+	.unit {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 0.5rem;
-		min-width: clamp(60px, 15vw, 80px);
+		min-width: 60px;
 	}
 
-	.time-value {
-		background: rgba(0, 0, 0, 0.4);
-		border: 1px solid rgba(255, 255, 255, 0.08);
-		border-radius: var(--radius-sm);
-		padding: clamp(0.75rem, 3vw, 1rem) clamp(0.5rem, 2vw, 1rem);
-		width: 100%;
-		text-align: center;
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-	}
-
-	.digit {
-		display: block;
+	.value {
 		font-variant-numeric: tabular-nums;
+		font-size: clamp(2rem, 6vw, 2.75rem);
 		font-weight: 700;
-		font-size: clamp(1.5rem, 5vw, 2.25rem);
 		line-height: 1;
-		color: var(--text);
-		text-shadow: 0 0 20px rgba(192, 132, 252, 0.3);
+		color: var(--text-primary);
+		letter-spacing: -0.02em;
+		margin-bottom: var(--space-xs);
+		font-feature-settings: "tnum";
 	}
 
-	.digit.seconds {
-		color: var(--accent-purple);
-		animation: seconds-pulse 1s ease-in-out infinite;
+	.value.seconds {
+		color: var(--accent);
+		min-width: 2ch;
+		text-align: center;
 	}
 
-	@keyframes seconds-pulse {
-		0%, 100% { opacity: 1; }
-		50% { opacity: 0.7; }
-	}
-
-	.time-label {
-		font-size: clamp(0.625rem, 1.5vw, 0.75rem);
+	.label {
+		font-size: 0.6875rem;
+		font-weight: 600;
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
-		color: var(--text-subtle);
-		font-weight: 500;
+		color: var(--text-tertiary);
 	}
 
 	.separator {
-		font-size: clamp(1.25rem, 3vw, 1.75rem);
-		font-weight: 300;
-		color: var(--text-subtle);
-		opacity: 0.5;
+		width: 4px;
+		height: 4px;
+		background: var(--text-tertiary);
+		border-radius: 50%;
+		opacity: 0.3;
 		margin-top: -1.5rem;
-		animation: pulse-opacity 2s ease-in-out infinite;
 	}
 
-	@keyframes pulse-opacity {
-		0%, 100% { opacity: 0.3; }
-		50% { opacity: 0.6; }
-	}
-
-	/* Meta info */
 	.meta {
-		margin-top: 1.25rem;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		gap: 0.25rem;
-		font-size: 0.875rem;
-		position: relative;
-		z-index: 1;
+		padding-top: var(--space-lg);
+		border-top: 1px solid var(--border);
 	}
 
 	.target-date {
-		color: var(--text-muted);
-		letter-spacing: 0.1em;
 		font-variant-numeric: tabular-nums;
+		font-size: 0.9375rem;
+		font-weight: 600;
+		color: var(--text-secondary);
+		letter-spacing: 0.05em;
 	}
 
 	.timezone {
-		color: var(--text-subtle);
 		font-size: 0.8125rem;
+		color: var(--text-tertiary);
 	}
 
-	.ready-badge {
+	.complete-badge {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.5rem;
-		padding: 0.5rem 1rem;
-		background: rgba(52, 211, 153, 0.1);
-		border: 1px solid rgba(52, 211, 153, 0.2);
+		gap: var(--space-sm);
+		padding: var(--space-sm) var(--space-md);
+		background: rgba(34, 197, 94, 0.1);
+		border: 1px solid rgba(34, 197, 94, 0.2);
 		border-radius: var(--radius-full);
-		color: var(--accent-emerald);
+		color: #22c55e;
+		font-size: 0.875rem;
 		font-weight: 500;
-		animation: ready-pulse 2s ease-in-out infinite;
-	}
-
-	@keyframes ready-pulse {
-		0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.2); }
-		50% { box-shadow: 0 0 20px 4px rgba(52, 211, 153, 0.1); }
-	}
-
-	.check {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		width: 18px;
-		height: 18px;
-		background: var(--accent-emerald);
-		color: var(--bg);
-		border-radius: 50%;
-		font-size: 0.75rem;
-		font-weight: 700;
-	}
-
-	/* Footer */
-	.divider {
-		width: 60px;
-		height: 2px;
-		background: linear-gradient(90deg, transparent, var(--accent-purple), transparent);
-		margin: 1.75rem auto 1.25rem;
-		opacity: 0.6;
-		border-radius: 2px;
 	}
 
 	.footer {
+		text-align: center;
 		font-size: 0.9375rem;
-		color: var(--text-muted);
-		line-height: 1.6;
+		color: var(--text-secondary);
 	}
 
-	.accent {
-		color: var(--text);
+	.emphasis {
+		color: var(--text-primary);
 		font-weight: 500;
 	}
 
-	/* Responsive */
 	@media (max-width: 480px) {
-		.content {
-			padding: 16px;
+		.scene {
+			padding: var(--space-md);
 		}
 
-		.countdown-container {
-			padding: 1.25rem 0.75rem;
+		.card {
+			padding: var(--space-xl);
 		}
 
-		.time-unit {
-			min-width: 56px;
+		.timer {
+			gap: var(--space-sm);
 		}
 
-		.separator {
-			margin-top: -1rem;
+		.unit {
+			min-width: 48px;
 		}
 	}
 
 	@media (max-width: 360px) {
-		.countdown {
-			gap: 0.25rem;
+		.timer {
+			gap: var(--space-xs);
 		}
 
-		.time-value {
-			padding: 0.625rem 0.375rem;
-			border-radius: 12px;
+		.unit {
+			min-width: 40px;
 		}
 
 		.separator {
-			font-size: 1rem;
+			display: none;
 		}
 	}
 
-	/* Reduced motion */
 	@media (prefers-reduced-motion: reduce) {
 		* {
-			animation-duration: 0.01ms !important;
-			animation-iteration-count: 1 !important;
-			transition-duration: 0.01ms !important;
-		}
-	}
-
-	/* Dark mode optimization */
-	@media (prefers-color-scheme: dark) {
-		:root {
-			--bg: #020205;
+			animation: none !important;
+			transition: none !important;
 		}
 	}
 </style>
