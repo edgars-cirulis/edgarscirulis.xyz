@@ -68,7 +68,7 @@
 			<h1 class="title">Atvēršana drīzumā</h1>
 			
 			<p class="description">
-				Mēs pārtaisām visu no jauna — tīrāk, skaistāk un asāk.
+				Pārtaisām visu no jauna..
 			</p>
 
 			<div class="countdown-section" data-done={done}>
@@ -77,28 +77,28 @@
 				<div class="timer" role="timer" aria-live="polite">
 					<div class="unit">
 						<div class="value" aria-label="{days} dienas">{days}</div>
-						<div class="label">Dienas</div>
+						<div class="label">dienas</div>
 					</div>
 					
 					<div class="separator" aria-hidden="true"></div>
 					
 					<div class="unit">
 						<div class="value" aria-label="{pad2(hours)} stundas">{pad2(hours)}</div>
-						<div class="label">Stundas</div>
+						<div class="label">stundas</div>
 					</div>
 					
 					<div class="separator" aria-hidden="true"></div>
 					
 					<div class="unit">
 						<div class="value" aria-label="{pad2(minutes)} minūtes">{pad2(minutes)}</div>
-						<div class="label">Minūtes</div>
+						<div class="label">minūtes</div>
 					</div>
 					
 					<div class="separator" aria-hidden="true"></div>
 					
 					<div class="unit">
 						<div class="value seconds" aria-label="{pad2(seconds)} sekundes">{pad2(seconds)}</div>
-						<div class="label">Sekundes</div>
+						<div class="label">sekundes</div>
 					</div>
 				</div>
 
@@ -111,6 +111,7 @@
 							<span>Gatavs — atsvaidzini lapu</span>
 						</div>
 					{:else}
+						<div class="meta-divider"></div>
 						<time datetime="2026-02-20T00:00:00+02:00" class="target-date">
 							20.02.2026
 						</time>
@@ -136,24 +137,25 @@
 		--text-secondary: #a1a1aa;
 		--text-tertiary: #71717a;
 		
-		--accent: #8b5cf6;
-		--accent-glow: rgba(139, 92, 246, 0.15);
+		--accent: #a78bfa;
+		--accent-glow: rgba(167, 139, 250, 0.15);
 		
-		--border: rgba(255, 255, 255, 0.08);
-		--border-strong: rgba(255, 255, 255, 0.12);
+		--border: rgba(255, 255, 255, 0.06);
+		--border-strong: rgba(255, 255, 255, 0.1);
 		
-		--shadow: 0 0 0 1px var(--border), 0 20px 50px -10px rgba(0, 0, 0, 0.5);
+		--shadow: 0 0 0 1px var(--border), 0 24px 48px -12px rgba(0, 0, 0, 0.6);
 		
-		--radius-sm: 8px;
+		--radius-sm: 6px;
 		--radius-md: 12px;
-		--radius-lg: 16px;
+		--radius-lg: 20px;
+		--radius-full: 9999px;
 		
-		--space-xs: 0.5rem;
-		--space-sm: 0.75rem;
-		--space-md: 1rem;
-		--space-lg: 1.5rem;
-		--space-xl: 2rem;
-		--space-2xl: 3rem;
+		--space-xs: 0.5rem;   /* 8px */
+		--space-sm: 0.75rem;  /* 12px */
+		--space-md: 1rem;     /* 16px */
+		--space-lg: 1.5rem;   /* 24px */
+		--space-xl: 2rem;     /* 32px */
+		--space-2xl: 2.5rem;  /* 40px */
 	}
 
 	:global(*) {
@@ -177,8 +179,10 @@
 		align-items: center;
 		justify-content: center;
 		position: relative;
-		padding: var(--space-lg);
-		background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(139, 92, 246, 0.15), transparent);
+		padding: var(--space-md);
+		background: 
+			radial-gradient(ellipse 80% 50% at 50% -20%, rgba(139, 92, 246, 0.12), transparent),
+			radial-gradient(ellipse 60% 40% at 50% 120%, rgba(139, 92, 246, 0.08), transparent);
 	}
 
 	.ambient-glow {
@@ -191,12 +195,12 @@
 	.ambient-glow::before {
 		content: '';
 		position: absolute;
-		top: 50%;
+		top: 40%;
 		left: 50%;
 		transform: translate(-50%, -50%);
-		width: 800px;
-		height: 800px;
-		background: radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 60%);
+		width: 600px;
+		height: 600px;
+		background: radial-gradient(circle, var(--accent-glow) 0%, transparent 60%);
 		opacity: 0;
 		transition: opacity 1.5s ease;
 	}
@@ -207,10 +211,10 @@
 
 	.container {
 		width: 100%;
-		max-width: 480px;
+		max-width: 440px;
 		opacity: 0;
-		transform: translateY(20px);
-		transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+		transform: translateY(12px);
+		transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
 	.container.visible {
@@ -219,9 +223,9 @@
 	}
 
 	.card {
-		background: var(--surface);
-		backdrop-filter: blur(20px) saturate(180%);
-		-webkit-backdrop-filter: blur(20px) saturate(180%);
+		background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%), var(--surface);
+		backdrop-filter: blur(24px) saturate(180%);
+		-webkit-backdrop-filter: blur(24px) saturate(180%);
 		border: 1px solid var(--border);
 		border-radius: var(--radius-lg);
 		padding: var(--space-2xl);
@@ -230,24 +234,16 @@
 		overflow: hidden;
 	}
 
-	.card::before {
-		content: '';
-		position: absolute;
-		inset: 0;
-		background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, transparent 100%);
-		pointer-events: none;
-	}
-
 	.header {
-		margin-bottom: var(--space-xl);
+		margin-bottom: var(--space-lg);
 	}
 
 	.status {
 		display: inline-flex;
 		align-items: center;
-		gap: var(--space-sm);
-		padding: var(--space-xs) var(--space-md);
-		background: rgba(255, 255, 255, 0.03);
+		gap: 6px;
+		padding: 6px 12px;
+		background: rgba(255, 255, 255, 0.02);
 		border: 1px solid var(--border);
 		border-radius: var(--radius-full);
 		font-size: 0.8125rem;
@@ -257,59 +253,59 @@
 	}
 
 	.status-dot {
-		width: 6px;
-		height: 6px;
+		width: 5px;
+		height: 5px;
 		background: var(--accent);
 		border-radius: 50%;
-		box-shadow: 0 0 8px var(--accent);
+		box-shadow: 0 0 10px var(--accent);
 		animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 	}
 
 	@keyframes pulse {
 		0%, 100% { opacity: 1; }
-		50% { opacity: 0.5; }
+		50% { opacity: 0.4; }
 	}
 
 	.title {
-		font-size: clamp(1.75rem, 5vw, 2.25rem);
+		font-size: clamp(1.5rem, 5vw, 2rem);
 		font-weight: 700;
 		letter-spacing: -0.02em;
 		line-height: 1.2;
-		margin-bottom: var(--space-md);
+		margin-bottom: var(--space-sm);
 		color: var(--text-primary);
 	}
 
 	.description {
-		font-size: 1rem;
+		font-size: 0.9375rem;
 		color: var(--text-secondary);
 		line-height: 1.6;
-		margin-bottom: var(--space-2xl);
+		margin-bottom: var(--space-xl);
 	}
 
 	.countdown-section {
-		background: rgba(0, 0, 0, 0.2);
+		background: rgba(0, 0, 0, 0.25);
 		border: 1px solid var(--border);
 		border-radius: var(--radius-md);
-		padding: var(--space-xl);
+		padding: var(--space-xl) var(--space-lg);
 		margin-bottom: var(--space-xl);
-		position: relative;
 	}
 
 	.countdown-header {
-		font-size: 0.75rem;
+		font-size: 0.6875rem;
 		font-weight: 600;
 		text-transform: uppercase;
-		letter-spacing: 0.1em;
+		letter-spacing: 0.12em;
 		color: var(--text-tertiary);
 		margin-bottom: var(--space-lg);
 		text-align: center;
+		opacity: 0.8;
 	}
 
 	.timer {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		justify-content: center;
-		gap: var(--space-md);
+		gap: var(--space-xs);
 		margin-bottom: var(--space-lg);
 	}
 
@@ -317,50 +313,63 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		min-width: 60px;
+		min-width: 56px;
+		flex: 1;
 	}
 
 	.value {
 		font-variant-numeric: tabular-nums;
-		font-size: clamp(2rem, 6vw, 2.75rem);
+		font-size: clamp(2rem, 6vw, 2.5rem);
 		font-weight: 700;
 		line-height: 1;
 		color: var(--text-primary);
-		letter-spacing: -0.02em;
+		letter-spacing: -0.03em;
 		margin-bottom: var(--space-xs);
 		font-feature-settings: "tnum";
+		transition: transform 0.1s ease;
 	}
 
 	.value.seconds {
 		color: var(--accent);
-		min-width: 2ch;
-		text-align: center;
+		animation: tick 1s ease-in-out infinite;
+	}
+
+	@keyframes tick {
+		0%, 100% { opacity: 1; }
+		50% { opacity: 0.7; }
 	}
 
 	.label {
-		font-size: 0.6875rem;
+		font-size: 0.625rem;
 		font-weight: 600;
 		text-transform: uppercase;
-		letter-spacing: 0.1em;
+		letter-spacing: 0.12em;
 		color: var(--text-tertiary);
+		opacity: 0.9;
 	}
 
 	.separator {
-		width: 4px;
-		height: 4px;
+		width: 3px;
+		height: 3px;
 		background: var(--text-tertiary);
 		border-radius: 50%;
-		opacity: 0.3;
-		margin-top: -1.5rem;
+		opacity: 0.2;
+		margin-top: 1.25rem;
 	}
 
 	.meta {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 0.25rem;
-		padding-top: var(--space-lg);
-		border-top: 1px solid var(--border);
+		gap: 0.375rem;
+	}
+
+	.meta-divider {
+		width: 40px;
+		height: 1px;
+		background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
+		margin-bottom: var(--space-sm);
+		opacity: 0.6;
 	}
 
 	.target-date {
@@ -368,12 +377,13 @@
 		font-size: 0.9375rem;
 		font-weight: 600;
 		color: var(--text-secondary);
-		letter-spacing: 0.05em;
+		letter-spacing: 0.02em;
 	}
 
 	.timezone {
 		font-size: 0.8125rem;
 		color: var(--text-tertiary);
+		font-weight: 500;
 	}
 
 	.complete-badge {
@@ -384,15 +394,22 @@
 		background: rgba(34, 197, 94, 0.1);
 		border: 1px solid rgba(34, 197, 94, 0.2);
 		border-radius: var(--radius-full);
-		color: #22c55e;
+		color: #4ade80;
 		font-size: 0.875rem;
-		font-weight: 500;
+		font-weight: 600;
+		animation: ready-pulse 2s ease-in-out infinite;
+	}
+
+	@keyframes ready-pulse {
+		0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.2); }
+		50% { box-shadow: 0 0 20px 2px rgba(34, 197, 94, 0.15); }
 	}
 
 	.footer {
 		text-align: center;
-		font-size: 0.9375rem;
+		font-size: 0.875rem;
 		color: var(--text-secondary);
+		line-height: 1.5;
 	}
 
 	.emphasis {
@@ -401,30 +418,38 @@
 	}
 
 	@media (max-width: 480px) {
-		.scene {
-			padding: var(--space-md);
-		}
-
 		.card {
-			padding: var(--space-xl);
+			padding: var(--space-xl) var(--space-lg);
 		}
 
 		.timer {
-			gap: var(--space-sm);
+			gap: 2px;
 		}
 
 		.unit {
 			min-width: 48px;
 		}
+
+		.value {
+			margin-bottom: 6px;
+		}
+
+		.separator {
+			margin-top: 1rem;
+		}
 	}
 
 	@media (max-width: 360px) {
 		.timer {
-			gap: var(--space-xs);
+			gap: 0;
 		}
 
 		.unit {
-			min-width: 40px;
+			min-width: 42px;
+		}
+
+		.value {
+			font-size: 1.75rem;
 		}
 
 		.separator {
