@@ -5,7 +5,7 @@
 	let visible = false;
 
 	// Target: 2026-02-20 00:00:00 GMT+2 (Riga)
-	const target = new Date('2026-01-00T00:00:00+02:00').getTime();
+	const target = new Date('2026-03-00T00:00:00+02:00').getTime();
 
 	let days = 0;
 	let hours = 0;
