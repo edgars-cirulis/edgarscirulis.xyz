@@ -5,7 +5,7 @@
 	let visible = false;
 
 	// Target: 2026-02-20 00:00:00 GMT+2 (Riga)
-	const target = new Date('2026-03-00T00:00:00+02:00').getTime();
+	const target = new Date('2026-03-01T00:00:00+02:00').getTime();
 
 	let days = 0;
 	let hours = 0;
@@ -48,14 +48,17 @@
 	<title>Atvēršana drīzumā — edgarscirulis.xyz</title>
 	<meta name="theme-color" content="#09090b" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-	<meta name="description" content="Vietne drīz atgriezīsies. Atvēršana 20.02.2026." />
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<meta name="description" content="Vietne drīz atgriezīsies. Atvēršana 01.03.2026." />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+		rel="stylesheet"
+	/>
 </svelte:head>
 
 <div class="scene" class:mounted>
 	<div class="ambient-glow" aria-hidden="true"></div>
-	
+
 	<main class="container" class:visible>
 		<div class="card">
 			<div class="header">
@@ -66,36 +69,34 @@
 			</div>
 
 			<h1 class="title">Atvēršana drīzumā</h1>
-			
-			<p class="description">
-				Pārtaisām visu no jauna..
-			</p>
+
+			<p class="description">Pārtaisām visu no jauna..</p>
 
 			<div class="countdown-section" data-done={done}>
 				<div class="countdown-header">Atlikušais laiks līdz atvēršanai</div>
-				
+
 				<div class="timer" role="timer" aria-live="polite">
 					<div class="unit">
 						<div class="value" aria-label="{days} dienas">{days}</div>
 						<div class="label">dienas</div>
 					</div>
-					
+
 					<div class="separator" aria-hidden="true"></div>
-					
+
 					<div class="unit">
 						<div class="value" aria-label="{pad2(hours)} stundas">{pad2(hours)}</div>
 						<div class="label">stundas</div>
 					</div>
-					
+
 					<div class="separator" aria-hidden="true"></div>
-					
+
 					<div class="unit">
 						<div class="value" aria-label="{pad2(minutes)} minūtes">{pad2(minutes)}</div>
 						<div class="label">minūtes</div>
 					</div>
-					
+
 					<div class="separator" aria-hidden="true"></div>
-					
+
 					<div class="unit">
 						<div class="value seconds" aria-label="{pad2(seconds)} sekundes">{pad2(seconds)}</div>
 						<div class="label">sekundes</div>
@@ -106,15 +107,19 @@
 					{#if done}
 						<div class="complete-badge">
 							<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-								<path d="M3 8L7 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+								<path
+									d="M3 8L7 12L13 4"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								/>
 							</svg>
 							<span>Gatavs — atsvaidzini lapu</span>
 						</div>
 					{:else}
 						<div class="meta-divider"></div>
-						<time datetime="2026-02-20T00:00:00+02:00" class="target-date">
-							20.02.2026
-						</time>
+						<time datetime="2026-02-20T00:00:00+02:00" class="target-date"> 20.02.2026 </time>
 						<span class="timezone">Rīga (GMT+2)</span>
 					{/if}
 				</div>
@@ -132,30 +137,30 @@
 		--bg: #09090b;
 		--bg-elevated: #18181b;
 		--surface: rgba(24, 24, 27, 0.6);
-		
+
 		--text-primary: #fafafa;
 		--text-secondary: #a1a1aa;
 		--text-tertiary: #71717a;
-		
+
 		--accent: #a78bfa;
 		--accent-glow: rgba(167, 139, 250, 0.15);
-		
+
 		--border: rgba(255, 255, 255, 0.06);
 		--border-strong: rgba(255, 255, 255, 0.1);
-		
+
 		--shadow: 0 0 0 1px var(--border), 0 24px 48px -12px rgba(0, 0, 0, 0.6);
-		
+
 		--radius-sm: 6px;
 		--radius-md: 12px;
 		--radius-lg: 20px;
 		--radius-full: 9999px;
-		
-		--space-xs: 0.5rem;   /* 8px */
-		--space-sm: 0.75rem;  /* 12px */
-		--space-md: 1rem;     /* 16px */
-		--space-lg: 1.5rem;   /* 24px */
-		--space-xl: 2rem;     /* 32px */
-		--space-2xl: 2.5rem;  /* 40px */
+
+		--space-xs: 0.5rem; /* 8px */
+		--space-sm: 0.75rem; /* 12px */
+		--space-md: 1rem; /* 16px */
+		--space-lg: 1.5rem; /* 24px */
+		--space-xl: 2rem; /* 32px */
+		--space-2xl: 2.5rem; /* 40px */
 	}
 
 	:global(*) {
@@ -165,7 +170,13 @@
 	}
 
 	:global(body) {
-		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+		font-family:
+			'Inter',
+			-apple-system,
+			BlinkMacSystemFont,
+			'Segoe UI',
+			Roboto,
+			sans-serif;
 		background: var(--bg);
 		color: var(--text-primary);
 		line-height: 1.5;
@@ -180,7 +191,7 @@
 		justify-content: center;
 		position: relative;
 		padding: var(--space-md);
-		background: 
+		background:
 			radial-gradient(ellipse 80% 50% at 50% -20%, rgba(139, 92, 246, 0.12), transparent),
 			radial-gradient(ellipse 60% 40% at 50% 120%, rgba(139, 92, 246, 0.08), transparent);
 	}
@@ -223,7 +234,8 @@
 	}
 
 	.card {
-		background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%), var(--surface);
+		background:
+			linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, transparent 100%), var(--surface);
 		backdrop-filter: blur(24px) saturate(180%);
 		-webkit-backdrop-filter: blur(24px) saturate(180%);
 		border: 1px solid var(--border);
@@ -262,8 +274,13 @@
 	}
 
 	@keyframes pulse {
-		0%, 100% { opacity: 1; }
-		50% { opacity: 0.4; }
+		0%,
+		100% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0.4;
+		}
 	}
 
 	.title {
@@ -325,7 +342,7 @@
 		color: var(--text-primary);
 		letter-spacing: -0.03em;
 		margin-bottom: var(--space-xs);
-		font-feature-settings: "tnum";
+		font-feature-settings: 'tnum';
 		transition: transform 0.1s ease;
 	}
 
@@ -335,8 +352,13 @@
 	}
 
 	@keyframes tick {
-		0%, 100% { opacity: 1; }
-		50% { opacity: 0.7; }
+		0%,
+		100% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0.7;
+		}
 	}
 
 	.label {
@@ -401,8 +423,13 @@
 	}
 
 	@keyframes ready-pulse {
-		0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.2); }
-		50% { box-shadow: 0 0 20px 2px rgba(34, 197, 94, 0.15); }
+		0%,
+		100% {
+			box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.2);
+		}
+		50% {
+			box-shadow: 0 0 20px 2px rgba(34, 197, 94, 0.15);
+		}
 	}
 
 	.footer {
